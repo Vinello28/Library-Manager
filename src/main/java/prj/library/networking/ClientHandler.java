@@ -9,7 +9,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import prj.library.models.Book;
+import prj.library.networking.messages.*;
 
 
 public class ClientHandler implements Runnable {
@@ -30,28 +36,35 @@ public class ClientHandler implements Runnable {
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())
         ) {
             while (true) {
-                String operation = (String) in.readObject();
-                Book book = (Book) in.readObject();
+                Message message = (Message) in.readObject();
 
-                switch (operation) {
-                    case "CREATE":
-                        createBook(book);
-                        out.writeObject("Book created successfully");
+                System.out.println("SERVER | DEBUG INFO: received message " + message.getOperation()+" "+message.getOperation());
+
+                switch (message.getOperation()) {
+                    case ADD_BOOK:
+                        createBook((Book) message.getMessage());
+                        out.writeObject(new GenericMessage(true));
                         break;
-                    case "READ":
-                        Book readBook = readBook(book.getId());
-                        out.writeObject(readBook);
+                    case GET_BOOK:
+                        Book tmp = readBook((int) message.getMessage());
+                        out.writeObject(new BookMessage(tmp));
                         break;
-                    case "UPDATE":
-                        updateBook(book);
-                        out.writeObject("Book updated successfully");
+                    case UPDATE_BOOK:
+                        updateBook((Book) message.getMessage());
+                        out.writeObject(new GenericMessage(true));
                         break;
-                    case "DELETE":
-                        deleteBook(book.getId());
-                        out.writeObject("Book deleted successfully");
+                    case REMOVE_BOOK:
+                        deleteBook((int) message.getMessage());
+                        out.writeObject(new GenericMessage(true));
+                        break;
+                    case GET_BOOKS:
+                        List<Book> books = getBooks();
+                        ArrayList<Book> booksArray = new ArrayList<>(books);
+                        out.writeObject(new RefreshMessage(booksArray));
                         break;
                     default:
                         out.writeObject("Invalid operation");
+                        break;
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -59,12 +72,15 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Create a book in the database
+     *
+     * @param book the book to create
+     */
     private void createBook(Book book) {
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Driver not found: " + e.getMessage());
-        }
+
+        check();
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "INSERT INTO books (title, author, year) VALUES (?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -78,7 +94,16 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Read a book from the database
+     *
+     * @param id the id of the book to read
+     * @return the book with the given id
+     */
     private Book readBook(int id) {
+
+        check();
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -100,7 +125,48 @@ public class ClientHandler implements Runnable {
         return null;
     }
 
+
+    /**
+     * Sends a request to the server to get all books.
+     *
+     * @return a list of all books
+     */
+    private List<Book> getBooks() {
+
+        check();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    ObservableList<Book> books = FXCollections.observableArrayList();
+                    while (rs.next()) {
+                        Book book = new Book();
+                        book.setId(rs.getInt("id"));
+                        book.setTitle(rs.getString("title"));
+                        book.setAuthor(rs.getString("author"));
+                        book.setYear(rs.getInt("year"));
+                        books.add(book);
+                    }
+                    return books;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Update a book in the database
+     *
+     * @param book the book to update
+     */
     private void updateBook(Book book) {
+
+        check();
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -115,7 +181,15 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Delete a book from the database
+     *
+     * @param id the book to delete
+     */
     private void deleteBook(int id) {
+
+        check();
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "DELETE FROM books WHERE id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -124,6 +198,19 @@ public class ClientHandler implements Runnable {
             }
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Check if the driver is available
+     *
+     * @return Nothing
+     */
+    private void check(){
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver not found: " + e.getMessage());
         }
     }
 }

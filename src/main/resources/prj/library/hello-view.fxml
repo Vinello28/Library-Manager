@@ -1,16 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="prj.library.HelloController">
+<VBox alignment="TOP_CENTER" prefHeight="1000.0" prefWidth="1000.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.LibraryController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <Label fx:id="welcomeText" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="69.0" prefWidth="385.0" text="LibraryManager">
+      <font>
+         <Font name="JetBrains Mono ExtraBold" size="36.0" />
+      </font></Label>
+   <TabPane prefHeight="205.0" prefWidth="960.0" tabClosingPolicy="UNAVAILABLE">
+     <tabs>
+       <Tab text="Add a Book">
+         <content>
+           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+             <children>
+               <AnchorPane layoutX="-29.0" layoutY="-3.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                 <SplitPane dividerPositions="0.19206680584551147" layoutY="1.0" prefHeight="173.0" prefWidth="960.0">
+                   <items>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="175.0">
+                          <children>
+                              <Button fx:id="addButton" layoutY="-1.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="82.0" prefWidth="182.0" text=" Add book">
+                                    <font>
+                                       <Font name="JetBrains Mono Medium" size="20.0" />
+                                    </font>
+                                    <effect>
+                                       <Blend />
+                                    </effect></Button>
+                              <Button fx:id="emptyButton" layoutY="89.0" mnemonicParsing="false" onAction="#onEmptyButtonClick" prefHeight="82.0" prefWidth="182.0" text="Empty fields">
+                                    <effect>
+                                       <Blend />
+                                    </effect>
+                                    <font>
+                                       <Font name="JetBrains Mono Medium" size="20.0" />
+                                    </font></Button>
+                          </children>
+                     </AnchorPane>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="177.0" prefWidth="679.0">
+                              <children>
+                                 <TextField layoutX="26.0" layoutY="22.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter book's title here...">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </TextField>
+                                 <TextField layoutX="26.0" layoutY="66.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter author's name and surname here...">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </TextField>
+                                 <TextField layoutX="26.0" layoutY="110.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter book's publication year here...">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </TextField>
+                                 <ChoiceBox layoutX="463.0" layoutY="62.0" prefHeight="36.0" prefWidth="206.0" />
+                                 <Label layoutX="463.0" layoutY="42.0" prefHeight="22.0" prefWidth="206.0" text="Choose a genre" textFill="#5b5858">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </Label>
+                              </children></AnchorPane>
+                   </items>
+                 </SplitPane>
+             </children>
+           </AnchorPane>
+         </content>
+       </Tab>
+       <Tab text="Search and Lend">
+         <content>
+           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                     <SplitPane dividerPositions="0.19318181818181818" orientation="VERTICAL" prefHeight="178.0" prefWidth="960.0">
+                       <items>
+                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                              <children>
+                                 <TextField layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="240.0" promptText="Book's title here...">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </TextField>
+                                 <ChoiceBox layoutX="470.0" layoutY="-1.0" prefHeight="33.0" prefWidth="150.0">
+                                    <effect>
+                                       <Glow level="0.45" />
+                                    </effect>
+                                 </ChoiceBox>
+                                 <Button layoutX="625.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
+                                    <font>
+                                       <Font name="JetBrains Mono SemiBold" size="15.0" />
+                                    </font>
+                                 </Button>
+                                 <TextField layoutX="239.0" layoutY="-1.0" prefHeight="32.0" prefWidth="231.0" promptText="Book's author here (name surn)">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </TextField>
+                                 <Button fx:id="lendButton" layoutX="868.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onLendButtonClick" prefHeight="34.0" prefWidth="90.0" text="lend">
+                                    <font>
+                                       <Font name="JetBrains Mono SemiBold" size="15.0" />
+                                    </font>
+                                 </Button>
+                                 <Button layoutX="784.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="34.0" prefWidth="84.0" text="edit">
+                                    <font>
+                                       <Font name="JetBrains Mono SemiBold" size="15.0" />
+                                    </font>
+                                 </Button>
+                                 <Button layoutX="708.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="33.0" prefWidth="76.0" text="delete">
+                                    <font>
+                                       <Font name="JetBrains Mono SemiBold" size="15.0" />
+                                    </font>
+                                 </Button>
+                              </children>
+                           </AnchorPane>
+                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="174.0" prefWidth="958.0">
+                              <children>
+                                 <ListView prefHeight="140.0" prefWidth="960.0" />
+                              </children>
+                           </AnchorPane>
+                       </items>
+                     </SplitPane>
+                  </children></AnchorPane>
+         </content>
+       </Tab>
+         <Tab text="Not returned">
+             <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+             </content>
+         </Tab>
+     </tabs>
+   </TabPane>
+   <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="82.0" prefWidth="960.0" text="All books actually saved in system" />
+    <ListView fx:id="bookListView" prefHeight="185.0" prefWidth="856.0">
+        <effect>
+            <DropShadow />
+        </effect>
+     </ListView>
 </VBox>
