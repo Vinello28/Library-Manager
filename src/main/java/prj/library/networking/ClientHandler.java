@@ -15,6 +15,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import prj.library.models.Book;
+import prj.library.models.Genre;
 import prj.library.networking.messages.*;
 
 
@@ -58,7 +59,7 @@ public class ClientHandler implements Runnable {
                         out.writeObject(new GenericMessage(true));
                         break;
                     case GET_BOOKS:
-                        List<Book> books = getBooks();
+                        List<Book> books = getAllBooks();
                         ArrayList<Book> booksArray = new ArrayList<>(books);
                         out.writeObject(new RefreshMessage(booksArray));
                         break;
@@ -131,25 +132,14 @@ public class ClientHandler implements Runnable {
      *
      * @return a list of all books
      */
-    private List<Book> getBooks() {
+    private List<Book> getAllBooks() {
 
         check();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    ObservableList<Book> books = FXCollections.observableArrayList();
-                    while (rs.next()) {
-                        Book book = new Book();
-                        book.setId(rs.getInt("id"));
-                        book.setTitle(rs.getString("title"));
-                        book.setAuthor(rs.getString("author"));
-                        book.setYear(rs.getInt("year"));
-                        books.add(book);
-                    }
-                    return books;
-                }
+                return getBooks(pstmt);
             }
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
@@ -157,6 +147,112 @@ public class ClientHandler implements Runnable {
         return null;
     }
 
+
+    /**
+     * Get books by title
+     * @param title the title of the book
+     * @return a list of books with the given title
+     */
+    private List<Book> getBooksByTitle(String title) {
+
+        check();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Get books by genre
+     * @param genre the genre of the book
+     * @return a list of books with the given genre
+     */
+    private List<Book> getBooksByGenre(Genre genre) {
+
+        check();
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE genre = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, genre.toString());
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Get books by author
+     * @param author the author of the book
+     * @return a list of books with the given author
+     */
+    private List<Book> getBooksByAuthor(String author) {
+
+        check();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE author = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, author);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Get books by year
+     * @param year the year of the book
+     * @return a list of books with the given year
+     */
+    private List<Book> getBooksByYear(int year) {
+
+        check();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Get books chosen by the prepared statement from the database
+     * @param pstmt the prepared statement
+     * @return a list of books
+     * @throws SQLException if the query fails
+     */
+    private List<Book> getBooks(PreparedStatement pstmt) throws SQLException {
+        try (ResultSet rs = pstmt.executeQuery()) {
+            ObservableList<Book> books = FXCollections.observableArrayList();
+            while (rs.next()) {
+                Book book = new Book();
+                book.setId(rs.getInt("id"));
+                book.setTitle(rs.getString("title"));
+                book.setAuthor(rs.getString("author"));
+                book.setYear(rs.getInt("year"));
+                if (rs.getString("genre") != null) book.setGenre(Genre.valueOf(rs.getString("genre")));
+                else book.setGenre(Genre.Genre);
+                books.add(book);
+            }
+            return books;
+        }
+    }
 
     /**
      * Update a book in the database
@@ -168,12 +264,14 @@ public class ClientHandler implements Runnable {
         check();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?";
+            String sql = "UPDATE books SET title = ?, author = ?, year = ?, genre = ? WHERE id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, book.getTitle());
                 pstmt.setString(2, book.getAuthor());
                 pstmt.setInt(3, book.getYear());
-                pstmt.setInt(4, book.getId());
+                pstmt.setString(4, book.getGenre().toString());
+                pstmt.setInt(5, book.getId());
+
                 pstmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -203,8 +301,6 @@ public class ClientHandler implements Runnable {
 
     /**
      * Check if the driver is available
-     *
-     * @return Nothing
      */
     private void check(){
         try{

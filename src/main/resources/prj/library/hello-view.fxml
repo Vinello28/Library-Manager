@@ -43,22 +43,22 @@
                      </AnchorPane>
                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="177.0" prefWidth="679.0">
                               <children>
-                                 <TextField layoutX="26.0" layoutY="22.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter book's title here...">
+                                 <TextField fx:id="titleTextField" layoutX="26.0" layoutY="22.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter book's title here...">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
                                  </TextField>
-                                 <TextField layoutX="26.0" layoutY="66.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter author's name and surname here...">
+                                 <TextField fx:id="authorTextField" layoutX="26.0" layoutY="66.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter author's name and surname here...">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
                                  </TextField>
-                                 <TextField layoutX="26.0" layoutY="110.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter book's publication year here...">
+                                 <TextField fx:id="yearTextField" layoutX="26.0" layoutY="110.0" prefHeight="40.0" prefWidth="352.0" promptText="Enter book's publication year here...">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
                                  </TextField>
-                                 <ChoiceBox layoutX="463.0" layoutY="62.0" prefHeight="36.0" prefWidth="206.0" />
+                                 <ChoiceBox fx:id="genreChoiceBox" layoutX="463.0" layoutY="62.0" prefHeight="36.0" prefWidth="206.0" />
                                  <Label layoutX="463.0" layoutY="42.0" prefHeight="22.0" prefWidth="206.0" text="Choose a genre" textFill="#5b5858">
                                     <font>
                                        <Font name="Arial" size="12.0" />
@@ -79,22 +79,22 @@
                        <items>
                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                               <children>
-                                 <TextField layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="240.0" promptText="Book's title here...">
+                                 <TextField fx:id="titleSearchTextField" layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="240.0" promptText="Book's title here...">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
                                  </TextField>
-                                 <ChoiceBox layoutX="470.0" layoutY="-1.0" prefHeight="33.0" prefWidth="150.0">
+                                 <ChoiceBox fx:id="genreSearchChoiceBox" layoutX="470.0" layoutY="-1.0" prefHeight="33.0" prefWidth="150.0">
                                     <effect>
                                        <Glow level="0.45" />
                                     </effect>
                                  </ChoiceBox>
-                                 <Button layoutX="625.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
+                                 <Button fx:id="searchButton" layoutX="625.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
-                                 <TextField layoutX="239.0" layoutY="-1.0" prefHeight="32.0" prefWidth="231.0" promptText="Book's author here (name surn)">
+                                 <TextField fx:id="authorSearchTextField" layoutX="239.0" layoutY="-1.0" prefHeight="32.0" prefWidth="231.0" promptText="Book's author here (name surn)">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
@@ -104,12 +104,12 @@
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
-                                 <Button layoutX="784.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="34.0" prefWidth="84.0" text="edit">
+                                 <Button fx:id="editButton" layoutX="784.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="34.0" prefWidth="84.0" text="edit">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
-                                 <Button layoutX="708.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="33.0" prefWidth="76.0" text="delete">
+                                 <Button fx:id="deleteButton" layoutX="708.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="33.0" prefWidth="76.0" text="delete">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
@@ -118,7 +118,7 @@
                            </AnchorPane>
                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="174.0" prefWidth="958.0">
                               <children>
-                                 <ListView prefHeight="140.0" prefWidth="960.0" />
+                                 <ListView fx:id="searchedListView" prefHeight="140.0" prefWidth="960.0" />
                               </children>
                            </AnchorPane>
                        </items>

@@ -8,11 +8,18 @@ public class Book implements Serializable {
     private String title;
     private String author;
     private int year;
+    private Genre genre;
 
     public Book() {
     }
 
-    public Book(int id, String title, String author, int year) {
+    public Book(String title, String author, int year, Genre genre) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+    }
+
+    public Book(int id, String title, String author, int year, Genre genre) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -51,9 +58,17 @@ public class Book implements Serializable {
         this.year = year;
     }
 
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
+
     @Override
     public String toString() {
-        return "Book{" + "id=" + id + ", title=" + title + ", author=" + author + ", year=" + year + '}';
+        return " " + "ID:" + id + ", " + title + ", " + author + ", " + year + genre.toString() +' ';
     }
 
 }
