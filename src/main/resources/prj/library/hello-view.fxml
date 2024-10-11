@@ -79,41 +79,46 @@
                        <items>
                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                               <children>
-                                 <TextField fx:id="titleSearchTextField" layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="240.0" promptText="Book's title here...">
+                                 <TextField fx:id="titleSearchTextField" layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="156.0" promptText="Book's title here...">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
                                  </TextField>
-                                 <ChoiceBox fx:id="genreSearchChoiceBox" layoutX="470.0" layoutY="-1.0" prefHeight="33.0" prefWidth="150.0">
+                                 <ChoiceBox fx:id="genreSearchChoiceBox" layoutX="511.0" layoutY="-1.0" prefHeight="33.0" prefWidth="150.0">
                                     <effect>
                                        <Glow level="0.45" />
                                     </effect>
                                  </ChoiceBox>
-                                 <Button fx:id="searchButton" layoutX="625.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
+                                 <Button fx:id="searchButton" layoutX="665.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
-                                 <TextField fx:id="authorSearchTextField" layoutX="239.0" layoutY="-1.0" prefHeight="32.0" prefWidth="231.0" promptText="Book's author here (name surn)">
+                                 <TextField fx:id="authorSearchTextField" layoutX="154.0" layoutY="-1.0" prefHeight="32.0" prefWidth="191.0" promptText="Book's author here (name surn)">
                                     <font>
                                        <Font name="Arial" size="12.0" />
                                     </font>
                                  </TextField>
-                                 <Button fx:id="lendButton" layoutX="868.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onLendButtonClick" prefHeight="34.0" prefWidth="90.0" text="lend">
+                                 <Button fx:id="lendButton" layoutX="890.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onLendButtonClick" prefHeight="34.0" prefWidth="68.0" text="lend">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
-                                 <Button fx:id="editButton" layoutX="784.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="34.0" prefWidth="84.0" text="edit">
+                                 <Button fx:id="editButton" layoutX="824.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="34.0" prefWidth="66.0" text="edit">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
-                                 <Button fx:id="deleteButton" layoutX="708.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="33.0" prefWidth="76.0" text="delete">
+                                 <Button fx:id="deleteButton" layoutX="748.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="33.0" prefWidth="76.0" text="delete">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font>
                                  </Button>
+                                 <TextField fx:id="yearSearchTextField" layoutX="344.0" layoutY="-1.0" prefHeight="32.0" prefWidth="168.0" promptText="Publication year...">
+                                    <font>
+                                       <Font name="Arial" size="12.0" />
+                                    </font>
+                                 </TextField>
                               </children>
                            </AnchorPane>
                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="174.0" prefWidth="958.0">

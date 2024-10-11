@@ -68,7 +68,9 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return " " + "ID:" + id + ", " + title + ", " + author + ", " + year + genre.toString() +' ';
+        if (genre == null) genre = Genre.Genre;
+
+        return " " + "ID:" + id + ", " + title + ", " + author + ", " + year + ", " + genre.toString() +' ';
     }
 
 }

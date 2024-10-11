@@ -2,26 +2,37 @@ package prj.library.networking.messages;
 
 import java.io.Serializable;
 
-public interface Message extends Serializable {
+public abstract class Message implements Serializable {
+
+    protected Operation operation;
+    protected Object message;
 
     /**
      * @return operation of the message
      */
-    public Operation getOperation();
+    public Operation getOperation(){
+        return operation;
+    }
 
     /**
      * @return message of the message
      */
-    public Object getMessage();
+    public Object getMessage(){
+        return message;
+    }
 
     /**
      * @param op operation to set
      */
-    public void setOperation(Operation op);
+    public void setOperation(Operation op){
+        this.operation = op;
+    }
 
     /**
      * @param message message to set
      */
-    public void setMessage(Object message);
+    public void setMessage(Object message){
+        this.message = message;
+    }
 
 }
