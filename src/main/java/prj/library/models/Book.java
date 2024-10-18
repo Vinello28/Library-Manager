@@ -9,21 +9,34 @@ public class Book implements Serializable {
     private String author;
     private int year;
     private Genre genre;
+    private int copies;
 
     public Book() {
     }
 
-    public Book(String title, String author, int year, Genre genre) {
+    public Book(String title, String author, int year, Genre genre, int copies) {
         this.title = title;
         this.author = author;
         this.year = year;
+        this.genre = genre;
+        this.copies = copies;
     }
 
-    public Book(int id, String title, String author, int year, Genre genre) {
+    public Book(int id, String title, String author, int year, Genre genre, int copies) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.year = year;
+        this.genre = genre;
+        this.copies = copies;
+    }
+
+    // Constructor without copies used for searching purposes
+    public Book(String title, String author, int year, Genre genre) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+        this.genre = genre;
     }
 
     public int getId() {
@@ -66,11 +79,19 @@ public class Book implements Serializable {
         this.genre = genre;
     }
 
+    public int getCopies() {
+        return copies;
+    }
+
+    public void setCopies(int copies) {
+        this.copies = copies;
+    }
+
     @Override
     public String toString() {
         if (genre == null) genre = Genre.Genre;
 
-        return " " + "ID:" + id + ", " + title + ", " + author + ", " + year + ", " + genre.toString() +' ';
+        return " " + "ID:" + id + ", " + title + ", " + author + ", " + year + ", " + genre.toString() + ", copies: " + copies + " ";
     }
 
 }

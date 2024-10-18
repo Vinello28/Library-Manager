@@ -2,11 +2,12 @@ package prj.library.networking;
 
 import prj.library.models.Book;
 import prj.library.models.Genre;
+import prj.library.models.Lends;
 import prj.library.networking.messages.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Client {
@@ -56,7 +57,8 @@ public class Client {
      * @return the book with the given id
      */
     public Book readBook(int id) {
-        sendMessage(Operation.GET_BOOK, id);
+        Book book = new Book(id, "", "", 0, Genre.Genre, 0);
+        sendMessage(Operation.GET_BOOK, book);
         return receiveMessageBook();
     }
     
@@ -77,7 +79,8 @@ public class Client {
      * @return true if the book was created, false otherwise
      */
     public Boolean deleteBook(int id) {
-        sendMessage(Operation.REMOVE_BOOK, id);
+        Book book = new Book(id, "", "", 0, Genre.Genre, 0);
+        sendMessage(Operation.REMOVE_BOOK, book);
         return receiveMessageBoolean();
     }
 
@@ -98,35 +101,12 @@ public class Client {
      * @param msg the message to send
      */
     private void sendMessage(Operation op, Object msg) {
-        Message temp = null;
-        if(op == Operation.ADD_BOOK) temp = new CreateMessage(msg);
-        if(op == Operation.GET_BOOK) temp = new ReadMessage(msg);
-        if(op == Operation.UPDATE_BOOK) temp = new UpdateMessage(msg);
-        if(op == Operation.REMOVE_BOOK) temp = new DeleteMessage(msg);
-        if(op == Operation.GET_BOOKS) temp = new RefreshMessage();
-        if(op == Operation.SEARCH_BY_ALL) temp = new SearchByMessage(Operation.SEARCH_BY_ALL, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE, (Book) msg);
-        if(op == Operation.SEARCH_BY_AUTHOR) temp = new SearchByMessage(Operation.SEARCH_BY_AUTHOR, (Book) msg);
-        if(op == Operation.SEARCH_BY_GENRE) temp = new SearchByMessage(Operation.SEARCH_BY_GENRE, (Book) msg);
-        if(op == Operation.SEARCH_BY_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_YEAR, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE_AUTHOR) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE_AUTHOR, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE_GENRE) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE_GENRE, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE_YEAR, (Book) msg);
-        if(op == Operation.SEARCH_BY_AUTHOR_GENRE) temp = new SearchByMessage(Operation.SEARCH_BY_AUTHOR_GENRE, (Book) msg);
-        if(op == Operation.SEARCH_BY_AUTHOR_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_AUTHOR_YEAR, (Book) msg);
-        if(op == Operation.SEARCH_BY_GENRE_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_GENRE_YEAR, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE_AUTHOR_GENRE) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE_AUTHOR_GENRE, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE_AUTHOR_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE_AUTHOR_YEAR, (Book) msg);
-        if(op == Operation.SEARCH_BY_TITLE_GENRE_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_TITLE_GENRE_YEAR, (Book) msg);
-        if(op == Operation.SEARCH_BY_AUTHOR_GENRE_YEAR) temp = new SearchByMessage(Operation.SEARCH_BY_AUTHOR_GENRE_YEAR, (Book) msg);
-
         try {
-            out.writeObject(temp);
+            out.writeObject(MessageFactory.createMessage(op, msg));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     /**
      * Searches for books by the given parameters.
@@ -169,14 +149,13 @@ public class Client {
      */
     private List<Book> receiveMessageBooks() {
         Message m = null;
-        System.out.println("CLIENT | DEBUG INFO: Receiving message...");
         try {
             m = (Message) in.readObject();
-            System.out.println("CLIENT | DEBUG INFO: Received message: " + m.getMessage());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        if(m.getOperation() == Operation.GET_BOOKS) return (List<Book>) m.getMessage();
+        System.out.println("CLIENT | DEBUG INFO: Received message " + m.getOperation().toString());
+        if (m.getOperation() == Operation.GET_BOOKS) return (List<Book>) m.getMessage();
         return null;
     }
 
@@ -212,5 +191,119 @@ public class Client {
         }
         if(m.getOperation() == Operation.GENERIC_RESPONSE) return (Boolean) m.getMessage();
         return null;
+    }
+
+    /**
+     * Receives a message from the server.
+     *
+     * @return the message received as a Date
+     */
+    private Lends receiveMessageLend() {
+        Message m = null;
+        try {
+            m = (Message) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        if(m.getOperation() == Operation.RESP_LEND) return (Lends) m.getMessage();
+        return null;
+    }
+
+    /**
+     * Receives a message from the server.
+     *
+     * @return the message received as a List of Lends
+     */
+    private List<Lends> receiveMessageLends() {
+        Message m = null;
+        try {
+            m = (Message) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        if (m.getOperation() == Operation.GET_LENDS) return (List<Lends>) m.getMessage();
+        return null;
+    }
+
+    /**
+     * Sends a request to the server to create a lend.
+     *
+     * @param lend the lend to create
+     * @return true if the lend was created, false otherwise
+     */
+    public Boolean createLend(Lends lend) {
+        sendMessage(Operation.ADD_LEND, lend);
+        return receiveMessageBoolean();
+    }
+
+    /**
+     * Sends a request to the server to update a lend.
+     *
+     * @param lend the lend to update
+     * @return true if the lend was updated, false otherwise
+     */
+    public Boolean updateLend(Lends lend) {
+        sendMessage(Operation.UPDATE_LEND, lend);
+        return receiveMessageBoolean();
+    }
+
+    /**
+     * Sends a request to the server to read a lend.
+     *
+     * @param id the id of the lend to read
+     * @return the lend with the given id
+     */
+    public Lends readLend(Lends id) {
+        sendMessage(Operation.GET_LEND, id);
+        return receiveMessageLend();
+    }
+
+    /**
+     * Sends a request to the server to get all lends.
+     *
+     * @return a list of all lends
+     */
+    public List<Lends> getLends() {
+        sendMessage(Operation.GET_LENDS, null);
+        return receiveMessageLends();
+    }
+
+    /**
+     * Sends a request to the server to delete a lend.
+     *
+     * @param id the lend to delete
+     * @return true if the lend was created, false otherwise
+     */
+    public Boolean deleteLend(int id) {
+        sendMessage(Operation.REMOVE_LEND, id);
+        return receiveMessageBoolean();
+    }
+
+    /**
+     * Searches for lends by the given parameters.
+     *
+     * @param choice the choice of search
+     * @param book the book of the lend
+     * @param returnDate the return date of the lend
+     * @return a list of lends that match the search criteria
+     */
+    public List<Lends> searchLendsBy(int choice, Book book, Date returnDate) {
+        Lends tmp = new Lends(book, returnDate);
+        if (choice == 0) sendMessage(Operation.SEARCH_LEND_BY_ALL, tmp);
+        if (choice == 1) sendMessage(Operation.SEARCH_LEND_BY_BOOK, tmp);
+        if (choice == 2) sendMessage(Operation.SEARCH_LEND_BY_RETURN_DATE, tmp);
+
+        System.out.println("CLIENT | DEBUG INFO: Sent search request");
+        return receiveMessageLends();
+    }
+
+    /**
+     * Refreshes the list of lends.
+     *
+     * @return a list of all lends
+     */
+    public List<Lends> refreshLends() {
+        sendMessage(Operation.REFRESH_LENDS, null);
+        return receiveMessageLends();
     }
 }

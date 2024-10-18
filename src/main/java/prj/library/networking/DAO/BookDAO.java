@@ -1,0 +1,481 @@
+package prj.library.networking.DAO;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import prj.library.models.Book;
+import prj.library.models.Genre;
+
+import java.sql.*;
+import java.util.List;
+
+public class BookDAO {
+    private String DB_URL;
+    private String DB_USER;
+    private String DB_PASSWORD;
+
+    public BookDAO(String DB_URL, String DB_USER, String DB_PASSWORD) {
+        this.DB_URL = DB_URL;
+        this.DB_USER = DB_USER;
+        this.DB_PASSWORD = DB_PASSWORD;
+    }
+
+
+    /**
+     * Get books by all parameters
+     * @param title the title of the book
+     * @param author the author of the book
+     * @param genre the genre of the book
+     * @param year the year of the book
+     * @return a list of books with the given parameters
+     */
+    public List<Book> getBooksByAllParam(String title, String author, Genre genre, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND author = ? AND genre = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setString(2, author);
+                pstmt.setString(3, genre.toString());
+                pstmt.setInt(4, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Create a book in the database
+     *
+     * @param book the book to create
+     */
+    public void createBook(Book book) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "INSERT INTO books (title, author, year, genre, copies) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, book.getTitle());
+                pstmt.setString(2, book.getAuthor());
+                pstmt.setInt(3, book.getYear());
+                if (book.getGenre() != null) pstmt.setInt(4, book.getGenre().ordinal());
+                else pstmt.setNull(4, Genre.Genre.ordinal());
+                pstmt.setInt(5, book.getCopies());
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Read a book from the database
+     *
+     * @param id the id of the book to read
+     * @return the book with the given id
+     */
+    public Book readBook(int id) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, id);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        Book book = new Book();
+                        book.setId(rs.getInt("id"));
+                        book.setTitle(rs.getString("title"));
+                        book.setAuthor(rs.getString("author"));
+                        book.setYear(rs.getInt("year"));
+                        if (rs.getString("genre") != null) book.setGenre(Genre.valueOf(rs.getString("genre")));
+                        else book.setGenre(Genre.Genre);
+                        book.setCopies(rs.getInt("copies"));
+                        return book;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Sends a request to the server to get all books.
+     *
+     * @return a list of all books
+     */
+    public List<Book> getAllBooks() {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title
+     * @param title the title of the book
+     * @return a list of books with the given title
+     */
+    public List<Book> getBooksByTitle(String title) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by genre
+     * @param genre the genre of the book
+     * @return a list of books with the given genre
+     */
+    public List<Book> getBooksByGenre(Genre genre) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE genre = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, genre.ordinal());
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by author
+     * @param author the author of the book
+     * @return a list of books with the given author
+     */
+    public List<Book> getBooksByAuthor(String author) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE author = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, author);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by year
+     * @param year the year of the book
+     * @return a list of books with the given year
+     */
+    public List<Book> getBooksByYear(int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title and author
+     * @param title the title of the book
+     * @param author the author of the book
+     * @return a list of books with the given title and author
+     */
+    public List<Book> getBooksByTitleAuthor(String title, String author) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND author = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setString(2, author);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title and genre
+     * @param title the title of the book
+     * @param genre the genre of the book
+     * @return a list of books with the given title and genre
+     */
+    public List<Book> getBooksByTitleGenre(String title, Genre genre) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND genre = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setString(2, genre.toString());
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title and year
+     * @param title the title of the book
+     * @param year the year of the book
+     * @return a list of books with the given title and year
+     */
+    public List<Book> getBooksByTitleYear(String title, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setInt(2, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by author and genre
+     * @param author the author of the book
+     * @param genre the genre of the book
+     * @return a list of books with the given author and genre
+     */
+    public List<Book> getBooksByAuthorGenre(String author, Genre genre) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE author = ? AND genre = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, author);
+                pstmt.setString(2, genre.toString());
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by author and year
+     * @param author the author of the book
+     * @param year the year of the book
+     * @return a list of books with the given author and year
+     */
+    public List<Book> getBooksByAuthorYear(String author, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE author = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, author);
+                pstmt.setInt(2, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by genre and year
+     * @param genre the genre of the book
+     * @param year the year of the book
+     * @return a list of books with the given genre and year
+     */
+    public List<Book> getBooksByGenreYear(Genre genre, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE genre = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, genre.toString());
+                pstmt.setInt(2, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title, author and genre
+     * @param title the title of the book
+     * @param author the author of the book
+     * @param genre the genre of the book
+     * @return a list of books with the given title, author and genre
+     */
+    public List<Book> getBooksByTitleAuthorGenre(String title, String author, Genre genre) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND author = ? AND genre = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setString(2, author);
+                pstmt.setString(3, genre.toString());
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title, author and year
+     * @param title the title of the book
+     * @param author the author of the book
+     * @param year the year of the book
+     * @return a list of books with the given title, author and year
+     */
+    public List<Book> getBooksByTitleAuthorYear(String title, String author, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND author = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setString(2, author);
+                pstmt.setInt(3, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by title, genre and year
+     * @param title the title of the book
+     * @param genre the genre of the book
+     * @param year the year of the book
+     * @return a list of books with the given title, genre and year
+     */
+    public List<Book> getBooksByTitleGenreYear(String title, Genre genre, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE title = ? AND genre = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, title);
+                pstmt.setString(2, genre.toString());
+                pstmt.setInt(3, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books by author, genre and year
+     * @param author the author of the book
+     * @param genre the genre of the book
+     * @param year the year of the book
+     * @return a list of books with the given author, genre and year
+     */
+    public List<Book> getBooksByAuthorGenreYear(String author, Genre genre, int year) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM books WHERE author = ? AND genre = ? AND year = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, author);
+                pstmt.setString(2, genre.toString());
+                pstmt.setInt(3, year);
+                return getBooks(pstmt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    /**
+     * Get books chosen by the prepared statement from the database
+     * @param pstmt the prepared statement
+     * @return a list of books
+     * @throws SQLException if the query fails
+     */
+    public List<Book> getBooks(PreparedStatement pstmt) throws SQLException {
+        try (ResultSet rs = pstmt.executeQuery()) {
+            ObservableList<Book> books = FXCollections.observableArrayList();
+            while (rs.next()) {
+                Book book = new Book();
+                book.setId(rs.getInt("id"));
+                book.setTitle(rs.getString("title"));
+                book.setAuthor(rs.getString("author"));
+                book.setYear(rs.getInt("year"));
+                book.setGenre(rs.getInt("genre") != 0 ? Genre.values()[rs.getInt("genre")] : Genre.Genre);
+                book.setCopies(rs.getInt("copies"));
+                books.add(book);
+            }
+            return books;
+        }
+    }
+
+
+    /**
+     * Update a book in the database
+     *
+     * @param book the book to update
+     */
+    public void updateBook(Book book) {
+
+        System.out.println("SERVER | DEBUG INFO: updating book " + book);
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "UPDATE books SET title = ?, author = ?, year = ?, genre = ?, copies = ? WHERE id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, book.getTitle());
+                pstmt.setString(2, book.getAuthor());
+                pstmt.setInt(3, book.getYear());
+                pstmt.setInt(4, book.getGenre().ordinal());
+                pstmt.setInt(5, book.getCopies());
+                pstmt.setInt(6, book.getId());
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Delete a book from the database
+     *
+     * @param id the book to delete
+     */
+    public void deleteBook(int id) {
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "DELETE FROM books WHERE id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, id);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+    }
+
+}

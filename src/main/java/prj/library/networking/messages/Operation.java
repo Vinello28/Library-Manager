@@ -1,6 +1,7 @@
 package prj.library.networking.messages;
 
 public enum Operation {
+    //books CRUD
     ADD_BOOK,
     REMOVE_BOOK,
     GET_BOOKS,
@@ -8,12 +9,7 @@ public enum Operation {
     UPDATE_BOOK,
     RESP_BOOK,
     GENERIC_RESPONSE,
-    ADD_RENTAL,
-    REMOVE_RENTAL,
-    GET_RENTALS,
-    GET_RENTAL,
-    UPDATE_RENTAL,
-    RESP_RENTAL,
+    //search books
     SEARCH_BY_ALL,
     SEARCH_BY_TITLE,
     SEARCH_BY_AUTHOR,
@@ -28,5 +24,18 @@ public enum Operation {
     SEARCH_BY_TITLE_AUTHOR_GENRE,
     SEARCH_BY_TITLE_AUTHOR_YEAR,
     SEARCH_BY_TITLE_GENRE_YEAR,
-    SEARCH_BY_AUTHOR_GENRE_YEAR
+    SEARCH_BY_AUTHOR_GENRE_YEAR,
+    //lends CRUD
+    ADD_LEND,
+    REMOVE_LEND,
+    GET_LENDS,
+    GET_LEND,
+    UPDATE_LEND,
+    RESP_LEND,
+
+    //search lends
+    SEARCH_LEND_BY_ALL,
+    SEARCH_LEND_BY_BOOK,
+    SEARCH_LEND_BY_RETURN_DATE,
+    REFRESH_LENDS
 }

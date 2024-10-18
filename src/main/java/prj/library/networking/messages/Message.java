@@ -7,6 +7,7 @@ public abstract class Message implements Serializable {
     protected Operation operation;
     protected Object message;
 
+
     /**
      * @return operation of the message
      */

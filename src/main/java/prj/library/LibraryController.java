@@ -65,6 +65,9 @@ public class LibraryController {
     @FXML
     private ListView<Book> bookListView;
 
+    @FXML
+    private TextField copiesTextField;
+
 
     private Client client;
 
@@ -94,11 +97,12 @@ public class LibraryController {
         String author = authorTextField.getText();
         int year = Integer.parseInt(yearTextField.getText());
         Genre genre = (Genre) genreChoiceBox.getValue();
-        Book book = new Book(title, author, year, genre);
+        int copies = Integer.parseInt(copiesTextField.getText());
+        Book book = new Book(title, author, year, genre, copies);
         //System.out.println("CLIENT | DEBUG INFO:  adding this book " + book);
         client.createBook(book);
         loadBooks();
-
+        onEmptyButtonClick();
     }
 
     @FXML
@@ -106,7 +110,8 @@ public class LibraryController {
         titleTextField.clear();
         authorTextField.clear();
         yearTextField.clear();
-        genreChoiceBox.setValue(Genre.Genre);
+        fillChoiceBoxes();
+        copiesTextField.clear();
     }
 
     @FXML
@@ -136,6 +141,12 @@ public class LibraryController {
 
         books = client.searchBooksBy(choice, title, author, year, genre);
         bookCheck_N_View(books, searchedListView);
+
+        titleSearchTextField.clear();
+        authorSearchTextField.clear();
+        yearSearchTextField.clear();
+
+        fillChoiceBoxes();
     }
 
 
@@ -162,10 +173,11 @@ public class LibraryController {
         TextField yearField = new TextField(String.valueOf(selectedBook.getYear()));
         ChoiceBox<Genre> genreChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(Genre.values()));
         genreChoiceBox.setValue(selectedBook.getGenre());
+        TextField copiesField = new TextField(String.valueOf(selectedBook.getCopies()));
 
         System.out.println("CLIENT | DEBUG INFO:  editing this book " + selectedBook);
 
-        // Create a grid pane and add the fields.
+        // Create a grid pane and add the fields
         GridPane grid = new GridPane();
         grid.add(new Label("Title:"), 0, 0);
         grid.add(titleField, 1, 0);
@@ -175,6 +187,8 @@ public class LibraryController {
         grid.add(yearField, 1, 2);
         grid.add(new Label("Genre:"), 0, 3);
         grid.add(genreChoiceBox, 1, 3);
+        grid.add(new Label("Copies:"), 0, 4);
+        grid.add(copiesField, 1, 4);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -185,6 +199,7 @@ public class LibraryController {
                 selectedBook.setAuthor(authorField.getText());
                 selectedBook.setYear(Integer.parseInt(yearField.getText()));
                 selectedBook.setGenre(genreChoiceBox.getValue());
+                selectedBook.setCopies(Integer.parseInt(copiesField.getText()));
                 return selectedBook;
             }
             return null;
@@ -202,7 +217,7 @@ public class LibraryController {
      */
     @FXML
     protected void onDeleteButtonClick() {
-       Book selectedBook = (Book) searchedListView.getSelectionModel().getSelectedItem();
+        Book selectedBook = (Book) searchedListView.getSelectionModel().getSelectedItem();
         client.deleteBook(selectedBook.getId());
         loadBooks();
     }
@@ -237,7 +252,7 @@ public class LibraryController {
      * @return true if the list is empty, false otherwise
      */
     private void bookCheck_N_View(List<Book> books, ListView searchedListView) {
-        if(books.isEmpty()) {
+        if(books==null || books.isEmpty()) {
             searchedListView.getItems().add(new Book("No books found", "", 404, Genre.Genre));
         }
         ObservableList<Book> bookTitles = FXCollections.observableArrayList();
