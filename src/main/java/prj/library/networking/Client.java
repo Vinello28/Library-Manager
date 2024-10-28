@@ -221,7 +221,9 @@ public class Client {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        if (m.getOperation() == Operation.GET_LENDS) return (List<Lends>) m.getMessage();
+        System.out.println("CLIENT | DEBUG INFO: Received message " + m.getOperation().toString() + " contents -> " + m.getMessage());
+
+        if (m.getOperation() == Operation.REFRESH_LENDS) return (List<Lends>) m.getMessage();
         return null;
     }
 

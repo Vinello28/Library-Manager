@@ -258,7 +258,8 @@ public class ClientHandler implements Runnable {
      */
     private void handleRefreshLendsOperation(RefreshLendsMessage message, ObjectOutputStream out) throws IOException {
         List<Lends> lends = lendDAO.readAllLends();
-        out.writeObject(MessageFactory.createMessage(Operation.GET_LENDS, new ArrayList<Lends>(lends)));
+        System.out.println("SERVER | DEBUG INFO: sent lends " + lends);
+        out.writeObject(MessageFactory.createMessage(Operation.REFRESH_LENDS, new ArrayList<Lends>(lends)));
     }
 
 }

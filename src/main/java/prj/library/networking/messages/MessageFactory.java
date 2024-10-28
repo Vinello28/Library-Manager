@@ -25,7 +25,7 @@ public class MessageFactory {
                 return new RefreshBooksMessage((ArrayList<Book>) messageContent);
             case GET_LENDS:
             case REFRESH_LENDS:
-                return new RefreshLendsMessage(operation, (List<Lends>) messageContent);
+                return new RefreshLendsMessage(operation, (ArrayList<Lends>) messageContent);
             case SEARCH_BY_TITLE_GENRE:
             case SEARCH_BY_ALL:
             case SEARCH_BY_AUTHOR:
