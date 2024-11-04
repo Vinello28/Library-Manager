@@ -11,7 +11,9 @@ import prj.library.networking.DAO.CustomerDAO;
 import prj.library.networking.DAO.LendsDAO;
 import prj.library.networking.messages.*;
 
-
+/**
+ * Class that handles the client requests.
+ */
 public class ClientHandler extends NetworkInterface implements Runnable {
 
     //private Socket clientSocket;
@@ -25,7 +27,6 @@ public class ClientHandler extends NetworkInterface implements Runnable {
 
     public ClientHandler(Socket socket) {
         super(socket);
-        //this.clientSocket = socket;
         bookDAO = new BookDAO(DB_URL, DB_USER, DB_PASSWORD);
         lendDAO = new LendsDAO(DB_URL, DB_USER, DB_PASSWORD);
         customerDAO = new CustomerDAO(DB_URL, DB_USER, DB_PASSWORD);
@@ -36,7 +37,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
         while (true) {
             Message message = (Message) receive();
 
-            System.out.println("SERVER | DEBUG INFO: received message " + message.getOperation() + " " + message.getMessage());
+            System.out.println("SERVER | INFO: received message " + message.getOperation() + " " + message.getMessage());
 
             switch (message.getOperation()) {
                 case ADD_BOOK:
@@ -95,7 +96,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                     handleSearchCustomersMessage((CustomerMessage) message);
                     break;
                 default:
-                    System.out.println("Invalid operation");
+                    System.out.println("SERVER | ERROR: Invalid operation");
                     break;
             }
         }
@@ -135,7 +136,6 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 results = bookDAO.getBooksByTitleYear(received.getTitle(), received.getYear());
                 break;
             case SEARCH_BY_AUTHOR_GENRE:
-                System.out.println("SERVER | DEBUG INFO: Searching by author and genre " + received.getAuthor() + " " + received.getGenre());
                 results = bookDAO.getBooksByAuthorGenre(received.getAuthor(), received.getGenre());
                 break;
             case SEARCH_BY_AUTHOR_YEAR:
@@ -157,14 +157,13 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 results = bookDAO.getBooksByAuthorGenreYear(received.getAuthor(), received.getGenre(), received.getYear());
                 break;
             default:
-                System.out.println("Invalid operation");
+                System.out.println("SERVER | ERROR: Invalid operation");
                 break;
         }
         send(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList<Book>(results)));
-        System.out.println("SERVER | DEBUG INFO: Results size " + results.size() + " below all the books found");
-        for (Book b : results) {
-            System.out.println("SERVER | DEBUG_INFO: " + b);
-        }
+
+        System.out.println("SERVER | DEBUG INFO: Results size " + results.size()); //TODO: remove before production
+
     }
 
     /**
@@ -188,7 +187,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 break;
             default:
                 ok = false;
-                System.out.println("Invalid operation");
+                System.out.println("SERVER | ERROR: Invalid operation");
                 break;
         }
         if(ok)send(MessageFactory.createMessage(Operation.GET_LENDS, new ArrayList<Lends>(results)));
@@ -221,7 +220,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 send(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList<>(books)));
             break;
             default:
-                System.out.println("Invalid operation");
+                System.out.println("SERVER | ERROR: Invalid operation");
             break;
         }
     }
@@ -253,7 +252,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 send(MessageFactory.createMessage(Operation.RESULT_LENDS, new ArrayList<>(lends)));
             break;
             default:
-                System.out.println("Invalid operation");
+                System.out.println("SERVER | ERROR: Invalid operation");
             break;
         }
     }
@@ -285,7 +284,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 send(MessageFactory.createMessage(Operation.RESULT_CUSTOMERS, new ArrayList<>(customers)));
             break;
             default:
-                System.out.println("Invalid operation");
+                System.out.println("SERVER | ERROR: Invalid operation");
             break;
         }
     }
@@ -332,7 +331,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 break;
             default:
                 ok = false;
-                System.out.println("Invalid operation");
+                System.out.println("SERVER | ERROR: Invalid operation");
                 break;
         }
         if(ok)send(MessageFactory.createMessage(Operation.RESULT_CUSTOMERS, new ArrayList<Customer>(results)));

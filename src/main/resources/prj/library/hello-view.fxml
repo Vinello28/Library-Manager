@@ -145,7 +145,7 @@
        </Tab>
          <Tab fx:id="lendopsTab" text="Lend Ops">
              <content>
-                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
                      <children>
                          <SplitPane dividerPositions="0.19318181818181818" orientation="VERTICAL" prefHeight="178.0" prefWidth="960.0">
                              <items>
@@ -201,6 +201,14 @@
                          </SplitPane>
                      </children>
                  </AnchorPane>
+             </content>
+         </Tab>
+         <Tab text="Add Customer">
+             <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                     <HBox prefHeight="177.0" prefWidth="960.0" />
+                  </children></AnchorPane>
              </content>
          </Tab>
      </tabs>

@@ -2,7 +2,6 @@ package prj.library.networking;
 
 import java.io.*;
 import java.net.*;
-import java.sql.*;
 import java.util.concurrent.*;
 
 public class Server {
@@ -11,15 +10,18 @@ public class Server {
     private ExecutorService pool = Executors.newFixedThreadPool(10);
 
     public void start() {
+        System.out.println("SERVER | INFO: Server is starting...");
+
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server is listening on port " + PORT);
+            System.out.println("SERVER | INFO: Server started");
+            System.out.println("SERVER | INFO: Server is listening on port " + PORT + " at " + InetAddress.getLocalHost().getHostAddress());
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 pool.execute(new ClientHandler(clientSocket));
             }
         } catch (IOException e) {
-            System.out.println("Server exception: " + e.getMessage());
+            System.out.println("SERVER | CRITICAL_ERROR: exception message -> " + e.getMessage());
         }
     }
 
