@@ -1,18 +1,19 @@
 package prj.library.models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Lends implements Serializable {
     private int id;
     private int bookId;
-    private Date returnDate;
-    private String surname;
-    private String cellphone;
+    private int customerId;
+    private LocalDate returnDate;
 
 
-    public Lends(int bookId, Date returnDate, String surname, String cellphone) {
+    public Lends(int bookId, int customerId, LocalDate returnDate) {
         this.bookId = bookId;
+        this.customerId = customerId;
         this.returnDate = returnDate;
     }
 
@@ -24,7 +25,7 @@ public class Lends implements Serializable {
      * @return true if the return date is before the current date
      */
     public boolean isLate() {
-        return returnDate.before(new Date());
+        return LocalDate.now().isAfter(returnDate);
     }
 
     public int getId() {
@@ -35,7 +36,7 @@ public class Lends implements Serializable {
         return bookId;
     }
 
-    public Date getReturnDate() {
+    public LocalDate getReturnDate() {
         return returnDate;
     }
 
@@ -47,35 +48,25 @@ public class Lends implements Serializable {
         this.bookId = bookId;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
 
-    public String getSurname() {
-        return surname;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
-
-    public String getCellphone() {
-        return cellphone;
-    }
-
-    public void setCellphone(String cellphone) {
-        this.cellphone = cellphone;
-    }
-
 
     @Override
     public String toString() {
         return "Lends{" +
                 "id=" + id +
                 ", bookId=" + bookId +
+                ", customerId=" + customerId +
                 ", returnDate='" + returnDate +
-                ", surname='" + surname +
-                ", cellphone='" + cellphone + '\'' +
                 '}';
     }
 }

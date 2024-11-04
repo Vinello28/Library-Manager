@@ -10,6 +10,7 @@ import java.util.List;
 import prj.library.models.Book;
 import prj.library.models.Lends;
 import prj.library.networking.DAO.BookDAO;
+import prj.library.networking.DAO.CustomerDAO;
 import prj.library.networking.DAO.LendsDAO;
 import prj.library.networking.messages.*;
 
@@ -22,6 +23,7 @@ public class ClientHandler implements Runnable {
     private static final String DB_PASSWORD = "Aridaje68"; //password
     private BookDAO bookDAO;
     private LendsDAO lendDAO;
+    private CustomerDAO customerDAO;
 
 
     public ClientHandler(Socket socket) {
@@ -41,40 +43,69 @@ public class ClientHandler implements Runnable {
 
                 System.out.println("SERVER | DEBUG INFO: received message " + message.getOperation()+" "+message.getMessage());
 
-                if(message instanceof BookMessage) {
-                    handleBookOperation((BookMessage) message, out);
-                    continue;
-                } else if (message instanceof SearchBooksMessage) {
-                    System.out.println("SERVER | DEBUG INFO: into book's search handling");
-                    handleSearchBookOperation((SearchBooksMessage) message, out);
-                    continue;
-                }
-                else if(message instanceof LendMessage) {
-                    System.out.println("SERVER | DEBUG INFO: into lend handling");
-                    handleLendOperation((LendMessage) message, out);
-                    continue;
-                }
-                else if(message instanceof SearchLendsMessage) {
-                    System.out.println("SERVER | DEBUG INFO: into lend's search handling");
-                    handleSearchLendOperation((SearchLendsMessage) message, out);
-                    continue;
-                }
-                else if(message instanceof RefreshBooksMessage) {
-                    System.out.println("SERVER | DEBUG INFO: into refresh books");
-                    handleRefreshBooksOperation((RefreshBooksMessage) message, out);
-                    continue;
-                }
-                else if(message instanceof RefreshLendsMessage) {
-                    System.out.println("SERVER | DEBUG INFO: into refresh lends");
-                    handleRefreshLendsOperation((RefreshLendsMessage) message, out);
-                    continue;
-                }
-                else {
-                    System.out.println("What have you... done?");
+                switch (message.getOperation()){
+                    case ADD_BOOK:
+                    case GET_BOOK:
+                    case UPDATE_BOOK:
+                    case REMOVE_BOOK:
+                    case GET_BOOKS:
+                        handleBookOperation((BookMessage) message, out);
+                        break;
+                    case SEARCH_BY_ALL:
+                    case SEARCH_BY_TITLE:
+                    case SEARCH_BY_AUTHOR:
+                    case SEARCH_BY_GENRE:
+                    case SEARCH_BY_YEAR:
+                    case SEARCH_BY_TITLE_AUTHOR:
+                    case SEARCH_BY_TITLE_GENRE:
+                    case SEARCH_BY_TITLE_YEAR:
+                    case SEARCH_BY_AUTHOR_GENRE:
+                    case SEARCH_BY_AUTHOR_YEAR:
+                    case SEARCH_BY_GENRE_YEAR:
+                    case SEARCH_BY_TITLE_AUTHOR_GENRE:
+                    case SEARCH_BY_TITLE_AUTHOR_YEAR:
+                    case SEARCH_BY_TITLE_GENRE_YEAR:
+                    case SEARCH_BY_AUTHOR_GENRE_YEAR:
+                        handleSearchBookOperation((BookMessage) message, out);
+                        break;
+                    case ADD_LEND:
+                    case GET_LEND:
+                    case UPDATE_LEND:
+                    case REMOVE_LEND:
+                    case GET_LENDS:
+                        handleLendOperation((LendMessage) message, out);
+                        break;
+                    case SEARCH_LEND_BY_ALL:
+                    case SEARCH_LEND_BY_BOOK:
+                    case SEARCH_LEND_BY_RETURN_DATE:
+                        handleSearchLendOperation((LendMessage) message, out);
+                        break;
+                    case ADD_CUSTOMER:
+                    case GET_CUSTOMER:
+                    case UPDATE_CUSTOMER:
+                    case REMOVE_CUSTOMER:
+                    case GET_CUSTOMERS:
+                        System.out.println("Customer operations not implemented"); //TODO: implement customer operations
+                        break;
+                    case SEARCH_CUSTOMER_BY_ALL:
+                    case SEARCH_CUSTOMER_BY_NAME:
+                    case SEARCH_CUSTOMER_BY_ADDRESS:
+                    case SEARCH_CUSTOMER_BY_PHONE:
+                    case SEARCH_CUSTOMER_BY_EMAIL:
+                    case SEARCH_CUSTOMER_BY_NAME_ADDRESS:
+                    case SEARCH_CUSTOMER_BY_NAME_PHONE:
+                    case SEARCH_CUSTOMER_BY_NAME_EMAIL:
+                    case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
+                    case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
+                        System.out.println("Customer search operations not implemented"); //TODO: implement customer search operations
+                        break;
+                    default:
+                        System.out.println("Invalid operation");
+                        break;
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Client handler exception: " + e.getMessage());
+            System.out.println("SERVER | CRITICAL_ERROR: Client handler exception-> " + e.getMessage());
         }
     }
 
@@ -83,7 +114,7 @@ public class ClientHandler implements Runnable {
      * @param message the message containing the search operation
      * @param out the output stream
      */
-    private void handleSearchBookOperation(SearchBooksMessage message, ObjectOutputStream out) throws IOException {
+    private void handleSearchBookOperation(BookMessage message, ObjectOutputStream out) throws IOException {
         Book received = message.getBook();
         List <Book> results = null;
         boolean ok = true;
@@ -139,7 +170,7 @@ public class ClientHandler implements Runnable {
                 System.out.println("Invalid operation");
                 break;
         }
-        if(ok)out.writeObject(MessageFactory.createMessage(Operation.GET_BOOKS, new ArrayList<Book>(results)));
+        if(ok)out.writeObject(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList<Book>(results)));
     }
 
     /**
@@ -147,20 +178,20 @@ public class ClientHandler implements Runnable {
      * @param message the message containing the search operation
      * @param out the output stream
      */
-    private void handleSearchLendOperation(SearchLendsMessage message, ObjectOutputStream out) throws IOException {
+    private void handleSearchLendOperation(LendMessage message, ObjectOutputStream out) throws IOException {
         Lends received = message.getLend();
         List <Lends> results = new ArrayList<>();
         boolean ok = true;
 
         switch (message.getOperation()) {
             case SEARCH_LEND_BY_ALL:
-                results = lendDAO.readAllLends();
+                results = lendDAO.getLends();
                 break;
             case SEARCH_LEND_BY_BOOK:
-                results = lendDAO.readLendsByBookId(received.getBookId());
+                results = lendDAO.getLendsByBookId(received.getBookId());
                 break;
             case SEARCH_LEND_BY_RETURN_DATE:
-                results = lendDAO.readLendsByReturnDate((java.sql.Date) received.getReturnDate());
+                results = lendDAO.getLendsByReturnDate(received.getReturnDate());
                 break;
             default:
                 ok = false;
@@ -196,7 +227,7 @@ public class ClientHandler implements Runnable {
             break;
             case GET_BOOKS:
                 List<Book> books = bookDAO.getAllBooks();
-                out.writeObject(MessageFactory.createMessage(Operation.GET_BOOKS, new ArrayList<>(books)));
+                out.writeObject(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList<>(books)));
             break;
             default:
                 System.out.println("Invalid operation");
@@ -225,41 +256,17 @@ public class ClientHandler implements Runnable {
                 out.writeObject(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
             break;
             case REMOVE_LEND:
-                lendDAO.deleteLend(lendMessage.getLend().getId());
+                lendDAO.deleteLend(lendMessage.getLend());
                 out.writeObject(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
             break;
             case GET_LENDS:
-                List<Lends> lends = lendDAO.readAllLends();
-                out.writeObject(MessageFactory.createMessage(Operation.GET_LENDS, new ArrayList<>(lends)));
+                List<Lends> lends = lendDAO.getLends();
+                out.writeObject(MessageFactory.createMessage(Operation.RESULT_LENDS, new ArrayList<>(lends)));
             break;
             default:
                 System.out.println("Invalid operation");
             break;
         }
-    }
-
-    /**
-     * Handles the refresh books operation
-     * @param message the message containing the refresh operation
-     * @param out the output stream
-     * @throws IOException
-     */
-    private void handleRefreshBooksOperation(RefreshBooksMessage message, ObjectOutputStream out) throws IOException {
-        List<Book> books = bookDAO.getAllBooks();
-        out.writeObject(MessageFactory.createMessage(Operation.GET_BOOKS, new ArrayList<Book>(books)));
-        System.out.println("SERVER | DEBUG INFO: sent books " + books);
-    }
-
-    /**
-     * Handles the refresh lends operation
-     * @param message the message containing the refresh operation
-     * @param out the output stream
-     * @throws IOException
-     */
-    private void handleRefreshLendsOperation(RefreshLendsMessage message, ObjectOutputStream out) throws IOException {
-        List<Lends> lends = lendDAO.readAllLends();
-        System.out.println("SERVER | DEBUG INFO: sent lends " + lends);
-        out.writeObject(MessageFactory.createMessage(Operation.REFRESH_LENDS, new ArrayList<Lends>(lends)));
     }
 
 }

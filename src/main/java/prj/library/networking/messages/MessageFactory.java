@@ -1,31 +1,18 @@
 package prj.library.networking.messages;
 
-import prj.library.models.Book;
-import prj.library.models.Lends;
+import prj.library.models.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MessageFactory {
     public static Message createMessage(Operation operation, Object messageContent) {
         switch (operation) {
             case ADD_BOOK:
             case GET_BOOK:
+            case GET_BOOKS:
             case UPDATE_BOOK:
             case REMOVE_BOOK:
             case RESP_BOOK:
-                return new BookMessage(operation, (Book) messageContent);
-            case ADD_LEND:
-            case GET_LEND:
-            case UPDATE_LEND:
-            case REMOVE_LEND:
-            case RESP_LEND:
-                return new LendMessage(operation, (Lends) messageContent);
-            case GET_BOOKS:
-                return new RefreshBooksMessage((ArrayList<Book>) messageContent);
-            case GET_LENDS:
-            case REFRESH_LENDS:
-                return new RefreshLendsMessage(operation, (ArrayList<Lends>) messageContent);
             case SEARCH_BY_TITLE_GENRE:
             case SEARCH_BY_ALL:
             case SEARCH_BY_AUTHOR:
@@ -41,11 +28,34 @@ public class MessageFactory {
             case SEARCH_BY_TITLE_YEAR:
             case SEARCH_BY_YEAR:
             case SEARCH_BY_TITLE_GENRE_YEAR:
-                return new SearchBooksMessage(operation, (Book) messageContent);
+                return new BookMessage(operation, (Book) messageContent);
+            case ADD_LEND:
+            case GET_LEND:
+            case UPDATE_LEND:
+            case REMOVE_LEND:
+            case RESP_LEND:
+            case GET_LENDS:
             case SEARCH_LEND_BY_ALL:
             case SEARCH_LEND_BY_BOOK:
             case SEARCH_LEND_BY_RETURN_DATE:
-                return new SearchLendsMessage(operation, (Lends) messageContent);
+                return new LendMessage(operation, (Lends) messageContent);
+            case RESULT_BOOKS:
+                return new BooksListMessage(operation, (ArrayList<Book>) messageContent);
+            case RESULT_LENDS:
+            case REFRESH_LENDS:
+                return new LendsListMessage(operation, (ArrayList<Lends>) messageContent);
+            case ADD_CUSTOMER:
+            case GET_CUSTOMER:
+            case UPDATE_CUSTOMER:
+            case REMOVE_CUSTOMER:
+            case GET_CUSTOMERS:
+            case RESP_CUSTOMER:
+            case SEARCH_CUSTOMER_BY_ALL:
+            case SEARCH_CUSTOMER_BY_NAME:
+            case SEARCH_CUSTOMER_BY_PHONE:
+                return new CustomerMessage(operation, (Customer) messageContent);
+            case RESULT_CUSTOMERS:
+                return new CustomersListMessage(operation, (ArrayList<Customer>) messageContent);
             case GENERIC_RESPONSE:
                 return new GenericMessage((Boolean) messageContent);
             default:

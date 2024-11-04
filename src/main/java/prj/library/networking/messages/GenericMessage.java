@@ -10,4 +10,8 @@ public class GenericMessage extends Message {
         this.operation = Operation.GENERIC_RESPONSE;
         this.message = (Boolean) message;
     }
+
+    public Boolean getResponse() {
+        return (Boolean) message;
+    }
 }

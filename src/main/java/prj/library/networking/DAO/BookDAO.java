@@ -8,7 +8,7 @@ import prj.library.models.Genre;
 import java.sql.*;
 import java.util.List;
 
-public class BookDAO {
+public class BookDAO implements BookDAOInterface {
     private String DB_URL;
     private String DB_USER;
     private String DB_PASSWORD;
@@ -20,14 +20,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by all parameters
-     * @param title the title of the book
-     * @param author the author of the book
-     * @param genre the genre of the book
-     * @param year the year of the book
-     * @return a list of books with the given parameters
-     */
     public synchronized List<Book> getBooksByAllParam(String title, String author, Genre genre, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND author = ? AND genre = ? AND year = ?";
@@ -44,11 +36,7 @@ public class BookDAO {
         return null;
     }
 
-    /**
-     * Create a book in the database
-     *
-     * @param book the book to create
-     */
+
     public synchronized void createBook(Book book) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "INSERT INTO books (title, author, year, genre, copies) VALUES (?, ?, ?, ?, ?)";
@@ -66,12 +54,7 @@ public class BookDAO {
         }
     }
 
-    /**
-     * Read a book from the database
-     *
-     * @param id the id of the book to read
-     * @return the book with the given id
-     */
+
     public synchronized Book readBook(int id) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE id = ?";
@@ -98,11 +81,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Sends a request to the server to get all books.
-     *
-     * @return a list of all books
-     */
     public synchronized List<Book> getAllBooks() {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books";
@@ -116,11 +94,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title
-     * @param title the title of the book
-     * @return a list of books with the given title
-     */
     public synchronized List<Book> getBooksByTitle(String title) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ?";
@@ -135,11 +108,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by genre
-     * @param genre the genre of the book
-     * @return a list of books with the given genre
-     */
     public synchronized List<Book> getBooksByGenre(Genre genre) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE genre = ?";
@@ -154,11 +122,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by author
-     * @param author the author of the book
-     * @return a list of books with the given author
-     */
     public synchronized List<Book> getBooksByAuthor(String author) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE author = ?";
@@ -173,11 +136,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by year
-     * @param year the year of the book
-     * @return a list of books with the given year
-     */
     public synchronized List<Book> getBooksByYear(int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE year = ?";
@@ -192,12 +150,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title and author
-     * @param title the title of the book
-     * @param author the author of the book
-     * @return a list of books with the given title and author
-     */
     public synchronized List<Book> getBooksByTitleAuthor(String title, String author) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND author = ?";
@@ -213,12 +165,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title and genre
-     * @param title the title of the book
-     * @param genre the genre of the book
-     * @return a list of books with the given title and genre
-     */
     public synchronized List<Book> getBooksByTitleGenre(String title, Genre genre) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND genre = ?";
@@ -234,12 +180,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title and year
-     * @param title the title of the book
-     * @param year the year of the book
-     * @return a list of books with the given title and year
-     */
     public synchronized List<Book> getBooksByTitleYear(String title, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND year = ?";
@@ -255,12 +195,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by author and genre
-     * @param author the author of the book
-     * @param genre the genre of the book
-     * @return a list of books with the given author and genre
-     */
     public synchronized List<Book> getBooksByAuthorGenre(String author, Genre genre) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE author = ? AND genre = ?";
@@ -276,12 +210,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by author and year
-     * @param author the author of the book
-     * @param year the year of the book
-     * @return a list of books with the given author and year
-     */
     public synchronized List<Book> getBooksByAuthorYear(String author, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE author = ? AND year = ?";
@@ -297,12 +225,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by genre and year
-     * @param genre the genre of the book
-     * @param year the year of the book
-     * @return a list of books with the given genre and year
-     */
     public synchronized List<Book> getBooksByGenreYear(Genre genre, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE genre = ? AND year = ?";
@@ -318,13 +240,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title, author and genre
-     * @param title the title of the book
-     * @param author the author of the book
-     * @param genre the genre of the book
-     * @return a list of books with the given title, author and genre
-     */
     public synchronized List<Book> getBooksByTitleAuthorGenre(String title, String author, Genre genre) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND author = ? AND genre = ?";
@@ -341,13 +256,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title, author and year
-     * @param title the title of the book
-     * @param author the author of the book
-     * @param year the year of the book
-     * @return a list of books with the given title, author and year
-     */
     public synchronized List<Book> getBooksByTitleAuthorYear(String title, String author, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND author = ? AND year = ?";
@@ -364,13 +272,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by title, genre and year
-     * @param title the title of the book
-     * @param genre the genre of the book
-     * @param year the year of the book
-     * @return a list of books with the given title, genre and year
-     */
     public synchronized List<Book> getBooksByTitleGenreYear(String title, Genre genre, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE title = ? AND genre = ? AND year = ?";
@@ -387,13 +288,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books by author, genre and year
-     * @param author the author of the book
-     * @param genre the genre of the book
-     * @param year the year of the book
-     * @return a list of books with the given author, genre and year
-     */
     public synchronized List<Book> getBooksByAuthorGenreYear(String author, Genre genre, int year) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE author = ? AND genre = ? AND year = ?";
@@ -410,12 +304,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Get books chosen by the prepared statement from the database
-     * @param pstmt the prepared statement
-     * @return a list of books
-     * @throws SQLException if the query fails
-     */
     public synchronized List<Book> getBooks(PreparedStatement pstmt) throws SQLException {
         try (ResultSet rs = pstmt.executeQuery()) {
             ObservableList<Book> books = FXCollections.observableArrayList();
@@ -434,11 +322,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Update a book in the database
-     *
-     * @param book the book to update
-     */
     public synchronized void updateBook(Book book) {
 
         System.out.println("SERVER | DEBUG INFO: updating book " + book);
@@ -460,11 +343,6 @@ public class BookDAO {
     }
 
 
-    /**
-     * Delete a book from the database
-     *
-     * @param id the book to delete
-     */
     public synchronized void deleteBook(int id) {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {

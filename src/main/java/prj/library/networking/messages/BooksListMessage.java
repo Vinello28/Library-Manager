@@ -4,14 +4,14 @@ import prj.library.models.Book;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefreshBooksMessage extends Message {
+public class BooksListMessage extends Message {
 
 
-    public RefreshBooksMessage() {
+    public BooksListMessage() {
     }
 
-    public RefreshBooksMessage(ArrayList<Book> message) {
-        this.operation = Operation.GET_BOOKS;
+    public BooksListMessage(Operation operation, ArrayList<Book> message) {
+        this.operation = operation;
         this.message = message;
     }
 
