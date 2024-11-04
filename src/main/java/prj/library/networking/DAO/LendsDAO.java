@@ -18,8 +18,7 @@ public class LendsDAO implements LendsDAOInterface {
         this.DB_PASSWORD = DB_PASSWORD;
     }
 
-
-    public void createLend(Lends lend) {
+    public synchronized void createLend(Lends lend) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "INSERT INTO lends (book_id, customer_id, return_date) VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -38,8 +37,7 @@ public class LendsDAO implements LendsDAOInterface {
         }
     }
 
-
-    public void updateLend(Lends lend) {
+    public synchronized void updateLend(Lends lend) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "UPDATE lends SET book_id = ?, customer_id = ?, return_date = ? WHERE lend_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -54,8 +52,7 @@ public class LendsDAO implements LendsDAOInterface {
         }
     }
 
-
-    public void deleteLend(Lends lend) {
+    public synchronized void deleteLend(Lends lend) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "DELETE FROM lends WHERE lend_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -67,8 +64,7 @@ public class LendsDAO implements LendsDAOInterface {
         }
     }
 
-
-    public Lends readLend(int id) {
+    public synchronized Lends readLend(int id) {
         Lends lend = null;
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends WHERE lend_id = ?";
@@ -86,8 +82,7 @@ public class LendsDAO implements LendsDAOInterface {
         return lend;
     }
 
-
-    public List<Lends> getLends() {
+    public synchronized List<Lends> getLends() {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends";
@@ -105,8 +100,7 @@ public class LendsDAO implements LendsDAOInterface {
         return lends;
     }
 
-
-    public List<Lends> getLendsByCustomerId(int customerId) {
+    public synchronized List<Lends> getLendsByCustomerId(int customerId) {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends WHERE customer_id = ?";
@@ -125,8 +119,7 @@ public class LendsDAO implements LendsDAOInterface {
         return lends;
     }
 
-
-    public List<Lends> getLendsByBookId(int bookId) {
+    public synchronized List<Lends> getLendsByBookId(int bookId) {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends WHERE book_id = ?";
@@ -145,7 +138,7 @@ public class LendsDAO implements LendsDAOInterface {
         return lends;
     }
 
-    public List<Lends> getLateLends() {
+    public synchronized List<Lends> getLateLends() {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends";
@@ -163,7 +156,7 @@ public class LendsDAO implements LendsDAOInterface {
         return lends;
     }
 
-    public List<Lends> getLendsByReturnDate(LocalDate returnDate) {
+    public synchronized List<Lends> getLendsByReturnDate(LocalDate returnDate) {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends WHERE return_date = ?";

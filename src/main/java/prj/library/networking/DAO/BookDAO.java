@@ -26,7 +26,7 @@ public class BookDAO implements BookDAOInterface {
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, title);
                 pstmt.setString(2, author);
-                pstmt.setString(3, genre.toString());
+                pstmt.setInt(3, genre.ordinal());
                 pstmt.setInt(4, year);
                 return getBooks(pstmt);
             }
@@ -170,7 +170,7 @@ public class BookDAO implements BookDAOInterface {
             String sql = "SELECT * FROM books WHERE title = ? AND genre = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, title);
-                pstmt.setString(2, genre.toString());
+                pstmt.setInt(2, genre.ordinal());
                 return getBooks(pstmt);
             }
         } catch (SQLException e) {
@@ -200,7 +200,7 @@ public class BookDAO implements BookDAOInterface {
             String sql = "SELECT * FROM books WHERE author = ? AND genre = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, author);
-                pstmt.setString(2, genre.toString());
+                pstmt.setInt(2, genre.ordinal());
                 return getBooks(pstmt);
             }
         } catch (SQLException e) {
@@ -229,7 +229,7 @@ public class BookDAO implements BookDAOInterface {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT * FROM books WHERE genre = ? AND year = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, genre.toString());
+                pstmt.setInt(1, genre.ordinal());
                 pstmt.setInt(2, year);
                 return getBooks(pstmt);
             }
@@ -246,7 +246,7 @@ public class BookDAO implements BookDAOInterface {
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, title);
                 pstmt.setString(2, author);
-                pstmt.setString(3, genre.toString());
+                pstmt.setInt(3, genre.ordinal());
                 return getBooks(pstmt);
             }
         } catch (SQLException e) {
@@ -277,7 +277,7 @@ public class BookDAO implements BookDAOInterface {
             String sql = "SELECT * FROM books WHERE title = ? AND genre = ? AND year = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, title);
-                pstmt.setString(2, genre.toString());
+                pstmt.setInt(2, genre.ordinal());
                 pstmt.setInt(3, year);
                 return getBooks(pstmt);
             }
@@ -293,7 +293,7 @@ public class BookDAO implements BookDAOInterface {
             String sql = "SELECT * FROM books WHERE author = ? AND genre = ? AND year = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, author);
-                pstmt.setString(2, genre.toString());
+                pstmt.setInt(2, genre.ordinal());
                 pstmt.setInt(3, year);
                 return getBooks(pstmt);
             }
@@ -304,7 +304,7 @@ public class BookDAO implements BookDAOInterface {
     }
 
 
-    public synchronized List<Book> getBooks(PreparedStatement pstmt) throws SQLException {
+    public List<Book> getBooks(PreparedStatement pstmt) throws SQLException {
         try (ResultSet rs = pstmt.executeQuery()) {
             ObservableList<Book> books = FXCollections.observableArrayList();
             while (rs.next()) {
@@ -317,6 +317,7 @@ public class BookDAO implements BookDAOInterface {
                 book.setCopies(rs.getInt("copies"));
                 books.add(book);
             }
+            System.out.println("SERVER | DEBUG INFO: returning books " + books);
             return books;
         }
     }
