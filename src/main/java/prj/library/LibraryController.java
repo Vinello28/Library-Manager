@@ -436,6 +436,17 @@ public class LibraryController {
         alert.showAndWait();
     }
 
+    /**
+     * When the search lend button is clicked, the lends are searched and displayed in the list view.
+     */
+    @FXML
+    public void onSearchLendButtonClick(){
+        //TODO: implement search lends, that can bu performed using books title or customer email or between dates
+
+        //List<Lends> lends = clientController.searchLendsBy();
+    }
+
+    @FXML
     public void onAddCustomerButtonClick() {
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
         if (selectedCustomer != null) {
@@ -443,8 +454,8 @@ public class LibraryController {
         } else {
             addCustomer();
         }
-        //loadCustomers();
         onRevertCustomerButtonClick();
+        loadCustomers();
     }
 
     private void updateCustomer(Customer customer) {
@@ -459,8 +470,8 @@ public class LibraryController {
     private void addCustomer() {
         Customer newCustomer = new Customer(
                 customerNameTextField.getText(),
-                customerPhoneTextField.getText(),
                 customerEmailTextField.getText(),
+                customerPhoneTextField.getText(),
                 customerAddressTextField.getText()
         );
         clientController.createCustomer(newCustomer);

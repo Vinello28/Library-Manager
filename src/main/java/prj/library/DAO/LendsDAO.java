@@ -1,4 +1,4 @@
-package prj.library.networking.DAO;
+package prj.library.DAO;
 
 import prj.library.models.Lends;
 

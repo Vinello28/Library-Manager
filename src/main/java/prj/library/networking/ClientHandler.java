@@ -6,9 +6,9 @@ import java.util.List;
 import prj.library.models.Book;
 import prj.library.models.Customer;
 import prj.library.models.Lends;
-import prj.library.networking.DAO.BookDAO;
-import prj.library.networking.DAO.CustomerDAO;
-import prj.library.networking.DAO.LendsDAO;
+import prj.library.DAO.BookDAO;
+import prj.library.DAO.CustomerDAO;
+import prj.library.DAO.LendsDAO;
 import prj.library.networking.messages.*;
 
 /**

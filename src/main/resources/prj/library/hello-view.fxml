@@ -161,7 +161,7 @@
                                                  <Glow level="0.45" />
                                              </effect>
                                          </ChoiceBox>
-                                         <Button fx:id="searchLendButton" layoutX="735.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
+                                         <Button fx:id="searchLendButton" layoutX="735.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchLendButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
                                              <font>
                                                  <Font name="JetBrains Mono SemiBold" size="15.0" />
                                              </font>

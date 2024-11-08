@@ -1,4 +1,4 @@
-package prj.library.networking.DAO;
+package prj.library.DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
