@@ -206,9 +206,58 @@
          <Tab text="Add Customer">
              <content>
                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <children>
-                     <HBox prefHeight="177.0" prefWidth="960.0" />
-                  </children></AnchorPane>
+                     <children>
+                         <AnchorPane layoutX="-29.0" layoutY="-3.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                         <SplitPane dividerPositions="0.3736951983298539" layoutY="1.0" prefHeight="173.0" prefWidth="960.0">
+                             <items>
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="350.0">
+                                     <children>
+                                         <TextField fx:id="customerNameTextField" layoutX="5.0" layoutY="5.0" prefHeight="35.0" prefWidth="166.0" promptText="Customer's name">
+                                             <font>
+                                                 <Font name="Arial" size="12.0" />
+                                             </font>
+                                         </TextField>
+                                         <TextField fx:id="customerPhoneTextField" layoutX="5.0" layoutY="44.0" prefHeight="35.0" prefWidth="167.0" promptText="Enter phone number">
+                                             <font>
+                                                 <Font name="Arial" size="12.0" />
+                                             </font>
+                                         </TextField>
+                                         <TextField fx:id="customerEmailTextField" layoutX="5.0" layoutY="83.0" prefHeight="35.0" prefWidth="168.0" promptText="Email address">
+                                             <font>
+                                                 <Font name="Arial" size="12.0" />
+                                             </font>
+                                         </TextField>
+                                         <TextField fx:id="customerAddressTextField" layoutX="4.0" layoutY="123.0" prefHeight="36.0" prefWidth="169.0" promptText="Customer's address">
+                                             <font>
+                                                 <Font name="Arial" size="12.0" />
+                                             </font>
+                                         </TextField>
+                                         <Button fx:id="addCustomerButton" layoutX="224.0" layoutY="40.0" mnemonicParsing="false" onAction="#onAddCustomerButtonClick" prefHeight="37.0" prefWidth="101.0" text="Save">
+                                             <font>
+                                                 <Font name="JetBrains Mono Medium" size="20.0" />
+                                             </font>
+                                             <effect>
+                                                 <Blend />
+                                             </effect></Button>
+                                 <Button fx:id="revertCustomerButton" layoutX="224.0" layoutY="103.0" mnemonicParsing="false" onAction="#onRevertCustomerButtonClick" prefHeight="37.0" prefWidth="101.0" text="Revert">
+                                    <font>
+                                       <Font name="JetBrains Mono Medium" size="20.0" />
+                                    </font>
+                                    <effect>
+                                       <Blend />
+                                    </effect>
+                                 </Button>
+                                     </children>
+                                 </AnchorPane>
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="568.0">
+                              <children>
+                                 <ListView fx:id="customerListView" prefHeight="173.0" prefWidth="597.0" />
+                              </children>
+                                 </AnchorPane>
+                             </items>
+                         </SplitPane>
+                     </children>
+                 </AnchorPane>
              </content>
          </Tab>
      </tabs>

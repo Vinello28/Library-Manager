@@ -2,6 +2,7 @@ package prj.library;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import prj.library.models.Book;
@@ -93,6 +94,27 @@ public class LibraryController {
     @FXML
     private Tab lendopsTab;
 
+    @FXML
+    private Button addCustomerButton;
+
+    @FXML
+    private Button revertCustomerButton;
+
+    @FXML
+    private TextField customerNameTextField;
+
+    @FXML
+    private TextField customerPhoneTextField;
+
+    @FXML
+    private TextField customerEmailTextField;
+
+    @FXML
+    private TextField customerAddressTextField;
+
+    @FXML
+    private ListView<Customer> customerListView;
+
 
 
     private ClientController clientController;
@@ -109,8 +131,23 @@ public class LibraryController {
     @FXML
     public void initialize() {
         loadBooks();
-        loadLends();
+        //loadLends();  TODO: remove this.
         fillChoiceBoxes();
+        loadCustomers();
+
+        //Add listener to the ListView
+        customerListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                //Update TextFields with selected customer data
+                customerNameTextField.setText(newValue.getName());
+                customerPhoneTextField.setText(newValue.getPhone());
+                customerEmailTextField.setText(newValue.getEmail());
+                customerAddressTextField.setText(newValue.getAddress());
+
+                //Change button text to "Update"
+                addCustomerButton.setText("Update");
+            }
+        });
     }
 
     @FXML
@@ -397,5 +434,54 @@ public class LibraryController {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public void onAddCustomerButtonClick() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+        if (selectedCustomer != null) {
+            updateCustomer(selectedCustomer);
+        } else {
+            addCustomer();
+        }
+        //loadCustomers();
+        onRevertCustomerButtonClick();
+    }
+
+    private void updateCustomer(Customer customer) {
+        customer.setName(customerNameTextField.getText());
+        customer.setPhone(customerPhoneTextField.getText());
+        customer.setEmail(customerEmailTextField.getText());
+        customer.setAddress(customerAddressTextField.getText());
+
+        clientController.updateCustomer(customer);
+    }
+
+    private void addCustomer() {
+        Customer newCustomer = new Customer(
+                customerNameTextField.getText(),
+                customerPhoneTextField.getText(),
+                customerEmailTextField.getText(),
+                customerAddressTextField.getText()
+        );
+        clientController.createCustomer(newCustomer);
+    }
+
+    private void loadCustomers() {
+        List<Customer> customers = clientController.getCustomers();
+        if (customers == null || customers.isEmpty()) {
+            showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
+            return;
+        }
+        ObservableList<Customer> customerNames = FXCollections.observableArrayList();
+        customerNames.addAll(customers);
+        customerListView.setItems(customerNames);
+    }
+
+    public void onRevertCustomerButtonClick() {
+        customerNameTextField.clear();
+        customerPhoneTextField.clear();
+        customerEmailTextField.clear();
+        customerAddressTextField.clear();
+        addCustomerButton.setText("Add");
     }
 }

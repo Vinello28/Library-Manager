@@ -265,6 +265,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
         switch (customerMessage.getOperation()) {
             case ADD_CUSTOMER:
                 customerDAO.createCustomer(customerMessage.getCustomer());
+                System.out.println("SERVER | INFO: Customer added");
                 send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
             break;
             case GET_CUSTOMER:
@@ -281,6 +282,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
             break;
             case GET_CUSTOMERS:
                 List<Customer> customers = customerDAO.readAllCustomers();
+                System.out.println("SERVER | INFO: Sending customers " + customers.size());
                 send(MessageFactory.createMessage(Operation.RESULT_CUSTOMERS, new ArrayList<>(customers)));
             break;
             default:
