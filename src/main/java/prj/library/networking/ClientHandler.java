@@ -36,7 +36,10 @@ public class ClientHandler extends NetworkInterface implements Runnable {
     public void run() {
         while (true) {
             Message message = (Message) receive();
-
+            if (message == null) {
+                System.out.println("SERVER | ERROR: Message is null");
+                break;
+            }
             System.out.println("SERVER | INFO: received message " + message.getOperation() + " " + message.getMessage());
 
             switch (message.getOperation()) {
@@ -333,6 +336,15 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 break;
             case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
                 results = customerDAO.searchCustomerByNameAndPhoneNumberAndEmail(received.getName(), received.getPhone(), received.getEmail());
+                break;
+                case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
+                results = customerDAO.searchCustomerByNameAndPhoneNumberAndAddress(received.getName(), received.getPhone(), received.getAddress());
+                break;
+            case SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS:
+                results = customerDAO.searchCustomerByNameAndEmailAndAddress(received.getName(), received.getEmail(), received.getAddress());
+                break;
+            case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
+                results = customerDAO.searchCustomerByPhoneNumberAndEmailAndAddress(received.getPhone(), received.getEmail(), received.getAddress());
                 break;
             case SEARCH_CUSTOMER_BY_ALL:
                 results = customerDAO.searchCustomerByAll(received.getName(), received.getPhone(), received.getEmail(), received.getAddress());

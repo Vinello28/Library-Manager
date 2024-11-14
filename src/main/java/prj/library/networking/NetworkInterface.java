@@ -19,7 +19,7 @@ public class NetworkInterface implements NIInterface {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error creating network interface: " + e.getMessage());
         }
     }
 
@@ -37,6 +37,8 @@ public class NetworkInterface implements NIInterface {
             return in.readObject();
         } catch (Exception e) {
             System.out.println("Error receiving object: " + e.getMessage());
+            close();
+            Thread.currentThread().interrupt();
         }
         return null;
     }

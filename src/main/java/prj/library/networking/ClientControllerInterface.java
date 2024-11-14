@@ -152,7 +152,7 @@ public interface ClientControllerInterface {
      * @param id the customer to delete
      * @return true if the customer was created, false otherwise
      */
-    Boolean deleteCustomer(int id);
+    Boolean deleteCustomer(Customer customer);
 
     /**
      * Searches for customers by the given parameters.

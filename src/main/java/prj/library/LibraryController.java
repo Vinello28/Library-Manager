@@ -443,7 +443,6 @@ public class LibraryController {
      */
     @FXML
     public void onSearchLendButtonClick(){
-        //TODO: implement search lends, that can bu performed using books title or customer email or between dates
         String title = titleLendTextField.getText();
         LocalDate date = lendSearchDatePicker.getValue();
         String cell = cellLendTextField.getText();
@@ -562,5 +561,44 @@ public class LibraryController {
             //loadBooks(); //TODO: development purposes
             loadLends(); //TODO: necessary?
         });
+    }
+
+    public void onDeleteCustomerButtonClick() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+        System.out.println("CLIENT | DEBUG INFO:  deleting this customer " + selectedCustomer);
+        clientController.deleteCustomer(selectedCustomer);
+        loadCustomers();
+    }
+
+    public void onSearchCustomerButtonClick(){
+        String name = customerNameTextField.getText();
+        String phone = customerPhoneTextField.getText();
+        String email = customerEmailTextField.getText();
+        String address = customerAddressTextField.getText();
+        int choice;
+        if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 0;
+        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 1;
+        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 2;
+        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 3;
+        else if(name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 4;
+        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 5;
+        else if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 6;
+        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 7;
+        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 8;
+        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 9;
+        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 10;
+        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 11;
+        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 12;
+        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 13;
+        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 14;
+        else choice = 15;
+
+        List<Customer> customers = clientController.searchCustomersBy(choice, new Customer(name, email, phone, address));
+        if(customers==null || customers.isEmpty()) showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
+        else {
+            ObservableList<Customer> customerNames = FXCollections.observableArrayList();
+            customerNames.addAll(customers);
+            customerListView.setItems(customerNames);
+        }
     }
 }

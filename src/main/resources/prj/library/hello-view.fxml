@@ -223,20 +223,30 @@
                                                  <Font name="Arial" size="12.0" />
                                              </font>
                                          </TextField>
-                                         <Button fx:id="addCustomerButton" layoutX="224.0" layoutY="40.0" mnemonicParsing="false" onAction="#onAddCustomerButtonClick" prefHeight="37.0" prefWidth="101.0" text="Save">
+                                         <Button fx:id="addCustomerButton" layoutX="224.0" layoutY="9.0" mnemonicParsing="false" onAction="#onAddCustomerButtonClick" prefHeight="37.0" prefWidth="91.0" text="save">
                                              <font>
-                                                 <Font name="JetBrains Mono Medium" size="20.0" />
+                                                 <Font name="JetBrains Mono Medium" size="18.0" />
                                              </font>
                                              <effect>
                                                  <Blend />
                                              </effect></Button>
-                                 <Button fx:id="revertCustomerButton" layoutX="224.0" layoutY="103.0" mnemonicParsing="false" onAction="#onRevertCustomerButtonClick" prefHeight="37.0" prefWidth="101.0" text="Revert">
+                                 <Button fx:id="revertCustomerButton" layoutX="224.0" layoutY="46.0" mnemonicParsing="false" onAction="#onRevertCustomerButtonClick" prefHeight="37.0" prefWidth="91.0" text="revert">
                                     <font>
-                                       <Font name="JetBrains Mono Medium" size="20.0" />
+                                       <Font name="JetBrains Mono Medium" size="18.0" />
                                     </font>
                                     <effect>
                                        <Blend />
                                     </effect>
+                                 </Button>
+                                 <Button fx:id="searchCustomerButton" layoutX="224.0" layoutY="83.0" mnemonicParsing="false" onAction="#onSearchCustomerButtonClick" prefHeight="37.0" prefWidth="91.0" text="search">
+                                    <font>
+                                       <Font name="JetBrains Mono Medium" size="18.0" />
+                                    </font>
+                                 </Button>
+                                 <Button fx:id="deleteCustomerButton" layoutX="224.0" layoutY="120.0" mnemonicParsing="false" onAction="#onDeleteCustomerButtonClick" prefHeight="37.0" prefWidth="91.0" text="delete">
+                                    <font>
+                                       <Font name="JetBrains Mono Medium" size="18.0" />
+                                    </font>
                                  </Button>
                                      </children>
                                  </AnchorPane>

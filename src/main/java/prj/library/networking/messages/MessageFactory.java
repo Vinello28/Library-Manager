@@ -53,13 +53,27 @@ public class MessageFactory {
             case SEARCH_CUSTOMER_BY_ALL:
             case SEARCH_CUSTOMER_BY_NAME:
             case SEARCH_CUSTOMER_BY_PHONE:
+            case SEARCH_CUSTOMER_BY_EMAIL:
+            case SEARCH_CUSTOMER_BY_ADDRESS:
+            case SEARCH_CUSTOMER_BY_NAME_PHONE:
+            case SEARCH_CUSTOMER_BY_NAME_EMAIL:
+            case SEARCH_CUSTOMER_BY_NAME_ADDRESS:
+            case SEARCH_CUSTOMER_BY_PHONE_EMAIL:
+            case SEARCH_CUSTOMER_BY_PHONE_ADDRESS:
+            case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
+            case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
+            case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
+            case SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS:
+            case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
                 return new CustomerMessage(operation, (Customer) messageContent);
             case RESULT_CUSTOMERS:
                 return new CustomersListMessage(operation, (ArrayList<Customer>) messageContent);
             case GENERIC_RESPONSE:
                 return new GenericMessage((Boolean) messageContent);
             default:
-                throw new IllegalArgumentException("Invalid operation: " + operation);
+                //throw new IllegalArgumentException("Invalid operation: " + operation); TODO: necessary?
+                System.out.println("Invalid operation: " + operation);
+                return null;
         }
     }
 }
