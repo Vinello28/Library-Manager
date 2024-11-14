@@ -87,6 +87,10 @@ public class Book implements Serializable {
         this.copies = copies;
     }
 
+    public void setAvailable(){
+        copies++;
+    }
+
     @Override
     public String toString() {
         if (genre == null) genre = Genre.Genre;

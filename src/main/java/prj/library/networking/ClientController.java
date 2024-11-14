@@ -5,11 +5,13 @@ import prj.library.models.Customer;
 import prj.library.models.Genre;
 import prj.library.models.Lends;
 import prj.library.networking.messages.Operation;
-
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The ClientController class is responsible for handling the communication between the client and the server.
+ */
 public class ClientController implements ClientControllerInterface {
     private Client client;
 
@@ -74,18 +76,32 @@ public class ClientController implements ClientControllerInterface {
         return client.receiveMessageLends();
     }
 
-    public Boolean deleteLend(int id) {
-        Lends lend = new Lends(id, 0, null);
+    public Boolean deleteLend(Lends lend) {
         client.sendMessage(Operation.REMOVE_LEND, lend);
         return client.receiveMessageBoolean();
     }
 
-    public List<Lends> searchLendsBy(int choice, Book book, Date returnDate) {
-        Lends tmp = new Lends(book, returnDate);
+    public List<Lends> searchLendsBy(int choice, String title, LocalDate returnDate, String cell) {
+        Book book = new Book(0, title, "", 0, Genre.Genre, 0);
+        Customer customer = new Customer(0, "", "", "", cell);
+        List<Customer> c = searchCustomersBy(2, customer);
+        List<Book> b = searchBooksBy(1, book);
+
+        if(b.isEmpty()) book = new Book(0, "", "", 0, Genre.Genre, 0);
+        else book = b.get(0);
+        if (c.isEmpty()) customer = new Customer(0, "", "", "", "");
+        else customer = c.get(0);
+
+        Lends tmp = new Lends(book.getId(), customer.getId(), returnDate);
+        System.out.println("CLIENT | DEBUG INFO: now choice is " + choice); //TODO: remove after debug
+        System.out.println("CLIENT | DEBUG INFO: now the search_prompt_lend is " + tmp); //TODO: remove after debug
+
+
         Operation m = null;
-        if (choice == 0) m = Operation.SEARCH_LEND_BY_ALL;
-        if (choice == 1) m = Operation.SEARCH_LEND_BY_BOOK;
+        if (choice == 0 && !b.isEmpty() && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_ALL;
+        if (choice == 1 && !b.isEmpty()) m = Operation.SEARCH_LEND_BY_BOOK;
         if (choice == 2) m = Operation.SEARCH_LEND_BY_RETURN_DATE;
+        if (choice == 3 && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_CELL;
         else m = Operation.GET_LENDS;
 
         if(m == Operation.GET_LENDS) tmp = null;

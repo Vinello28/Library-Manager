@@ -62,15 +62,7 @@ public class BookDAO implements BookDAOInterface {
                 pstmt.setInt(1, id);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
-                        Book book = new Book();
-                        book.setId(rs.getInt("id"));
-                        book.setTitle(rs.getString("title"));
-                        book.setAuthor(rs.getString("author"));
-                        book.setYear(rs.getInt("year"));
-                        if (rs.getString("genre") != null) book.setGenre(Genre.valueOf(rs.getString("genre")));
-                        else book.setGenre(Genre.Genre);
-                        book.setCopies(rs.getInt("copies"));
-                        return book;
+                        return bookExtractor(rs);
                     }
                 }
             }
@@ -78,6 +70,18 @@ public class BookDAO implements BookDAOInterface {
             System.out.println("Database error: " + e.getMessage());
         }
         return null;
+    }
+
+    private Book bookExtractor(ResultSet rs) throws SQLException {
+        Book book = new Book();
+        book.setId(rs.getInt("id"));
+        book.setTitle(rs.getString("title"));
+        book.setAuthor(rs.getString("author"));
+        book.setYear(rs.getInt("year"));
+        book.setGenre(rs.getInt("genre") != 0 ? Genre.values()[rs.getInt("genre")] : Genre.Genre);
+        book.setCopies(rs.getInt("copies"));
+        System.out.println("SERVER | DEBUG INFO: extracted book " + book);
+        return book;
     }
 
 
@@ -308,14 +312,7 @@ public class BookDAO implements BookDAOInterface {
         try (ResultSet rs = pstmt.executeQuery()) {
             ObservableList<Book> books = FXCollections.observableArrayList();
             while (rs.next()) {
-                Book book = new Book();
-                book.setId(rs.getInt("id"));
-                book.setTitle(rs.getString("title"));
-                book.setAuthor(rs.getString("author"));
-                book.setYear(rs.getInt("year"));
-                book.setGenre(rs.getInt("genre") != 0 ? Genre.values()[rs.getInt("genre")] : Genre.Genre);
-                book.setCopies(rs.getInt("copies"));
-                books.add(book);
+                books.add(bookExtractor(rs));
             }
             System.out.println("SERVER | DEBUG INFO: returning books " + books);
             return books;
@@ -342,7 +339,6 @@ public class BookDAO implements BookDAOInterface {
             System.out.println("Database error: " + e.getMessage());
         }
     }
-
 
     public synchronized void deleteBook(int id) {
 

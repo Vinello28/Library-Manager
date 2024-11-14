@@ -244,7 +244,13 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
             break;
             case REMOVE_LEND:
+                int id = lendMessage.getLend().getBookId();
                 lendDAO.deleteLend(lendMessage.getLend());
+                System.out.println("SERVER | INFO: Lend removed");
+                System.out.println("SERVER | DEBUG_INFO: Setting book available, id: " + id);
+                Book book = bookDAO.readBook(id);
+                book.setAvailable();
+                bookDAO.updateBook(book);
                 send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
             break;
             case GET_LENDS:

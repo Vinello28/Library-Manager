@@ -55,9 +55,8 @@ public class LendsDAO implements LendsDAOInterface {
     public synchronized void deleteLend(Lends lend) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "DELETE FROM lends WHERE lend_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);  //TODO: check if the lend_id is received
             preparedStatement.setInt(1, lend.getId());
-
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("SERVER | LendDAO error: " + e.getMessage());
@@ -91,7 +90,7 @@ public class LendsDAO implements LendsDAOInterface {
 
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("id"));
+                lend.setId(resultSet.getInt("lend_id"));
                 lends.add(lend);
             }
         } catch (SQLException e) {
@@ -110,7 +109,7 @@ public class LendsDAO implements LendsDAOInterface {
 
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("id"));
+                lend.setId(resultSet.getInt("lend_id"));
                 lends.add(lend);
             }
         } catch (SQLException e) {
@@ -129,7 +128,7 @@ public class LendsDAO implements LendsDAOInterface {
 
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("id"));
+                lend.setId(resultSet.getInt("lend_id"));
                 lends.add(lend);
             }
         } catch (SQLException e) {
@@ -147,7 +146,7 @@ public class LendsDAO implements LendsDAOInterface {
 
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("id"));
+                lend.setId(resultSet.getInt("lend_id"));
                 if (lend.isLate()) lends.add(lend);
             }
         } catch (SQLException e) {
@@ -166,7 +165,7 @@ public class LendsDAO implements LendsDAOInterface {
 
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("id"));
+                lend.setId(resultSet.getInt("lend_id"));
                 lends.add(lend);
             }
         } catch (SQLException e) {

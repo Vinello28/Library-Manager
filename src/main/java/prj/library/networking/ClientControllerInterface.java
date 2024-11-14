@@ -2,11 +2,8 @@ package prj.library.networking;
 
 import prj.library.models.Book;
 import prj.library.models.Customer;
-import prj.library.models.Genre;
 import prj.library.models.Lends;
-import prj.library.networking.messages.Operation;
-
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -53,7 +50,6 @@ public interface ClientControllerInterface {
      */
     Boolean deleteBook(int id);
 
-
     /**
      * Searches for books by the given parameters.
      *
@@ -62,7 +58,6 @@ public interface ClientControllerInterface {
      * @return a list of books that match the search criteria
      */
     List<Book> searchBooksBy(int choice, Book tmp);
-
 
     /**
      * Sends a request to the server to create a lend.
@@ -101,7 +96,7 @@ public interface ClientControllerInterface {
      * @param id the lend to delete
      * @return true if the lend was created, false otherwise
      */
-    Boolean deleteLend(int id);
+    Boolean deleteLend(Lends lend);
 
     /**
      * Searches for lends by the given parameters.
@@ -111,7 +106,7 @@ public interface ClientControllerInterface {
      * @param returnDate the return date of the lend
      * @return a list of lends that match the search criteria
      */
-    List<Lends> searchLendsBy(int choice, Book book, Date returnDate);
+    List<Lends> searchLendsBy(int choice, String title, LocalDate returnDate, String cell);
 
     /**
      * Refreshes the list of lends.

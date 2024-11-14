@@ -40,6 +40,7 @@ public enum Operation {
     SEARCH_LEND_BY_ALL,
     SEARCH_LEND_BY_BOOK,
     SEARCH_LEND_BY_RETURN_DATE,
+    SEARCH_LEND_BY_CELL,
     REFRESH_LENDS,
 
     //customers CRUD

@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
+/**
+ * Represents a lend of a book to a customer
+ */
 public class Lends implements Serializable {
     private int id;
     private int bookId;
@@ -17,8 +20,6 @@ public class Lends implements Serializable {
         this.returnDate = returnDate;
     }
 
-    public Lends(Book book, Date returnDate) {
-    }
 
     /**
      * Checks if the return date is before the current date
@@ -62,11 +63,11 @@ public class Lends implements Serializable {
 
     @Override
     public String toString() {
-        return "Lends{" +
-                "id=" + id +
-                ", bookId=" + bookId +
-                ", customerId=" + customerId +
-                ", returnDate='" + returnDate +
-                '}';
+        return " " +
+                "ID: " + id +
+                " | book Id: " + bookId +
+                " | customer Id: " + customerId +
+                " | return date: " + returnDate +
+                " | ";
     }
 }

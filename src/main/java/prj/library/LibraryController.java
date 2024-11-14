@@ -86,10 +86,10 @@ public class LibraryController {
     private Button editLendButton;
 
     @FXML
-    private ListView<Lends> searchedLendListView;
+    private TextField titleLendTextField;
 
     @FXML
-    private ChoiceBox genreLendChoiceBox;
+    private ListView<Lends> searchedLendListView;
 
     @FXML
     private Tab lendopsTab;
@@ -114,6 +114,12 @@ public class LibraryController {
 
     @FXML
     private ListView<Customer> customerListView;
+
+    @FXML
+    private DatePicker lendSearchDatePicker;
+
+    @FXML
+    private TextField cellLendTextField;
 
 
 
@@ -157,8 +163,8 @@ public class LibraryController {
         int year = Integer.parseInt(yearTextField.getText());
         Genre genre = (Genre) genreChoiceBox.getValue();
         int copies = Integer.parseInt(copiesTextField.getText());
+
         Book book = new Book(title, author, year, genre, copies);
-        //System.out.println("CLIENT | DEBUG INFO:  adding this book " + book);
         clientController.createBook(book);
         loadBooks();
         onEmptyButtonClick();
@@ -206,8 +212,6 @@ public class LibraryController {
 
         clearBookSearch();
     }
-
-
 
     /**
      * Edits the selected book from the list view of searched books.
@@ -271,7 +275,6 @@ public class LibraryController {
             loadBooks();
         });
     }
-
 
     /**
      * Deletes the selected books from the list view of searched books.
@@ -419,7 +422,6 @@ public class LibraryController {
     private void fillChoiceBoxes() {
         genreChoiceBox.getItems().addAll(Genre.values());
         genreSearchChoiceBox.getItems().addAll(Genre.values());
-        genreLendChoiceBox.getItems().addAll(Genre.values());
     }
 
     /**
@@ -442,8 +444,18 @@ public class LibraryController {
     @FXML
     public void onSearchLendButtonClick(){
         //TODO: implement search lends, that can bu performed using books title or customer email or between dates
+        String title = titleLendTextField.getText();
+        LocalDate date = lendSearchDatePicker.getValue();
+        String cell = cellLendTextField.getText();
+        int choice;
+        if(!title.isEmpty() && date != null && !cell.isEmpty()) choice = 0;
+        else if(!title.isEmpty() && date != null && cell.isEmpty()) choice = 1;
+        else if(title.isEmpty() && date != null && cell.isEmpty()) choice = 2;
+        else if(title.isEmpty() && date != null && !cell.isEmpty()) choice = 3;
+        else choice = 4;
 
-        //List<Lends> lends = clientController.searchLendsBy();
+        List<Lends> lends = clientController.searchLendsBy(choice, title, date, cell);
+        lendCheck_N_View(lends, searchedLendListView);
     }
 
     @FXML
@@ -494,5 +506,61 @@ public class LibraryController {
         customerEmailTextField.clear();
         customerAddressTextField.clear();
         addCustomerButton.setText("Add");
+    }
+
+    public void onDeleteLendButtonClick() {
+        Lends selectedLend = (Lends) searchedLendListView.getSelectionModel().getSelectedItem();
+        System.out.println("CLIENT | DEBUG INFO:  deleting this lend " + selectedLend);
+        clientController.deleteLend(selectedLend);
+        loadBooks();
+        loadLends(); //TODO: necessary?
+    }
+
+    public void onEditLendButtonClick() {
+        Lends selectedLend = (Lends) searchedLendListView.getSelectionModel().getSelectedItem();
+        if (selectedLend == null) {
+            System.out.println("No lend selected for editing.");
+            return;
+        }
+
+        Dialog<Lends> dialog = new Dialog<>();
+        dialog.setTitle("Edit Lend");
+
+        // Set the button types.
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        //Create the fields and populate with current lend data.
+        Label customerLabel = new Label(clientController.readCustomer(selectedLend.getCustomerId()).getEmail());
+        DatePicker returnDatePicker = new DatePicker(selectedLend.getReturnDate());
+        Label booktitleLabel = new Label(clientController.readBook(selectedLend.getBookId()).getTitle());
+
+        System.out.println("CLIENT | DEBUG INFO:  editing this lend " + selectedLend);
+
+        // Create a grid pane and add the fields
+        GridPane grid = new GridPane();
+        grid.add(new Label("Customer's email:"), 0, 0);
+        grid.add(customerLabel, 1, 0);
+        grid.add(new Label("Book's title:"), 0, 1);
+        grid.add(booktitleLabel, 1, 1);
+        grid.add(new Label("Return date:"), 0, 2);
+        grid.add(returnDatePicker, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convert the result to a Lends object when the save button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                selectedLend.setReturnDate(returnDatePicker.getValue());
+                return selectedLend;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(editedLend -> {
+            clientController.updateLend(editedLend);
+            //loadBooks(); //TODO: development purposes
+            loadLends(); //TODO: necessary?
+        });
     }
 }

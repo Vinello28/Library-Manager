@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" prefHeight="1000.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.LibraryController">
+<VBox alignment="TOP_CENTER" prefHeight="1000.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.LibraryController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -151,45 +151,36 @@
                              <items>
                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                      <children>
-                                         <TextField fx:id="titleLendTextField" layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="156.0" promptText="Book's title here...">
+                                         <TextField fx:id="titleLendTextField" layoutX="-1.0" layoutY="-1.0" prefHeight="32.0" prefWidth="198.0" promptText="Book's title here...">
                                              <font>
                                                  <Font name="Arial" size="12.0" />
                                              </font>
                                          </TextField>
-                                         <ChoiceBox fx:id="genreLendChoiceBox" layoutX="512.0" layoutY="-1.0" prefHeight="33.0" prefWidth="134.0">
-                                             <effect>
-                                                 <Glow level="0.45" />
-                                             </effect>
-                                         </ChoiceBox>
-                                         <Button fx:id="searchLendButton" layoutX="735.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchLendButtonClick" prefHeight="34.0" prefWidth="83.0" text="search">
+                                         <Button fx:id="searchLendButton" layoutX="720.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onSearchLendButtonClick" prefHeight="34.0" prefWidth="89.0" text="search">
                                              <font>
                                                  <Font name="JetBrains Mono SemiBold" size="15.0" />
                                              </font>
                                          </Button>
-                                         <TextField fx:id="authorSearchLendTextField" layoutX="154.0" layoutY="-1.0" prefHeight="32.0" prefWidth="191.0" promptText="Book's author here (name surn)">
+                                         <TextField fx:id="cellLendTextField" layoutX="197.0" layoutY="-1.0" prefHeight="32.0" prefWidth="217.0" promptText="Customer's cellphone number...">
                                              <font>
                                                  <Font name="Arial" size="12.0" />
                                              </font>
                                          </TextField>
-                                         <Button fx:id="editLendButton" layoutX="894.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="34.0" prefWidth="66.0" text="edit">
+                                         <Button fx:id="editLendButton" layoutX="888.0" layoutY="-2.0" mnemonicParsing="false" onAction="#onEditLendButtonClick" prefHeight="34.0" prefWidth="71.0" text="edit">
                                              <font>
                                                  <Font name="JetBrains Mono SemiBold" size="15.0" />
                                              </font>
                                          </Button>
-                                         <Button fx:id="returnButton" layoutX="818.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="33.0" prefWidth="76.0" text="delete">
+                                         <Button fx:id="deleteLendButton" layoutX="808.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onDeleteLendButtonClick" prefHeight="33.0" prefWidth="81.0" text="delete">
                                              <font>
                                                  <Font name="JetBrains Mono SemiBold" size="15.0" />
                                              </font>
                                          </Button>
-                                         <TextField fx:id="yearSearchLendTextField" layoutX="344.0" layoutY="-1.0" prefHeight="32.0" prefWidth="168.0" promptText="Publication year...">
-                                             <font>
-                                                 <Font name="Arial" size="12.0" />
-                                             </font>
-                                         </TextField>
-                                 <Button fx:id="lateSearchButton" layoutX="651.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onLateSearchButtonClick" prefHeight="33.0" prefWidth="84.0" text="late">
+                                 <Button fx:id="lateSearchButton" layoutX="626.0" layoutY="-1.0" mnemonicParsing="false" onAction="#onLateSearchButtonClick" prefHeight="33.0" prefWidth="95.0" text="late">
                                     <font>
                                        <Font name="JetBrains Mono SemiBold" size="15.0" />
                                     </font></Button>
+                                 <DatePicker fx:id="lendSearchDatePicker" layoutX="414.0" layoutY="-1.0" prefHeight="33.0" prefWidth="208.0" />
                                      </children>
                                  </AnchorPane>
                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="174.0" prefWidth="958.0">
