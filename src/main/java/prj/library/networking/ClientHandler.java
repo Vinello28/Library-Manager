@@ -193,7 +193,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 System.out.println("SERVER | ERROR: Invalid operation");
                 break;
         }
-        if(ok)send(MessageFactory.createMessage(Operation.GET_LENDS, new ArrayList<Lends>(results)));
+        if(ok)send(MessageFactory.createMessage(Operation.RESULT_LENDS, new ArrayList<Lends>(results)));
     }
 
     /**

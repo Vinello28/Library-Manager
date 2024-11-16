@@ -163,6 +163,8 @@ public class LendsDAO implements LendsDAOInterface {
             preparedStatement.setDate(1, Date.valueOf(returnDate));
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            System.out.println("SERVER | here");
+
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
                 lend.setId(resultSet.getInt("lend_id"));

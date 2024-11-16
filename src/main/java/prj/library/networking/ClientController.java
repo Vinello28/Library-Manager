@@ -93,18 +93,19 @@ public class ClientController implements ClientControllerInterface {
         else customer = c.get(0);
 
         Lends tmp = new Lends(book.getId(), customer.getId(), returnDate);
-        System.out.println("CLIENT | DEBUG INFO: now choice is " + choice); //TODO: remove after debug
-        System.out.println("CLIENT | DEBUG INFO: now the search_prompt_lend is " + tmp); //TODO: remove after debug
-
 
         Operation m = null;
         if (choice == 0 && !b.isEmpty() && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_ALL;
         if (choice == 1 && !b.isEmpty()) m = Operation.SEARCH_LEND_BY_BOOK;
         if (choice == 2) m = Operation.SEARCH_LEND_BY_RETURN_DATE;
         if (choice == 3 && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_CELL;
-        else m = Operation.GET_LENDS;
 
-        if(m == Operation.GET_LENDS) tmp = null;
+        if(m == null) {
+            m = Operation.GET_LENDS;
+            tmp = null;
+        }
+
+        System.out.println("CLIENT | DEBUG INFO: Sending search request" + m + " " + tmp);
 
         client.sendMessage(m, tmp);
         return client.receiveMessageLends();

@@ -37,11 +37,24 @@ public class NetworkInterface implements NIInterface {
             return in.readObject();
         } catch (Exception e) {
             System.out.println("Error receiving object: " + e.getMessage());
-            close();
-            Thread.currentThread().interrupt();
+            //close();
+            //Thread.currentThread().interrupt();
+            safeDisconnection();
         }
         return null;
     }
+
+    /**
+     * Safely disconnects the network interface.
+     */
+    private void safeDisconnection(){
+        System.out.println("Network Interface | INFO: Safe disconnection starting...");
+        close();
+        System.out.println("Network Interface | INFO: socket closed");
+        Thread.currentThread().interrupt();
+        System.out.println("Network Interface | INFO: Thread interrupted, safe disconnection completed");
+    }
+
 
     public void close() {
         try {

@@ -14,10 +14,11 @@ public interface NIInterface {
      *
      * @return the object received
      */
-    public Object receive();
+    Object receive();
 
     /**
      * Closes the network connection.
      */
-    public void close();
+    void close();
+
 }
