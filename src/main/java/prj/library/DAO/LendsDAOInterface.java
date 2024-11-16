@@ -1,0 +1,71 @@
+package prj.library.DAO;
+
+import prj.library.models.Lends;
+
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * Interface for the LendsDAO class
+ */
+public interface LendsDAOInterface {
+
+    /**
+     * Create a new lend
+     * @param lend the lend to be created
+     */
+    void createLend(Lends lend);
+
+    /**
+     * Update a lend
+     * @param lend the lend to be updated
+     */
+    void updateLend(Lends lend);
+
+    /**
+     * Delete a lend
+     * @param lend the lend to be deleted
+     */
+    void deleteLend(Lends lend);
+
+    /**
+     * Get a lend by its id
+     * @param id the id of the lend
+     * @return the lend with the given id
+     */
+    Lends readLend(int id);
+
+    /**
+     * Get all lends
+     * @return a list of all lends
+     */
+    List<Lends> getLends();
+
+    /**
+     * Get all lends by a customer id
+     * @param customerId the id of the customer
+     * @return a list of all lends by the customer with the given id
+     */
+    List<Lends> getLendsByCustomerId(int customerId);
+
+    /**
+     * Get all lends by a book id
+     * @param bookId the id of the book
+     * @return a list of all lends by the book with the given id
+     */
+    List<Lends> getLendsByBookId(int bookId);
+
+    /**
+     * Get all late lends
+     * @return a list of all late lends
+     */
+    List<Lends> getLateLends();
+
+    /**
+     * Get Lends by return date
+     * @param returnDate the return date of the lend
+     * @return a list of all lends with the given return date
+     */
+    List<Lends> getLendsByReturnDate(LocalDate returnDate);
+
+}
