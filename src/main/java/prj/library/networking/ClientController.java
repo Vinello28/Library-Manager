@@ -5,6 +5,8 @@ import prj.library.models.Customer;
 import prj.library.models.Genre;
 import prj.library.models.Lends;
 import prj.library.networking.messages.Operation;
+import prj.library.utils.CLIUtils;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -101,6 +103,7 @@ public class ClientController implements ClientControllerInterface {
         if (choice == 3 && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_CELL;
 
         if(m == null) {
+            CLIUtils.clientInfo("No such search option or Book/Customer not found");
             m = Operation.GET_LENDS;
             tmp = null;
         }

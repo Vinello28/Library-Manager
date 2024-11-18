@@ -12,6 +12,7 @@ import prj.library.models.Lends;
 import javafx.scene.layout.GridPane;
 import prj.library.networking.ClientController;
 import prj.library.networking.messages.Operation;
+import prj.library.utils.CLIUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -450,8 +451,10 @@ public class LibraryController {
         if(!title.isEmpty() && date != null && !cell.isEmpty()) choice = 0;
         else if(!title.isEmpty() && date != null && cell.isEmpty()) choice = 1;
         else if(title.isEmpty() && date != null && cell.isEmpty()) choice = 2;
-        else if(title.isEmpty() && date != null && !cell.isEmpty()) choice = 3;
+        else if(title.isEmpty() && date == null && !cell.isEmpty()) choice = 3;
         else choice = 4;
+
+        CLIUtils.clientDebug("Searching lends by " + choice);
 
         List<Lends> lends = clientController.searchLendsBy(choice, title, date, cell);
         lendCheck_N_View(lends, searchedLendListView);
