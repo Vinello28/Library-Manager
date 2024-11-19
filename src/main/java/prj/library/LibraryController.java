@@ -2,6 +2,7 @@ package prj.library;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import prj.library.models.Book;
@@ -82,6 +83,12 @@ public class LibraryController {
 
     @FXML
     private TextField cellLendTextField;
+
+    @FXML
+    private RadioButton returnedRadioButton;
+
+    @FXML
+    private RadioButton notReturnedRadioButton;
 
 
     private ClientController clientController;
@@ -252,12 +259,12 @@ public class LibraryController {
      */
     @FXML
     protected void onLendButtonClick() {
-
         Book selectedBook = searchedListView.getSelectionModel().getSelectedItem();
         final Lends[] lend = new Lends[1];
 
         if (selectedBook == null) {
-            System.out.println("No book selected for editing.");
+            CLIUtils.clientInfo("No book selected for editing.");
+            showErrorDialog("Error", "No book selected", "Please select a book to lend.");
             return;
         }
 
@@ -274,7 +281,7 @@ public class LibraryController {
         DatePicker returnDatePicker = new DatePicker();
         Label booktitleLabel = new Label(selectedBook.getTitle());
 
-        System.out.println("CLIENT | DEBUG INFO:  editing this book " + selectedBook);
+        CLIUtils.clientDebug("editing this book " + selectedBook); //TODO: remove
 
         // Create a grid pane and add the fields
         GridPane grid = new GridPane();
@@ -299,7 +306,7 @@ public class LibraryController {
         });
 
         dialog.showAndWait().ifPresent(editedBook -> {
-            lend[0] = new Lends(selectedBook.getId(), customerChoiceBox.getValue().getId(),returnDatePicker.getValue());
+            lend[0] = new Lends(selectedBook.getId(), customerChoiceBox.getValue().getId(),returnDatePicker.getValue(), false);
             clientController.createLend(lend[0]);
             clientController.updateBook(editedBook);
             loadBooks();
@@ -405,6 +412,11 @@ public class LibraryController {
         String title = titleLendTextField.getText();
         LocalDate date = lendSearchDatePicker.getValue();
         String cell = cellLendTextField.getText();
+        boolean returned;
+        if(returnedRadioButton.isSelected()) returned = true;
+        else if (notReturnedRadioButton.isSelected()) returned = false;
+        else returned = false;
+
         int choice;
         if(!title.isEmpty() && date != null && !cell.isEmpty()) choice = 0;
         else if(!title.isEmpty() && date != null && cell.isEmpty()) choice = 1;
@@ -414,7 +426,7 @@ public class LibraryController {
 
         CLIUtils.clientDebug("Searching lends by " + choice);
 
-        List<Lends> lends = clientController.searchLendsBy(choice, title, date, cell);
+        List<Lends> lends = clientController.searchLendsBy(choice, title, date, cell, returned);
         lendCheck_N_View(lends, searchedLendListView);
     }
 
@@ -561,5 +573,13 @@ public class LibraryController {
             customerNames.addAll(customers);
             customerListView.setItems(customerNames);
         }
+    }
+
+    public void onNotReturnedRadioButtonClick(ActionEvent actionEvent) {
+        returnedRadioButton.setSelected(false);
+    }
+
+    public void onReturnedRadioButtonClick(ActionEvent actionEvent) {
+        notReturnedRadioButton.setSelected(false);
     }
 }

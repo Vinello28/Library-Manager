@@ -76,7 +76,7 @@ public class LendsDAO implements LendsDAOInterface {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
+                lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate(), resultSet.getBoolean("returned"));
                 lend.setId(resultSet.getInt("id"));
             }
         } catch (SQLException e) {
@@ -93,7 +93,7 @@ public class LendsDAO implements LendsDAOInterface {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
+                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate(), resultSet.getBoolean("returned"));
                 lend.setId(resultSet.getInt("lend_id"));
                 lends.add(lend);
             }
@@ -133,7 +133,7 @@ public class LendsDAO implements LendsDAOInterface {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
+                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate(), resultSet.getBoolean("returned"));
                 lend.setId(resultSet.getInt("lend_id"));
                 if (lend.isLate()) lends.add(lend);
             }
@@ -154,7 +154,7 @@ public class LendsDAO implements LendsDAOInterface {
             CLIUtils.serverDebug("here in get lends by return date..."); //TODO: remove this
 
             while (resultSet.next()) {
-                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
+                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate(), resultSet.getBoolean("returned"));
                 lend.setId(resultSet.getInt("lend_id"));
                 lends.add(lend);
             }
@@ -180,7 +180,7 @@ public class LendsDAO implements LendsDAOInterface {
         List<Lends> lends = new ArrayList<>();
 
         while (resultSet.next()) {
-            Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
+            Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate(), resultSet.getBoolean("returned"));
             lend.setId(resultSet.getInt("lend_id"));
             lends.add(lend);
         }

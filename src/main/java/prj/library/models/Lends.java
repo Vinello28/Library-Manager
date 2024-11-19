@@ -12,12 +12,14 @@ public class Lends implements Serializable {
     private int bookId;
     private int customerId;
     private LocalDate returnDate;
+    private boolean returned;
 
 
-    public Lends(int bookId, int customerId, LocalDate returnDate) {
+    public Lends(int bookId, int customerId, LocalDate returnDate, boolean returned) {
         this.bookId = bookId;
         this.customerId = customerId;
         this.returnDate = returnDate;
+        this.returned = returned;
     }
 
 
@@ -61,6 +63,14 @@ public class Lends implements Serializable {
         this.customerId = customerId;
     }
 
+    public boolean isReturned() {
+        return returned;
+    }
+
+    public void setReturned(boolean returned) {
+        this.returned = returned;
+    }
+
     @Override
     public String toString() {
         return " " +
@@ -68,6 +78,6 @@ public class Lends implements Serializable {
                 " | book Id: " + bookId +
                 " | customer Id: " + customerId +
                 " | return date: " + returnDate +
-                " | ";
+                " | book returned: " + returned;
     }
 }

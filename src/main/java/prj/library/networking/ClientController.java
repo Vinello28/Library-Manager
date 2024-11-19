@@ -83,7 +83,7 @@ public class ClientController implements ClientControllerInterface {
         return client.receiveMessageBoolean();
     }
 
-    public List<Lends> searchLendsBy(int choice, String title, LocalDate returnDate, String cell) {
+    public List<Lends> searchLendsBy(int choice, String title, LocalDate returnDate, String cell, Boolean returned) {
         Book book = new Book(0, title, "", 0, Genre.Genre, 0);
         Customer customer = new Customer(0, "", "", "", cell);
         List<Customer> c = searchCustomersBy(2, customer);
@@ -94,7 +94,7 @@ public class ClientController implements ClientControllerInterface {
         if (c.isEmpty()) customer = new Customer(0, "", "", "", "");
         else customer = c.get(0);
 
-        Lends tmp = new Lends(book.getId(), customer.getId(), returnDate);
+        Lends tmp = new Lends(book.getId(), customer.getId(), returnDate, returned);
 
         Operation m = null;
         if (choice == 0 && !b.isEmpty() && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_ALL;
@@ -108,7 +108,7 @@ public class ClientController implements ClientControllerInterface {
             tmp = null;
         }
 
-        System.out.println("CLIENT | DEBUG INFO: Sending search request" + m + " " + tmp);
+        CLIUtils.clientDebug("Sending search request" + m + " " + tmp);
 
         client.sendMessage(m, tmp);
         return client.receiveMessageLends();
