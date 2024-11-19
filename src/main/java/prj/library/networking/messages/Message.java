@@ -7,6 +7,15 @@ public abstract class Message implements Serializable {
     protected Operation operation;
     protected Object message;
 
+    /**
+     * Constructor.
+     * @param operation operation of the message
+     * @param message message of the message
+     */
+    public Message(Operation operation, Object message){
+        this.operation = operation;
+        this.message = message;
+    }
 
     /**
      * @return operation of the message

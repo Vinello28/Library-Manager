@@ -5,8 +5,7 @@ import prj.library.models.Customer;
 public class CustomerMessage extends Message {
 
     public CustomerMessage(Operation operation, Customer message) {
-        this.operation = operation;
-        this.message = message;
+        super(operation, message);
     }
 
     public Customer getCustomer() {

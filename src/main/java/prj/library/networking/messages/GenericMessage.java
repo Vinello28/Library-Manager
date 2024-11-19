@@ -1,16 +1,17 @@
 package prj.library.networking.messages;
 
+/**
+ * Generic message class
+ */
 public class GenericMessage extends Message {
 
-    public GenericMessage() {
-        this.operation = Operation.GENERIC_RESPONSE;
-    }
-
     public GenericMessage(Object message) {
-        this.operation = Operation.GENERIC_RESPONSE;
-        this.message = (Boolean) message;
+        super(Operation.GENERIC_RESPONSE, message);
     }
 
+    /**
+     * @return the response
+     */
     public Boolean getResponse() {
         return (Boolean) message;
     }

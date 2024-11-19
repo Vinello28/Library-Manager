@@ -2,7 +2,6 @@ package prj.library;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import prj.library.models.Book;
@@ -11,12 +10,10 @@ import prj.library.models.Genre;
 import prj.library.models.Lends;
 import javafx.scene.layout.GridPane;
 import prj.library.networking.ClientController;
-import prj.library.networking.messages.Operation;
 import prj.library.utils.CLIUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

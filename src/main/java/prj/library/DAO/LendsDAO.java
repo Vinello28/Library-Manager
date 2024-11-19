@@ -1,12 +1,16 @@
 package prj.library.DAO;
 
 import prj.library.models.Lends;
+import prj.library.utils.CLIUtils;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for Lends
+ */
 public class LendsDAO implements LendsDAOInterface {
     private String DB_URL;
     private String DB_USER;
@@ -33,7 +37,7 @@ public class LendsDAO implements LendsDAOInterface {
                 lend.setId(resultSet.getInt(1));
             }
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
     }
 
@@ -48,7 +52,7 @@ public class LendsDAO implements LendsDAOInterface {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
     }
 
@@ -59,7 +63,7 @@ public class LendsDAO implements LendsDAOInterface {
             preparedStatement.setInt(1, lend.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
     }
 
@@ -76,7 +80,7 @@ public class LendsDAO implements LendsDAOInterface {
                 lend.setId(resultSet.getInt("id"));
             }
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
         return lend;
     }
@@ -94,7 +98,7 @@ public class LendsDAO implements LendsDAOInterface {
                 lends.add(lend);
             }
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
         return lends;
     }
@@ -103,17 +107,9 @@ public class LendsDAO implements LendsDAOInterface {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends WHERE customer_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, customerId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("lend_id"));
-                lends.add(lend);
-            }
+            lends = lendsExtractor(customerId, connection, query);
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
         return lends;
     }
@@ -122,17 +118,9 @@ public class LendsDAO implements LendsDAOInterface {
         List<Lends> lends = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT * FROM lends WHERE book_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, bookId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
-                lend.setId(resultSet.getInt("lend_id"));
-                lends.add(lend);
-            }
+            lends = lendsExtractor(bookId, connection, query);
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
         return lends;
     }
@@ -150,7 +138,7 @@ public class LendsDAO implements LendsDAOInterface {
                 if (lend.isLate()) lends.add(lend);
             }
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
         return lends;
     }
@@ -163,7 +151,7 @@ public class LendsDAO implements LendsDAOInterface {
             preparedStatement.setDate(1, Date.valueOf(returnDate));
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            System.out.println("SERVER | here");
+            CLIUtils.serverDebug("here in get lends by return date..."); //TODO: remove this
 
             while (resultSet.next()) {
                 Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
@@ -171,9 +159,31 @@ public class LendsDAO implements LendsDAOInterface {
                 lends.add(lend);
             }
         } catch (SQLException e) {
-            System.out.println("SERVER | LendDAO error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
         return lends;
     }
 
+    /**
+     * Extracts lends from the database
+     * @param customerId bookId
+     * @param connection connection
+     * @param query query
+     * @return list of lends
+     * @throws SQLException if there is an error with the database
+     */
+    private List<Lends> lendsExtractor(int customerId, Connection connection, String query) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, customerId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        List<Lends> lends = new ArrayList<>();
+
+        while (resultSet.next()) {
+            Lends lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate());
+            lend.setId(resultSet.getInt("lend_id"));
+            lends.add(lend);
+        }
+        return lends;
+    }
 }

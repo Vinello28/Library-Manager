@@ -4,15 +4,13 @@ import prj.library.models.Lends;
 
 import java.util.ArrayList;
 
+/**
+ * Message class for sending a list of Lends objects.
+ */
 public class LendsListMessage extends Message {
 
-    public LendsListMessage(Operation operation, Object message) {
-        this.operation = Operation.REFRESH_LENDS;
-    }
-
     public LendsListMessage(Operation operation, ArrayList<Lends> message) {
-        this.operation = operation;
-        this.message = message;
+        super(operation, message);
     }
 
     /**
