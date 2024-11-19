@@ -21,12 +21,6 @@ import java.util.stream.Collectors;
 public class LibraryController {
 
     @FXML
-    private Button addButton;
-
-    @FXML
-    private Button emptyButton;
-
-    @FXML
     private TextField titleTextField;
 
     @FXML
@@ -36,16 +30,13 @@ public class LibraryController {
     private TextField yearTextField;
 
     @FXML
-    private ChoiceBox genreChoiceBox;
+    private ChoiceBox<Genre> genreChoiceBox;
 
     @FXML
     private TextField titleSearchTextField;
 
     @FXML
-    private ChoiceBox genreSearchChoiceBox;
-
-    @FXML
-    private Button searchButton;
+    private ChoiceBox<Genre> genreSearchChoiceBox;
 
     @FXML
     private TextField authorSearchTextField;
@@ -54,19 +45,7 @@ public class LibraryController {
     private TextField yearSearchTextField;
 
     @FXML
-    private Button lendButton;
-
-    @FXML
-    private Button editButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private ListView searchedListView;
-    
-    @FXML
-    private Label welcomeText;
+    private ListView<Book> searchedListView;
 
     @FXML
     private ListView<Book> bookListView;
@@ -75,28 +54,13 @@ public class LibraryController {
     private TextField copiesTextField;
 
     @FXML
-    private Button searchLendButton;
-
-    @FXML
-    private Button returnButton;
-
-    @FXML
-    private Button editLendButton;
-
-    @FXML
     private TextField titleLendTextField;
 
     @FXML
     private ListView<Lends> searchedLendListView;
 
     @FXML
-    private Tab lendopsTab;
-
-    @FXML
     private Button addCustomerButton;
-
-    @FXML
-    private Button revertCustomerButton;
 
     @FXML
     private TextField customerNameTextField;
@@ -120,7 +84,6 @@ public class LibraryController {
     private TextField cellLendTextField;
 
 
-
     private ClientController clientController;
 
     public LibraryController() {
@@ -137,7 +100,7 @@ public class LibraryController {
         loadBooks();
         //loadLends();  TODO: remove this.
         fillChoiceBoxes();
-        loadCustomers();
+        loadCustomers(); //TODO remove??
 
         //Add listener to the ListView
         customerListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -159,7 +122,7 @@ public class LibraryController {
         String title = titleTextField.getText();
         String author = authorTextField.getText();
         int year = Integer.parseInt(yearTextField.getText());
-        Genre genre = (Genre) genreChoiceBox.getValue();
+        Genre genre = genreChoiceBox.getValue();
         int copies = Integer.parseInt(copiesTextField.getText());
 
         Book book = new Book(title, author, year, genre, copies);
@@ -182,7 +145,7 @@ public class LibraryController {
         String title = titleSearchTextField.getText();
         String author = authorSearchTextField.getText();
         int year = yearSearchTextField.getText().isEmpty() ? 0 : Integer.parseInt(yearSearchTextField.getText());
-        Genre genre = (Genre) genreSearchChoiceBox.getValue();
+        Genre genre = genreSearchChoiceBox.getValue();
         List<Book> books;
         int choice = 0;
 
@@ -217,7 +180,7 @@ public class LibraryController {
     @FXML
     protected void onEditButtonClick() {
 
-        Book selectedBook = (Book) searchedListView.getSelectionModel().getSelectedItem();
+        Book selectedBook = searchedListView.getSelectionModel().getSelectedItem();
         if (selectedBook == null) {
             System.out.println("No book selected for editing.");
             return;
@@ -279,7 +242,7 @@ public class LibraryController {
      */
     @FXML
     protected void onDeleteButtonClick() {
-        Book selectedBook = (Book) searchedListView.getSelectionModel().getSelectedItem();
+        Book selectedBook = searchedListView.getSelectionModel().getSelectedItem();
         clientController.deleteBook(selectedBook.getId());
         loadBooks();
     }
@@ -290,7 +253,7 @@ public class LibraryController {
     @FXML
     protected void onLendButtonClick() {
 
-        Book selectedBook = (Book) searchedListView.getSelectionModel().getSelectedItem();
+        Book selectedBook = searchedListView.getSelectionModel().getSelectedItem();
         final Lends[] lend = new Lends[1];
 
         if (selectedBook == null) {
@@ -373,9 +336,8 @@ public class LibraryController {
      * Checks if the list of books is empty and adds a message to the list view.
      * @param books the list of books to check
      * @param searchedListView the list view to add the message to
-     * @return true if the list is empty, false otherwise
      */
-    private void bookCheck_N_View(List<Book> books, ListView searchedListView) {
+    private void bookCheck_N_View(List<Book> books, ListView<Book> searchedListView) {
         if(books==null || books.isEmpty()) showErrorDialog("Error", "No books found", "Books you are looking for are not found. Try something else.");
         else {
             ObservableList<Book> bookTitles = FXCollections.observableArrayList();
@@ -388,9 +350,8 @@ public class LibraryController {
      * Checks if the list of lends is empty and adds a message to the list view.
      * @param lends the list of lends to check
      * @param searchedLendListView the list view to add the message to
-     * @return true if the list is empty, false otherwise
      */
-    private void lendCheck_N_View(List<Lends> lends, ListView searchedLendListView) {
+    private void lendCheck_N_View(List<Lends> lends, ListView<Lends> searchedLendListView) {
 
         if(lends==null || lends.isEmpty()) showErrorDialog("Error", "No lends found", "Lends you are looking for are not found. Try something else.");
         else{
@@ -508,7 +469,7 @@ public class LibraryController {
     }
 
     public void onDeleteLendButtonClick() {
-        Lends selectedLend = (Lends) searchedLendListView.getSelectionModel().getSelectedItem();
+        Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
         System.out.println("CLIENT | DEBUG INFO:  deleting this lend " + selectedLend);
         clientController.deleteLend(selectedLend);
         loadBooks();
@@ -516,7 +477,7 @@ public class LibraryController {
     }
 
     public void onEditLendButtonClick() {
-        Lends selectedLend = (Lends) searchedLendListView.getSelectionModel().getSelectedItem();
+        Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
         if (selectedLend == null) {
             System.out.println("No lend selected for editing.");
             return;
