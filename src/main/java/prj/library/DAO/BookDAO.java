@@ -23,7 +23,6 @@ public class BookDAO implements BookDAOInterface {
         this.DB_PASSWORD = DB_PASSWORD;
     }
 
-
     public synchronized void createBook(Book book) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "INSERT INTO books (title, author, year, genre, copies) VALUES (?, ?, ?, ?, ?)";

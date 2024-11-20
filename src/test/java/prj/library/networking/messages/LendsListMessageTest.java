@@ -16,8 +16,8 @@ class LendsListMessageTest {
     @BeforeEach
     void setUp() {
         ArrayList<Lends> lends = new ArrayList<>();
-        lends.add(new Lends(1, 1, LocalDate.now()));
-        lends.add(new Lends(2, 2, LocalDate.now()));
+        lends.add(new Lends(1, 1, LocalDate.now(), false));
+        lends.add(new Lends(2, 2, LocalDate.now(), false));
         lendsListMessage = new LendsListMessage(Operation.RESULT_LENDS, lends);
     }
 
@@ -31,8 +31,8 @@ class LendsListMessageTest {
     @Test
     void setLends() {
         ArrayList<Lends> lends = new ArrayList<>();
-        lends.add(new Lends(3, 3, LocalDate.now()));
-        lends.add(new Lends(4, 4, LocalDate.now()));
+        lends.add(new Lends(3, 3, LocalDate.now(), false));
+        lends.add(new Lends(4, 4, LocalDate.now(), false));
         lendsListMessage.setLends(lends);
         assertEquals(2, lendsListMessage.getLends().size());
         assertEquals(3, lendsListMessage.getLends().get(0).getBookId());

@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import prj.library.utils.CLIUtils;
 
 
 public class LibraryController {
@@ -97,17 +96,18 @@ public class LibraryController {
         try {
             clientController = new ClientController();
         } catch (IOException e) {
-            clientController.close();
-            throw new RuntimeException(e);
+            if (clientController != null) clientController.close();
+            CLIUtils.clientCriticalError(e.getMessage());
+            showErrorDialog("Error", "Critical error", "Could not connect to the server. Please try again later.");
+            LibraryApplication.close();
         }
     }
 
     @FXML
     public void initialize() {
         loadBooks();
-        //loadLends();  TODO: remove this.
         fillChoiceBoxes();
-        loadCustomers(); //TODO remove??
+        //loadCustomers(); TODO remove??
 
         //Add listener to the ListView
         customerListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -128,9 +128,16 @@ public class LibraryController {
     protected void onAddButtonClick() {
         String title = titleTextField.getText();
         String author = authorTextField.getText();
-        int year = Integer.parseInt(yearTextField.getText());
+        int year = 0;
+        if (!yearTextField.getText().isEmpty()) year = Integer.parseInt(yearTextField.getText());
         Genre genre = genreChoiceBox.getValue();
-        int copies = Integer.parseInt(copiesTextField.getText());
+        int copies=0;
+        if(!copiesTextField.getText().isEmpty()) copies = Integer.parseInt(copiesTextField.getText());
+
+        if(title.isEmpty() || author.isEmpty() || year == 0 || genre == null || copies == 0) {
+            showErrorDialog("Error", "Invalid input", "Please fill all fields.");
+            return;
+        }
 
         Book book = new Book(title, author, year, genre, copies);
         clientController.createBook(book);
@@ -173,7 +180,6 @@ public class LibraryController {
         if(title.isEmpty() && !author.isEmpty() && year != 0 && genre != null) choice = 14;
         if (title.isEmpty() && author.isEmpty() && year == 0 && genre == null) choice = 15;
 
-        System.out.println("CLIENT | DEBUG INFO:  searching by " + choice);
         Book tmp = new Book(title, author, year, genre);
         books = clientController.searchBooksBy(choice, tmp);
         bookCheck_N_View(books, searchedListView);
@@ -250,6 +256,11 @@ public class LibraryController {
     @FXML
     protected void onDeleteButtonClick() {
         Book selectedBook = searchedListView.getSelectionModel().getSelectedItem();
+        if (selectedBook == null) {
+            CLIUtils.clientInfo("No book selected for editing.");
+            showErrorDialog("Error", "No book selected", "Please select a book to delete.");
+            return;
+        }
         clientController.deleteBook(selectedBook.getId());
         loadBooks();
     }
@@ -328,7 +339,6 @@ public class LibraryController {
         List<Lends> lends = clientController.getLends();
         lendCheck_N_View(lends, searchedLendListView);
     }
-
 
     @FXML
     private void onLateSearchButtonClick() {

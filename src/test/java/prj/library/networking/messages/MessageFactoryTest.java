@@ -31,7 +31,7 @@ class MessageFactoryTest {
 
     @Test
     void createMessageLend () {
-        Lends lend = new Lends(1, 1, LocalDate.now());
+        Lends lend = new Lends(1, 1, LocalDate.now(), false);
         Message message = MessageFactory.createMessage(Operation.ADD_LEND, lend);
         assertEquals(Operation.ADD_LEND, message.getOperation());
         assertEquals(lend, message.getMessage());
@@ -51,7 +51,7 @@ class MessageFactoryTest {
     @Test
     void createMessageLendsList () {
         ArrayList<Lends> lends = new ArrayList<>();
-        lends.add(new Lends(1, 1, LocalDate.now()));
+        lends.add(new Lends(1, 1, LocalDate.now(), false));
         Message message = MessageFactory.createMessage(Operation.RESULT_LENDS, lends);
         assertEquals(Operation.RESULT_LENDS, message.getOperation());
         assertEquals(lends, message.getMessage());
@@ -69,7 +69,7 @@ class MessageFactoryTest {
 
     @Test
     void createMessageLendSearch () {
-        Lends lend = new Lends(1, 1, LocalDate.now());
+        Lends lend = new Lends(1, 1, LocalDate.now(),   false);
         Message message = MessageFactory.createMessage(Operation.SEARCH_LEND_BY_BOOK, lend);
         assertEquals(Operation.SEARCH_LEND_BY_BOOK, message.getOperation());
         assertEquals(lend, message.getMessage());

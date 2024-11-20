@@ -37,8 +37,6 @@ public class NetworkInterface implements NIInterface {
             return in.readObject();
         } catch (Exception e) {
             System.out.println("Error receiving object: " + e.getMessage());
-            //close();
-            //Thread.currentThread().interrupt();
             safeDisconnection();
         }
         return null;

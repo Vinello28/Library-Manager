@@ -14,7 +14,7 @@ class LendMessageTest {
 
     @BeforeEach
     void setUp() {
-        Lends lends = new Lends(1, 1, LocalDate.now());
+        Lends lends = new Lends(1, 1, LocalDate.now(), false);
         lendMessage = new LendMessage(Operation.ADD_LEND, lends);
     }
 

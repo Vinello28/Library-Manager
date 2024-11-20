@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class LibraryApplication extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("hello-view.fxml"));
@@ -17,6 +18,13 @@ public class LibraryApplication extends Application {
         stage.setFullScreen(false);
         stage.setResizable(false);
         stage.show();
+    }
+
+    /**
+     * Close the application
+     */
+    public static void close() {
+        System.exit(0);
     }
 
     public static void main(String[] args) {

@@ -50,10 +50,7 @@ public class ClientController implements ClientControllerInterface {
     }
 
     public List<Book> searchBooksBy(int choice, Book tmp) {
-        System.out.println("CLIENT | DEBUG INFO: now choice is " + choice);
         Operation m = choseSearchOpBooks(choice);
-
-        System.out.println("CLIENT | DEBUG INFO: Sending search request" + m + " " + tmp);
         client.sendMessage(m, tmp);
         return client.receiveMessageBooks();
     }
@@ -93,7 +90,6 @@ public class ClientController implements ClientControllerInterface {
 
         Operation m = null;
         if(!sentinel && !returned) {
-            System.out.println("here");
             switch (choice) {
                 case 0:
                     m = Operation.SEARCH_LEND_BY_ALL;
@@ -121,7 +117,6 @@ public class ClientController implements ClientControllerInterface {
                     break;
             }
         } else {
-            System.out.println("correct");
             switch (choice) {
                 case 0:
                     m = Operation.SEARCH_LEND_BY_ALL_RETURNED;
@@ -152,8 +147,6 @@ public class ClientController implements ClientControllerInterface {
                     break;
             }
         }
-
-        CLIUtils.clientDebug("Sending search request" + m + " " + tmp);
 
         client.sendMessage(m, tmp);
         return client.receiveMessageLends();
