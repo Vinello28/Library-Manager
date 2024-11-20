@@ -77,6 +77,19 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 case SEARCH_LEND_BY_ALL:
                 case SEARCH_LEND_BY_BOOK:
                 case SEARCH_LEND_BY_RETURN_DATE:
+                case SEARCH_LEND_BY_CUSTOMER:
+                case SEARCH_LEND_BY_ALL_RETURNED:
+                case SEARCH_LEND_BY_BOOK_RETURNED:
+                case SEARCH_LEND_BY_CUSTOMER_RETURNED:
+                case SEARCH_LEND_BY_RETURN_DATE_RETURNED:
+                case SEARCH_LEND_BY_BOOK_CUSTOMER:
+                case SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED:
+                case SEARCH_LEND_BY_BOOK_RETURN_DATE:
+                case SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED:
+                case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE:
+                case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
+                case SEARCH_LEND_BY_LATE:
+                case GET_LENDS_RETURNED:
                     handleSearchLendOperation((LendMessage) message);
                     break;
                 case ADD_CUSTOMER:
@@ -164,9 +177,6 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 break;
         }
         send(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList<Book>(results)));
-
-        System.out.println("SERVER | DEBUG INFO: Results size " + results.size()); //TODO: remove before production
-
     }
 
     /**
@@ -179,6 +189,9 @@ public class ClientHandler extends NetworkInterface implements Runnable {
         boolean ok = true;
 
         switch (message.getOperation()) {
+            case SEARCH_LEND_BY_LATE:
+                results = lendDAO.getLateLends();
+                break;
             case SEARCH_LEND_BY_ALL:
                 results = lendDAO.getLends();
                 break;
@@ -187,6 +200,42 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 break;
             case SEARCH_LEND_BY_RETURN_DATE:
                 results = lendDAO.getLendsByReturnDate(received.getReturnDate());
+                break;
+                case SEARCH_LEND_BY_CUSTOMER:
+                results = lendDAO.getLendsByCustomerId(received.getCustomerId());
+                break;
+            case SEARCH_LEND_BY_ALL_RETURNED:
+                results = lendDAO.getLendsByAllReturned(received.getBookId(), received.getCustomerId(), received.getReturnDate(), received.isReturned());
+                break;
+            case SEARCH_LEND_BY_BOOK_RETURNED:
+                results = lendDAO.getLendsByBookIdReturned(received.getBookId(), received.isReturned());
+                break;
+            case SEARCH_LEND_BY_CUSTOMER_RETURNED:
+                results = lendDAO.getLendsByCustomerIdReturned(received.getCustomerId(), received.isReturned());
+                break;
+            case SEARCH_LEND_BY_RETURN_DATE_RETURNED:
+                results = lendDAO.getLendsByReturnDateReturned(received.getReturnDate(), received.isReturned());
+                break;
+            case SEARCH_LEND_BY_BOOK_CUSTOMER:
+                results = lendDAO.getLendsByBookIdCustomerId(received.getBookId(), received.getCustomerId());
+                break;
+            case SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED:
+                results = lendDAO.getLendsByBookIdCustomerIdReturned(received.getBookId(), received.getCustomerId(), received.isReturned());
+                break;
+            case SEARCH_LEND_BY_BOOK_RETURN_DATE:
+                results = lendDAO.getLendsByBookIdReturnDate(received.getBookId(), received.getReturnDate());
+                break;
+            case SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED:
+                results = lendDAO.getLendsByBookIdReturnDateReturned(received.getBookId(), received.getReturnDate(), received.isReturned());
+                break;
+            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE:
+                results = lendDAO.getLendsByCustomerIdReturnDate(received.getCustomerId(), received.getReturnDate());
+                break;
+            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
+                results = lendDAO.getLendsByCustomerIdReturnDateReturned(received.getCustomerId(), received.getReturnDate(), received.isReturned());
+                break;
+            case GET_LENDS_RETURNED:
+                results = lendDAO.getLendsReturned(received.isReturned());
                 break;
             default:
                 ok = false;

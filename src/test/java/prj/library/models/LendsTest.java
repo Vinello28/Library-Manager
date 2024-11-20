@@ -11,7 +11,7 @@ class LendsTest {
     Lends lend;
     @BeforeEach
     void setUp() {
-        lend = new Lends(1, 1, LocalDate.now());
+        lend = new Lends(1, 1, LocalDate.now(), false);
     }
 
     @Test

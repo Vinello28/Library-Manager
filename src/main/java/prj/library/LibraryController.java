@@ -12,11 +12,11 @@ import prj.library.models.Lends;
 import javafx.scene.layout.GridPane;
 import prj.library.networking.ClientController;
 import prj.library.utils.CLIUtils;
-
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import prj.library.utils.CLIUtils;
 
 
 public class LibraryController {
@@ -298,7 +298,6 @@ public class LibraryController {
         // Convert the result to a Book object when the save button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-
                 selectedBook.setCopies(selectedBook.getCopies()-1);
                 return selectedBook;
             }
@@ -333,11 +332,10 @@ public class LibraryController {
 
     @FXML
     private void onLateSearchButtonClick() {
-        List<Lends> lends = clientController.getLends();
-        List<Lends> lateLends = lends.stream().filter(Lends::isLate).collect(Collectors.toList());
-        lendCheck_N_View(lateLends, searchedLendListView);
+        List<Lends> lends = clientController.searchLateLends();
+        lendSearchClear();
+        lendCheck_N_View(lends, searchedLendListView);
     }
-
 
     /**
      * Checks if the list of books is empty and adds a message to the list view.
@@ -364,7 +362,7 @@ public class LibraryController {
         else{
             ObservableList<Lends> lendTitles = FXCollections.observableArrayList();
 
-            System.out.println("CLIENT | DEBUG_INFO: " + lends);
+            CLIUtils.clientInfo("CLIENT | DEBUG_INFO: " + lends);
 
             lendTitles.addAll(lends);
             searchedLendListView.setItems(lendTitles);
@@ -409,25 +407,57 @@ public class LibraryController {
      */
     @FXML
     public void onSearchLendButtonClick(){
+        searchedLendListView.getItems().clear();
+
         String title = titleLendTextField.getText();
         LocalDate date = lendSearchDatePicker.getValue();
         String cell = cellLendTextField.getText();
+        int b_id=0; //book id
+        int c_id=0; //customer id
         boolean returned;
-        if(returnedRadioButton.isSelected()) returned = true;
-        else if (notReturnedRadioButton.isSelected()) returned = false;
-        else returned = false;
+        boolean sentinel = false;
 
-        int choice;
-        if(!title.isEmpty() && date != null && !cell.isEmpty()) choice = 0;
-        else if(!title.isEmpty() && date != null && cell.isEmpty()) choice = 1;
-        else if(title.isEmpty() && date != null && cell.isEmpty()) choice = 2;
-        else if(title.isEmpty() && date == null && !cell.isEmpty()) choice = 3;
-        else choice = 4;
+        if(returnedRadioButton.isSelected()) returned = true;
+        else if (notReturnedRadioButton.isSelected()) {
+            returned = false;
+            sentinel = true;
+        } else returned = false;
+
+        //checks if book and customer exists
+        if (!title.isEmpty()) {
+            List<Book> books = clientController.searchBooksBy(1, new Book(0, title, "", 0, Genre.Genre, 0));
+            if (books == null || books.isEmpty()) {
+                showErrorDialog("Error", "Book not found", "Book you are looking for is not found. Try something else.");
+                lendSearchClear();
+                return;
+            }
+            b_id = books.get(0).getId();
+        }
+        if(!cell.isEmpty()) {
+            List<Customer> customers = clientController.searchCustomersBy(2, new Customer("", "", cell, ""));
+            if (customers == null || customers.isEmpty()) {
+                showErrorDialog("Error", "Customer not found", "Customer you are looking for is not found. Try something else.");
+                lendSearchClear();
+                return;
+            }
+            c_id = customers.get(0).getId();
+        }
+
+        int choice=7;
+        if (b_id != 0 && c_id != 0 && date != null) choice = 0;
+        else if (b_id != 0 && c_id == 0 && date == null) choice = 1;
+        else if (b_id == 0 && c_id != 0 && date == null) choice = 2;
+        else if (b_id == 0 && c_id == 0 && date != null) choice = 3;
+        else if (b_id != 0 && c_id != 0 && date == null) choice = 4;
+        else if (b_id != 0 && c_id == 0 && date != null) choice = 5;
+        else if (b_id == 0 && c_id != 0 && date != null) choice = 6;
+
 
         CLIUtils.clientDebug("Searching lends by " + choice);
 
-        List<Lends> lends = clientController.searchLendsBy(choice, title, date, cell, returned);
+        List<Lends> lends = clientController.searchLendsBy(choice, b_id, date, c_id, returned, sentinel);
         lendCheck_N_View(lends, searchedLendListView);
+        lendSearchClear();
     }
 
     @FXML
@@ -491,25 +521,27 @@ public class LibraryController {
     public void onEditLendButtonClick() {
         Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
         if (selectedLend == null) {
-            System.out.println("No lend selected for editing.");
+            CLIUtils.clientInfo("No lend selected for editing.");
             return;
         }
 
         Dialog<Lends> dialog = new Dialog<>();
         dialog.setTitle("Edit Lend");
 
-        // Set the button types.
+        //set the button types.
         ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-        //Create the fields and populate with current lend data.
+        //create the fields and populate with current lend data.
         Label customerLabel = new Label(clientController.readCustomer(selectedLend.getCustomerId()).getEmail());
         DatePicker returnDatePicker = new DatePicker(selectedLend.getReturnDate());
         Label booktitleLabel = new Label(clientController.readBook(selectedLend.getBookId()).getTitle());
+        ChoiceBox<Boolean> returnedChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(true, false)); //fill choice box with true and false
+        returnedChoiceBox.setValue(selectedLend.isReturned()); //set true if it's returned
 
-        System.out.println("CLIENT | DEBUG INFO:  editing this lend " + selectedLend);
+        CLIUtils.clientDebug("editing this lend " + selectedLend); //TODO: remove
 
-        // Create a grid pane and add the fields
+        //create a grid pane and add the fields
         GridPane grid = new GridPane();
         grid.add(new Label("Customer's email:"), 0, 0);
         grid.add(customerLabel, 1, 0);
@@ -517,12 +549,16 @@ public class LibraryController {
         grid.add(booktitleLabel, 1, 1);
         grid.add(new Label("Return date:"), 0, 2);
         grid.add(returnDatePicker, 1, 2);
+        grid.add(new Label("Returned:"), 0, 3);
+        grid.add(returnedChoiceBox, 1, 3);
+
 
         dialog.getDialogPane().setContent(grid);
 
-        // Convert the result to a Lends object when the save button is clicked.
+        //convert the result to a Lends object when the save button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
+                selectedLend.setReturned(returnedChoiceBox.getValue());
                 selectedLend.setReturnDate(returnDatePicker.getValue());
                 return selectedLend;
             }
@@ -531,8 +567,9 @@ public class LibraryController {
 
         dialog.showAndWait().ifPresent(editedLend -> {
             clientController.updateLend(editedLend);
-            //loadBooks(); //TODO: development purposes
-            loadLends(); //TODO: necessary?
+            List<Lends> lends = new ArrayList<>();
+            lends.add(clientController.readLend(editedLend));
+            lendCheck_N_View(lends, searchedLendListView);
         });
     }
 
@@ -580,6 +617,17 @@ public class LibraryController {
     }
 
     public void onReturnedRadioButtonClick(ActionEvent actionEvent) {
+        notReturnedRadioButton.setSelected(false);
+    }
+
+    /**
+     * Clears the lend's search fields.
+     */
+    private void lendSearchClear() {
+        titleLendTextField.clear();
+        lendSearchDatePicker.setValue(null);
+        cellLendTextField.clear();
+        returnedRadioButton.setSelected(false);
         notReturnedRadioButton.setSelected(false);
     }
 }

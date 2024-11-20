@@ -106,7 +106,7 @@ public interface ClientControllerInterface {
      * @param returnDate the return date of the lend
      * @return a list of lends that match the search criteria
      */
-    List<Lends> searchLendsBy(int choice, String title, LocalDate returnDate, String cell, Boolean returned);
+    List<Lends> searchLendsBy(int choice, int b_id, LocalDate returnDate, int c_id, Boolean returned, Boolean sentinel);
 
     /**
      * Refreshes the list of lends.

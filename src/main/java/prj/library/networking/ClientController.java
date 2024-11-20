@@ -83,29 +83,74 @@ public class ClientController implements ClientControllerInterface {
         return client.receiveMessageBoolean();
     }
 
-    public List<Lends> searchLendsBy(int choice, String title, LocalDate returnDate, String cell, Boolean returned) {
-        Book book = new Book(0, title, "", 0, Genre.Genre, 0);
-        Customer customer = new Customer(0, "", "", "", cell);
-        List<Customer> c = searchCustomersBy(2, customer);
-        List<Book> b = searchBooksBy(1, book);
+    public List<Lends> searchLateLends() {
+        client.sendMessage(Operation.SEARCH_LEND_BY_LATE, null);
+        return client.receiveMessageLends();
+    }
 
-        if(b.isEmpty()) book = new Book(0, "", "", 0, Genre.Genre, 0);
-        else book = b.get(0);
-        if (c.isEmpty()) customer = new Customer(0, "", "", "", "");
-        else customer = c.get(0);
-
-        Lends tmp = new Lends(book.getId(), customer.getId(), returnDate, returned);
+    public List<Lends> searchLendsBy(int choice, int b_id, LocalDate returnDate, int c_id, Boolean returned, Boolean sentinel) {
+        Lends tmp = new Lends(b_id, c_id, returnDate, returned);
 
         Operation m = null;
-        if (choice == 0 && !b.isEmpty() && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_ALL;
-        if (choice == 1 && !b.isEmpty()) m = Operation.SEARCH_LEND_BY_BOOK;
-        if (choice == 2) m = Operation.SEARCH_LEND_BY_RETURN_DATE;
-        if (choice == 3 && !c.isEmpty()) m = Operation.SEARCH_LEND_BY_CELL;
-
-        if(m == null) {
-            CLIUtils.clientInfo("No such search option or Book/Customer not found");
-            m = Operation.GET_LENDS;
-            tmp = null;
+        if(!sentinel && !returned) {
+            System.out.println("here");
+            switch (choice) {
+                case 0:
+                    m = Operation.SEARCH_LEND_BY_ALL;
+                    break;
+                case 1:
+                    m = Operation.SEARCH_LEND_BY_BOOK;
+                    break;
+                case 2:
+                    m = Operation.SEARCH_LEND_BY_CUSTOMER;
+                    break;
+                case 3:
+                    m = Operation.SEARCH_LEND_BY_RETURN_DATE;
+                    break;
+                case 4:
+                    m = Operation.SEARCH_LEND_BY_BOOK_CUSTOMER;
+                    break;
+                case 5:
+                    m = Operation.SEARCH_LEND_BY_BOOK_RETURN_DATE;
+                    break;
+                case 6:
+                    m = Operation.SEARCH_LEND_BY_CUSTOMER_RETURN_DATE;
+                    break;
+                default:
+                    m = Operation.GET_LENDS;
+                    break;
+            }
+        } else {
+            System.out.println("correct");
+            switch (choice) {
+                case 0:
+                    m = Operation.SEARCH_LEND_BY_ALL_RETURNED;
+                    break;
+                case 1:
+                    m = Operation.SEARCH_LEND_BY_BOOK_RETURNED;
+                    break;
+                case 2:
+                    m = Operation.SEARCH_LEND_BY_CUSTOMER_RETURNED;
+                    break;
+                case 3:
+                    m = Operation.SEARCH_LEND_BY_RETURN_DATE_RETURNED;
+                    break;
+                case 4:
+                    m = Operation.SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED;
+                    break;
+                case 5:
+                    m = Operation.SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED;
+                    break;
+                case 6:
+                    m = Operation.SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED;
+                    break;
+                case 7:
+                    m = Operation.GET_LENDS_RETURNED;
+                    break;
+                default:
+                    m = Operation.GET_LENDS;
+                    break;
+            }
         }
 
         CLIUtils.clientDebug("Sending search request" + m + " " + tmp);

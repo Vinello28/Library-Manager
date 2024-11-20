@@ -38,6 +38,19 @@ public class MessageFactory {
             case SEARCH_LEND_BY_ALL:
             case SEARCH_LEND_BY_BOOK:
             case SEARCH_LEND_BY_RETURN_DATE:
+            case SEARCH_LEND_BY_CUSTOMER:
+            case SEARCH_LEND_BY_LATE:
+            case SEARCH_LEND_BY_BOOK_RETURNED:
+            case SEARCH_LEND_BY_RETURN_DATE_RETURNED:
+            case SEARCH_LEND_BY_CUSTOMER_RETURNED:
+            case SEARCH_LEND_BY_BOOK_CUSTOMER:
+            case SEARCH_LEND_BY_BOOK_RETURN_DATE:
+            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE:
+            case SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED:
+            case SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED:
+            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
+            case SEARCH_LEND_BY_ALL_RETURNED:
+            case GET_LENDS_RETURNED:
                 return new LendMessage(operation, (Lends) messageContent);
             case RESULT_BOOKS:
                 return new BooksListMessage(operation, (ArrayList<Book>) messageContent);

@@ -42,6 +42,13 @@ public interface LendsDAOInterface {
     List<Lends> getLends();
 
     /**
+     * Get all lends that have been returned or not
+     * @param returned the return status of the lend
+     * @return a list of all lends with specified return status
+     */
+    List<Lends> getLendsReturned(Boolean returned);
+
+    /**
      * Get all lends by a customer id
      * @param customerId the id of the customer
      * @return a list of all lends by the customer with the given id
@@ -68,4 +75,97 @@ public interface LendsDAOInterface {
      */
     List<Lends> getLendsByReturnDate(LocalDate returnDate);
 
+    /**
+     * Get lends by all parameters including returned
+     * @param bookId the id of the book
+     * @param customerId the id of the customer
+     * @param returnDate the return date of the lend
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByAllReturned(int bookId, int customerId, LocalDate returnDate, boolean returned);
+
+    /**
+     * Get lends by all parameters excluding returned
+     * @param bookId the id of the book
+     * @param customerId the id of the customer
+     * @param returnDate the return date of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByAll(int bookId, int customerId, LocalDate returnDate);
+
+    /**
+     * Get lends by all parameters excluding return date
+     * @param bookId the id of the book
+     * @param customerId the id of the customer
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByBookIdCustomerIdReturned(int bookId, int customerId, boolean returned);
+
+    /**
+     * Get lends by all parameters excluding customer id
+     * @param bookId the id of the book
+     * @param returnDate the return date of the lend
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByBookIdReturnDateReturned(int bookId, LocalDate returnDate, boolean returned);
+
+    /**
+     * Get lends by all parameters excluding book id
+     * @param customerId the id of the customer
+     * @param returnDate the return date of the lend
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByCustomerIdReturnDateReturned(int customerId, LocalDate returnDate, boolean returned);
+
+    /**
+     * Get lends by book id and customer id
+     * @param bookId the id of the book
+     * @param customerId the id of the customer
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByBookIdCustomerId(int bookId, int customerId);
+
+    /**
+     * Get lends by book id and return date
+     * @param bookId the id of the book
+     * @param returnDate the return date of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByBookIdReturnDate(int bookId, LocalDate returnDate);
+
+    /**
+     * Get lends by book id and returned
+     * @param bookId the id of the book
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByBookIdReturned(int bookId, boolean returned);
+
+    /**
+     * Get lends by customer id and return date
+     * @param customerId the id of the customer
+     * @param returnDate the return date of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByCustomerIdReturnDate(int customerId, LocalDate returnDate);
+
+    /**
+     * Get lends by customer id and returned
+     * @param customerId the id of the customer
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByCustomerIdReturned(int customerId, boolean returned);
+
+    /**
+     * Get lends by return date and returned
+     * @param returnDate the return date of the lend
+     * @param returned the return status of the lend
+     * @return a list of all lends that match the given parameters
+     */
+    List<Lends> getLendsByReturnDateReturned(LocalDate returnDate, boolean returned);
 }
