@@ -84,7 +84,6 @@ public class MessageFactory {
             case GENERIC_RESPONSE:
                 return new GenericMessage((Boolean) messageContent);
             default:
-                //throw new IllegalArgumentException("Invalid operation: " + operation); TODO: necessary?
                 System.out.println("Invalid operation: " + operation);
                 return null;
         }

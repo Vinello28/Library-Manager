@@ -60,7 +60,7 @@ public class LendsDAO implements LendsDAOInterface {
         Connection connection = getConnection();
         String query = "DELETE FROM lends WHERE lend_id = ?";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query); //TODO: Check if this is correct
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, lend.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

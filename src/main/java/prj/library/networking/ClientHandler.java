@@ -103,6 +103,11 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 case SEARCH_CUSTOMER_BY_NAME_PHONE:
                 case SEARCH_CUSTOMER_BY_NAME_EMAIL:
                 case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
+                case SEARCH_CUSTOMER_BY_PHONE_EMAIL:
+                case SEARCH_CUSTOMER_BY_PHONE_ADDRESS:
+                case SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS:
+                case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
+                case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
                 case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
                     handleSearchCustomersMessage((CustomerMessage) message);
                     break;
@@ -382,6 +387,12 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 break;
             case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
                 results = customerDAO.searchCustomerByEmailAndAddress(received.getEmail(), received.getAddress());
+                break;
+                case SEARCH_CUSTOMER_BY_PHONE_EMAIL:
+                results = customerDAO.searchCustomerByPhoneNumberAndEmail(received.getPhone(), received.getEmail());
+                break;
+                case SEARCH_CUSTOMER_BY_PHONE_ADDRESS:
+                results = customerDAO.searchCustomerByPhoneNumberAndAddress(received.getPhone(), received.getAddress());
                 break;
             case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
                 results = customerDAO.searchCustomerByNameAndPhoneNumberAndEmail(received.getName(), received.getPhone(), received.getEmail());

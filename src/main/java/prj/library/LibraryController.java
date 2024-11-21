@@ -182,7 +182,6 @@ public class LibraryController {
         Book tmp = new Book(title, author, year, genre);
         books = clientController.searchBooksBy(choice, tmp);
         bookCheck_N_View(books, searchedListView);
-
         clearBookSearch();
     }
 
@@ -191,7 +190,6 @@ public class LibraryController {
      */
     @FXML
     protected void onEditButtonClick() {
-
         Book selectedBook = searchedListView.getSelectionModel().getSelectedItem();
         if (selectedBook == null) {
             System.out.println("No book selected for editing.");
@@ -212,8 +210,6 @@ public class LibraryController {
         ChoiceBox<Genre> genreChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(Genre.values()));
         genreChoiceBox.setValue(selectedBook.getGenre());
         TextField copiesField = new TextField(String.valueOf(selectedBook.getCopies()));
-
-        System.out.println("CLIENT | DEBUG INFO:  editing this book " + selectedBook);
 
         // Create a grid pane and add the fields
         GridPane grid = new GridPane();
@@ -392,9 +388,6 @@ public class LibraryController {
         else if (b_id != 0 && c_id == 0 && date != null) choice = 5;
         else if (b_id == 0 && c_id != 0 && date != null) choice = 6;
 
-
-        clientDebug("Searching lends by " + choice);
-
         List<Lends> lends = clientController.searchLendsBy(choice, b_id, date, c_id, returned, sentinel);
         lendCheck_N_View(lends, searchedLendListView);
         lendSearchClear();
@@ -471,7 +464,7 @@ public class LibraryController {
                 //selectedLend.setReturned(returnedChoiceBox.getValue());
                 selectedLend.setReturnDate(returnDatePicker.getValue());
                 if (!selectedLend.isReturned() && returnedChoiceBox.getValue()) {
-                    Book book = clientController.readBook(selectedLend.getBookId());    //TODO: check if it works
+                    Book book = clientController.readBook(selectedLend.getBookId());
                     if (book != null){
                         clientDebug("updating book " + book);
                         book.setCopies(book.getCopies() + 1);

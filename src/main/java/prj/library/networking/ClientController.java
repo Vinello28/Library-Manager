@@ -224,15 +224,15 @@ public class ClientController implements ClientControllerInterface {
         if (choice == 3) return Operation.SEARCH_CUSTOMER_BY_EMAIL;
         if (choice == 4) return Operation.SEARCH_CUSTOMER_BY_ADDRESS;
         if (choice == 5) return Operation.SEARCH_CUSTOMER_BY_NAME_PHONE;
-        if (choice == 6) return Operation.SEARCH_CUSTOMER_BY_NAME_EMAIL;
-        if (choice == 7) return Operation.SEARCH_CUSTOMER_BY_NAME_ADDRESS;
-        if (choice == 8) return Operation.SEARCH_CUSTOMER_BY_PHONE_EMAIL;
-        if (choice == 9) return Operation.SEARCH_CUSTOMER_BY_PHONE_ADDRESS;
-        if (choice == 10) return Operation.SEARCH_CUSTOMER_BY_EMAIL_ADDRESS;
-        if (choice == 11) return Operation.SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL;
-        if (choice == 12) return Operation.SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS;
-        if (choice == 13) return Operation.SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS;
-        if (choice == 14) return Operation.SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS;
+        if (choice == 6) return Operation.SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL;
+        if (choice == 7) return Operation.SEARCH_CUSTOMER_BY_NAME_EMAIL;
+        if (choice == 8) return Operation.SEARCH_CUSTOMER_BY_NAME_ADDRESS;
+        if (choice == 9) return Operation.SEARCH_CUSTOMER_BY_PHONE_EMAIL;
+        if (choice == 10) return Operation.SEARCH_CUSTOMER_BY_PHONE_ADDRESS;
+        if (choice == 11) return Operation.SEARCH_CUSTOMER_BY_EMAIL_ADDRESS;
+        if (choice == 12) return Operation.SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS;
+        if (choice == 13) return Operation.SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS;
+        if (choice == 14) return Operation.SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS;
         return Operation.GET_CUSTOMERS;
     }
 
