@@ -279,6 +279,14 @@ public class LibraryController {
             return;
         }
 
+        Book refreshedBook = clientController.readBook(selectedBook.getId());
+        if (refreshedBook.getCopies() <= 0) {
+            showErrorDialog("Error", "No copies available", "There are no copies of this book available.");
+            return;
+        }
+        refreshedBook.setCopies(refreshedBook.getCopies()-1);
+        clientController.updateBook(refreshedBook);
+
         Dialog<Book> dialog = new Dialog<>();
         dialog.setTitle("Lend Book");
 
@@ -309,10 +317,13 @@ public class LibraryController {
         // Convert the result to a Book object when the save button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                selectedBook.setCopies(selectedBook.getCopies()-1);
+                if(selectedBook.getCopies() == refreshedBook.getCopies()+1) CLIUtils.clientDebug("OKOK"); //TODO: remove
                 return selectedBook;
+            } else {
+                refreshedBook.setCopies(refreshedBook.getCopies()+1);
+                clientController.updateBook(refreshedBook);
+                return null;
             }
-            return null;
         });
 
         dialog.showAndWait().ifPresent(editedBook -> {
@@ -320,7 +331,6 @@ public class LibraryController {
             clientController.createLend(lend[0]);
             clientController.updateBook(editedBook);
             loadBooks();
-            //loadLends();
         });
     }
 
@@ -525,7 +535,6 @@ public class LibraryController {
         System.out.println("CLIENT | DEBUG INFO:  deleting this lend " + selectedLend);
         clientController.deleteLend(selectedLend);
         loadBooks();
-        loadLends(); //TODO: necessary?
     }
 
     public void onEditLendButtonClick() {
@@ -568,8 +577,16 @@ public class LibraryController {
         //convert the result to a Lends object when the save button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                selectedLend.setReturned(returnedChoiceBox.getValue());
+                //selectedLend.setReturned(returnedChoiceBox.getValue());
                 selectedLend.setReturnDate(returnDatePicker.getValue());
+                if (!selectedLend.isReturned() && returnedChoiceBox.getValue()) {
+                    Book book = clientController.readBook(selectedLend.getBookId());    //TODO: check if it works
+                    if (book != null){
+                        book.setCopies(book.getCopies() + 1);
+                        clientController.updateBook(book);
+                    }
+                }
+                selectedLend.setReturned(returnedChoiceBox.getValue());
                 return selectedLend;
             }
             return null;
