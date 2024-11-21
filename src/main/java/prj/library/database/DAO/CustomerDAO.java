@@ -1,10 +1,10 @@
-package prj.library.DAO;
+package prj.library.database.DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import prj.library.models.Customer;
 import prj.library.utils.CLIUtils;
-
+import static prj.library.database.DatabaseController.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,19 +13,14 @@ import java.util.List;
  * Customer Data Access Object
  */
 public class CustomerDAO implements CustomerDAOInterface {
-    private String DB_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
 
-    public CustomerDAO(String DB_URL, String DB_USER, String DB_PASSWORD) {
-        this.DB_URL = DB_URL;
-        this.DB_USER = DB_USER;
-        this.DB_PASSWORD = DB_PASSWORD;
+    public CustomerDAO() {
     }
 
     public synchronized void createCustomer(Customer customer) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)";
+        Connection conn = getConnection();
+        String query = "INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getEmail());
@@ -35,11 +30,13 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
     }
 
     public synchronized void updateCustomer(Customer customer) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "UPDATE customers SET name = ?, email = ?, phone = ?, address = ? WHERE id_c = ?";
+        Connection conn = getConnection();
+        String query = "UPDATE customers SET name = ?, email = ?, phone = ?, address = ? WHERE id_c = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getEmail());
@@ -50,22 +47,26 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
     }
 
     public synchronized void deleteCustomer(Customer customer) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "DELETE FROM customers WHERE id_c = ?";
+        Connection conn = getConnection();
+        String query = "DELETE FROM customers WHERE id_c = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, customer.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
     }
 
     public synchronized Customer readCustomer(int id) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE id_c = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE id_c = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet rst = statement.executeQuery();
@@ -74,36 +75,42 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByName(String name) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByPhoneNumber(String phoneNumber) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE phone = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE phone = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, phoneNumber);
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByEmail(String email) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE email = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE email = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, email);
             return getCustomers(statement);
@@ -114,10 +121,13 @@ public class CustomerDAO implements CustomerDAOInterface {
     }
 
     public synchronized List<Customer> readAllCustomers() {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
-            return getCustomers(statement);
+            List<Customer> res = getCustomers(statement);
+            closeConnection(conn);
+            return res;
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
             return new ArrayList<>();
@@ -125,20 +135,25 @@ public class CustomerDAO implements CustomerDAOInterface {
     }
 
     public synchronized List<Customer> searchCustomerByAddress(String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, address);
-            return getCustomers(statement);
+            List<Customer> res = getCustomers(statement);
+            closeConnection(conn);
+            return res;
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
             return new ArrayList<>();
         }
+
     }
 
     public synchronized List<Customer> searchCustomerByNameAndPhoneNumber(String name, String phoneNumber) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND phone = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND phone = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, phoneNumber);
@@ -146,12 +161,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndEmail(String name, String email) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND email = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND email = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, email);
@@ -159,12 +176,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndAddress(String name, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, address);
@@ -172,12 +191,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByPhoneNumberAndEmail(String phoneNumber, String email) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE phone = ? AND email = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE phone = ? AND email = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, phoneNumber);
             statement.setString(2, email);
@@ -185,12 +206,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByPhoneNumberAndAddress(String phoneNumber, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE phone = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE phone = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, phoneNumber);
             statement.setString(2, address);
@@ -198,12 +221,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByEmailAndAddress(String email, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE email = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE email = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, email);
             statement.setString(2, address);
@@ -211,12 +236,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndPhoneNumberAndEmail(String name, String phoneNumber, String email) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND email = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND email = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, phoneNumber);
@@ -225,12 +252,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndPhoneNumberAndAddress(String name, String phoneNumber, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, phoneNumber);
@@ -239,12 +268,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndEmailAndAddress(String name, String email, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND email = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND email = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, email);
@@ -253,12 +284,14 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByPhoneNumberAndEmailAndAddress(String phoneNumber, String email, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE phone = ? AND email = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE phone = ? AND email = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, phoneNumber);
             statement.setString(2, email);
@@ -267,22 +300,27 @@ public class CustomerDAO implements CustomerDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByAll(String name, String phoneNumber, String email, String address) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND email = ? AND address = ?";
+        Connection conn = getConnection();
+        String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND email = ? AND address = ?";
+        try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name);
             statement.setString(2, phoneNumber);
             statement.setString(3, email);
             statement.setString(4, address);
-            return getCustomers(statement);
+            List<Customer> res = getCustomers(statement);
+            closeConnection(conn);
+            return res;
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
             return new ArrayList<>();
         }
+
     }
 
     /**

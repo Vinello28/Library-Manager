@@ -1,30 +1,25 @@
-package prj.library.DAO;
+package prj.library.database.DAO;
 
 import prj.library.models.Lends;
 import prj.library.utils.CLIUtils;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static prj.library.database.DatabaseController.*;
 
 /**
  * Data Access Object for Lends
  */
 public class LendsDAO implements LendsDAOInterface {
-    private String DB_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
 
-    public LendsDAO(String DB_URL, String DB_USER, String DB_PASSWORD) {
-        this.DB_URL = DB_URL;
-        this.DB_USER = DB_USER;
-        this.DB_PASSWORD = DB_PASSWORD;
+    public LendsDAO() {
     }
 
     public synchronized void createLend(Lends lend) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "INSERT INTO lends (book_id, customer_id, return_date, returned) VALUES (?, ?, ?, ?)";
+        Connection connection = getConnection();
+        String query = "INSERT INTO lends (book_id, customer_id, return_date, returned) VALUES (?, ?, ?, ?)";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, lend.getBookId());
             preparedStatement.setInt(2, lend.getCustomerId());
@@ -40,11 +35,13 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
     }
 
     public synchronized void updateLend(Lends lend) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "UPDATE lends SET book_id = ?, customer_id = ?, return_date = ?, returned = ? WHERE lend_id = ?";
+        Connection connection = getConnection();
+        String query = "UPDATE lends SET book_id = ?, customer_id = ?, return_date = ?, returned = ? WHERE lend_id = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, lend.getBookId());
             preparedStatement.setInt(2, lend.getCustomerId());
@@ -56,23 +53,27 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
     }
 
     public synchronized void deleteLend(Lends lend) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "DELETE FROM lends WHERE lend_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);  //TODO: check if the lend_id is received
+        Connection connection = getConnection();
+        String query = "DELETE FROM lends WHERE lend_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query); //TODO: Check if this is correct
             preparedStatement.setInt(1, lend.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
     }
 
     public synchronized Lends readLend(int id) {
         Lends lend = null;
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE lend_id = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE lend_id = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -84,90 +85,104 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lend;
     }
 
     public synchronized List<Lends> getLends() {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             lends = getLendsByStatement(preparedStatement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsReturned(Boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setBoolean(1, returned);
             lends = getLendsByStatement(preparedStatement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByCustomerId(int customerId) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE customer_id = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE customer_id = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, customerId);
             lends = getLendsByStatement(preparedStatement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByBookId(int bookId) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             lends = getLendsByStatement(preparedStatement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLateLends() {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE return_date < ? AND returned = false";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE return_date < ? AND returned = false";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(LocalDate.now()));
             lends = getLendsByStatement(preparedStatement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByReturnDate(LocalDate returnDate) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE return_date = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE return_date = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(returnDate));
             lends = getLendsByStatement(preparedStatement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByAllReturned(int bookId, int customerId, LocalDate returnDate, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND return_date = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND return_date = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setInt(2, customerId);
@@ -177,13 +192,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByAll(int bookId, int customerId, LocalDate returnDate) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND return_date = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND return_date = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setInt(2, customerId);
@@ -192,13 +209,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByBookIdCustomerIdReturned(int bookId, int customerId, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setInt(2, customerId);
@@ -207,13 +226,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByBookIdReturnDateReturned(int bookId, LocalDate returnDate, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND return_date = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND return_date = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setDate(2, Date.valueOf(returnDate));
@@ -222,13 +243,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByCustomerIdReturnDateReturned(int customerId, LocalDate returnDate, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE customer_id = ? AND return_date = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE customer_id = ? AND return_date = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, customerId);
             preparedStatement.setDate(2, Date.valueOf(returnDate));
@@ -237,13 +260,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByBookIdCustomerId(int bookId, int customerId) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND customer_id = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setInt(2, customerId);
@@ -251,13 +276,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByBookIdReturnDate(int bookId, LocalDate returnDate) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND return_date = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND return_date = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setDate(2, Date.valueOf(returnDate));
@@ -265,13 +292,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByBookIdReturned(int bookId, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE book_id = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE book_id = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, bookId);
             preparedStatement.setBoolean(2, returned);
@@ -279,13 +308,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByCustomerIdReturnDate(int customerId, LocalDate returnDate) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE customer_id = ? AND return_date = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE customer_id = ? AND return_date = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, customerId);
             preparedStatement.setDate(2, Date.valueOf(returnDate));
@@ -293,13 +324,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByCustomerIdReturned(int customerId, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE customer_id = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE customer_id = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, customerId);
             preparedStatement.setBoolean(2, returned);
@@ -307,13 +340,15 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 
     public synchronized List<Lends> getLendsByReturnDateReturned(LocalDate returnDate, boolean returned) {
         List<Lends> lends = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM lends WHERE return_date = ? AND returned = ?";
+        Connection connection = getConnection();
+        String query = "SELECT * FROM lends WHERE return_date = ? AND returned = ?";
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(returnDate));
             preparedStatement.setBoolean(2, returned);
@@ -321,6 +356,7 @@ public class LendsDAO implements LendsDAOInterface {
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
         }
+        closeConnection(connection);
         return lends;
     }
 

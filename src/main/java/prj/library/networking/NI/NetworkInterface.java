@@ -1,4 +1,4 @@
-package prj.library.networking;
+package prj.library.networking.NI;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,6 +13,10 @@ public class NetworkInterface implements NIInterface {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    /**
+     * Constructor for the NetworkInterface class.
+     * @param socket the socket to use for the network connection
+     */
     public NetworkInterface(Socket socket) {
         try {
             this.socket = socket;
@@ -42,18 +46,6 @@ public class NetworkInterface implements NIInterface {
         return null;
     }
 
-    /**
-     * Safely disconnects the network interface.
-     */
-    private void safeDisconnection(){
-        System.out.println("Network Interface | INFO: Safe disconnection starting...");
-        close();
-        System.out.println("Network Interface | INFO: socket closed");
-        Thread.currentThread().interrupt();
-        System.out.println("Network Interface | INFO: Thread interrupted, safe disconnection completed");
-    }
-
-
     public void close() {
         try {
             in.close();
@@ -63,5 +55,19 @@ public class NetworkInterface implements NIInterface {
             System.out.println("Error closing connection: " + e.getMessage());
         }
     }
+
+    /**
+     * Safely disconnects the network interface.
+     */
+    private void safeDisconnection(){
+        System.out.println("Network Interface | INFO: Safe disconnection starting...");
+        close();
+        System.out.println("Network Interface | INFO: socket closed");
+        Thread.currentThread().interrupt();
+        System.out.println("Network Interface | INFO: interrupting thread");
+        if (Thread.currentThread().isInterrupted()) System.out.println("Network Interface | INFO: Thread interrupted, safe disconnection completed");
+    }
+
+
 
 }

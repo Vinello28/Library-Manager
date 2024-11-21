@@ -2,7 +2,6 @@ package prj.library;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import prj.library.models.Book;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static prj.library.utils.CLIUtils.*;
 
 
 public class LibraryController {
@@ -107,7 +107,6 @@ public class LibraryController {
     public void initialize() {
         loadBooks();
         fillChoiceBoxes();
-        //loadCustomers(); TODO remove??
 
         //Add listener to the ListView
         customerListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -247,6 +246,7 @@ public class LibraryController {
         dialog.showAndWait().ifPresent(editedBook -> {
             clientController.updateBook(editedBook);
             loadBooks();
+            searchedListView.getItems().clear();
         });
     }
 
@@ -263,6 +263,7 @@ public class LibraryController {
         }
         clientController.deleteBook(selectedBook.getId());
         loadBooks();
+        searchedListView.getItems().clear();
     }
 
     /**
@@ -284,8 +285,6 @@ public class LibraryController {
             showErrorDialog("Error", "No copies available", "There are no copies of this book available.");
             return;
         }
-        refreshedBook.setCopies(refreshedBook.getCopies()-1);
-        clientController.updateBook(refreshedBook);
 
         Dialog<Book> dialog = new Dialog<>();
         dialog.setTitle("Lend Book");
@@ -299,8 +298,6 @@ public class LibraryController {
         customerChoiceBox.getItems().addAll(clientController.getCustomers());
         DatePicker returnDatePicker = new DatePicker();
         Label booktitleLabel = new Label(selectedBook.getTitle());
-
-        CLIUtils.clientDebug("editing this book " + selectedBook); //TODO: remove
 
         // Create a grid pane and add the fields
         GridPane grid = new GridPane();
@@ -317,11 +314,14 @@ public class LibraryController {
         // Convert the result to a Book object when the save button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                if(selectedBook.getCopies() == refreshedBook.getCopies()+1) CLIUtils.clientDebug("OKOK"); //TODO: remove
-                return selectedBook;
+                if(clientController.readBook(selectedBook.getId()).getCopies() <= 0) {
+                    showErrorDialog("Error", "No copies available", "There are no copies of this book available.");
+                    return null;
+                } else {
+                    selectedBook.setCopies(selectedBook.getCopies()-1);
+                    return selectedBook;
+                }
             } else {
-                refreshedBook.setCopies(refreshedBook.getCopies()+1);
-                clientController.updateBook(refreshedBook);
                 return null;
             }
         });
@@ -331,7 +331,230 @@ public class LibraryController {
             clientController.createLend(lend[0]);
             clientController.updateBook(editedBook);
             loadBooks();
+            searchedListView.getItems().clear();
         });
+    }
+
+    @FXML
+    protected void onLateSearchButtonClick() {
+        List<Lends> lends = clientController.searchLateLends();
+        lendSearchClear();
+        lendCheck_N_View(lends, searchedLendListView);
+    }
+
+    /**
+     * When the search lend button is clicked, the lends are searched and displayed in the list view.
+     */
+    @FXML
+    protected void onSearchLendButtonClick(){
+        searchedLendListView.getItems().clear();
+
+        String title = titleLendTextField.getText();
+        LocalDate date = lendSearchDatePicker.getValue();
+        String cell = cellLendTextField.getText();
+        int b_id=0; //book id
+        int c_id=0; //customer id
+        boolean returned;
+        boolean sentinel = false;
+
+        if(returnedRadioButton.isSelected()) returned = true;
+        else if (notReturnedRadioButton.isSelected()) {
+            returned = false;
+            sentinel = true;
+        } else returned = false;
+
+        //checks if book and customer exists
+        if (!title.isEmpty()) {
+            List<Book> books = clientController.searchBooksBy(1, new Book(0, title, "", 0, Genre.Genre, 0));
+            if (books == null || books.isEmpty()) {
+                showErrorDialog("Error", "Book not found", "Book you are looking for is not found. Try something else.");
+                lendSearchClear();
+                return;
+            }
+            b_id = books.get(0).getId();
+        }
+        if(!cell.isEmpty()) {
+            List<Customer> customers = clientController.searchCustomersBy(2, new Customer("", "", cell, ""));
+            if (customers == null || customers.isEmpty()) {
+                showErrorDialog("Error", "Customer not found", "Customer you are looking for is not found. Try something else.");
+                lendSearchClear();
+                return;
+            }
+            c_id = customers.get(0).getId();
+        }
+
+        int choice=7;
+        if (b_id != 0 && c_id != 0 && date != null) choice = 0;
+        else if (b_id != 0 && c_id == 0 && date == null) choice = 1;
+        else if (b_id == 0 && c_id != 0 && date == null) choice = 2;
+        else if (b_id == 0 && c_id == 0 && date != null) choice = 3;
+        else if (b_id != 0 && c_id != 0 && date == null) choice = 4;
+        else if (b_id != 0 && c_id == 0 && date != null) choice = 5;
+        else if (b_id == 0 && c_id != 0 && date != null) choice = 6;
+
+
+        clientDebug("Searching lends by " + choice);
+
+        List<Lends> lends = clientController.searchLendsBy(choice, b_id, date, c_id, returned, sentinel);
+        lendCheck_N_View(lends, searchedLendListView);
+        lendSearchClear();
+    }
+
+    @FXML
+    protected void onAddCustomerButtonClick() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+        if (selectedCustomer != null) {
+            updateCustomer(selectedCustomer);
+        } else {
+            addCustomer();
+        }
+        onRevertCustomerButtonClick();
+        loadCustomers();
+    }
+
+    @FXML
+    protected void onRevertCustomerButtonClick() {
+        customerNameTextField.clear();
+        customerPhoneTextField.clear();
+        customerEmailTextField.clear();
+        customerAddressTextField.clear();
+        addCustomerButton.setText("Add");
+    }
+
+    @FXML
+    protected void onDeleteLendButtonClick() {
+        Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
+        System.out.println("CLIENT | DEBUG INFO:  deleting this lend " + selectedLend);
+        clientController.deleteLend(selectedLend);
+        loadBooks();
+        searchedLendListView.getItems().clear();
+    }
+
+    @FXML
+    protected void onEditLendButtonClick() {
+        Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
+        if (selectedLend == null) {
+            CLIUtils.clientInfo("No lend selected for editing.");
+            return;
+        }
+
+        Dialog<Lends> dialog = new Dialog<>();
+        dialog.setTitle("Edit Lend");
+
+        //set the button types.
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        //create the fields and populate with current lend data.
+        Label customerLabel = new Label(clientController.readCustomer(selectedLend.getCustomerId()).getEmail());
+        DatePicker returnDatePicker = new DatePicker(selectedLend.getReturnDate());
+        Label booktitleLabel = new Label(clientController.readBook(selectedLend.getBookId()).getTitle());
+        ChoiceBox<Boolean> returnedChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(true, false)); //fill choice box with true and false
+        returnedChoiceBox.setValue(selectedLend.isReturned()); //set true if it's returned
+
+        //create a grid pane and add the fields
+        GridPane grid = new GridPane();
+        grid.add(new Label("Customer's email:"), 0, 0);
+        grid.add(customerLabel, 1, 0);
+        grid.add(new Label("Book's title:"), 0, 1);
+        grid.add(booktitleLabel, 1, 1);
+        grid.add(new Label("Return date:"), 0, 2);
+        grid.add(returnDatePicker, 1, 2);
+        grid.add(new Label("Returned:"), 0, 3);
+        grid.add(returnedChoiceBox, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+
+        //convert the result to a Lends object when the save button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                //selectedLend.setReturned(returnedChoiceBox.getValue());
+                selectedLend.setReturnDate(returnDatePicker.getValue());
+                if (!selectedLend.isReturned() && returnedChoiceBox.getValue()) {
+                    Book book = clientController.readBook(selectedLend.getBookId());    //TODO: check if it works
+                    if (book != null){
+                        clientDebug("updating book " + book);
+                        book.setCopies(book.getCopies() + 1);
+                        clientController.updateBook(book);
+                    }
+                }
+                selectedLend.setReturned(returnedChoiceBox.getValue());
+                return selectedLend;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(editedLend -> {
+            clientController.updateLend(editedLend);
+            List<Lends> lends = new ArrayList<>();
+            lends.add(clientController.readLend(editedLend));
+            lendCheck_N_View(lends, searchedLendListView);
+            loadBooks();
+        });
+    }
+
+    @FXML
+    protected void onDeleteCustomerButtonClick() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+        System.out.println("CLIENT | DEBUG INFO:  deleting this customer " + selectedCustomer);
+        clientController.deleteCustomer(selectedCustomer);
+        customerListView.getSelectionModel().clearSelection();
+        onRevertCustomerButtonClick();
+        loadCustomers();
+    }
+
+    @FXML
+    protected void onSearchCustomerButtonClick(){
+        String name = customerNameTextField.getText();
+        String phone = customerPhoneTextField.getText();
+        String email = customerEmailTextField.getText();
+        String address = customerAddressTextField.getText();
+        int choice;
+        if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 0;
+        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 1;
+        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 2;
+        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 3;
+        else if(name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 4;
+        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 5;
+        else if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 6;
+        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 7;
+        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 8;
+        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 9;
+        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 10;
+        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 11;
+        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 12;
+        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 13;
+        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 14;
+        else choice = 15;
+
+        List<Customer> customers = clientController.searchCustomersBy(choice, new Customer(name, email, phone, address));
+        if(customers==null || customers.isEmpty()) showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
+        else {
+            ObservableList<Customer> customerNames = FXCollections.observableArrayList();
+            customerNames.addAll(customers);
+            customerListView.setItems(customerNames);
+        }
+    }
+
+    @FXML
+    protected void onNotReturnedRadioButtonClick() {
+        returnedRadioButton.setSelected(false);
+    }
+
+    @FXML
+    protected void onReturnedRadioButtonClick() {
+        notReturnedRadioButton.setSelected(false);
+    }
+
+    /**
+     * Clears the lend's search fields.
+     */
+    private void lendSearchClear() {
+        titleLendTextField.clear();
+        lendSearchDatePicker.setValue(null);
+        cellLendTextField.clear();
+        returnedRadioButton.setSelected(false);
+        notReturnedRadioButton.setSelected(false);
     }
 
     /**
@@ -350,11 +573,49 @@ public class LibraryController {
         lendCheck_N_View(lends, searchedLendListView);
     }
 
-    @FXML
-    private void onLateSearchButtonClick() {
-        List<Lends> lends = clientController.searchLateLends();
-        lendSearchClear();
-        lendCheck_N_View(lends, searchedLendListView);
+    /**
+     * Updates the customer with the data from the text fields.
+     * @param customer the customer to update
+     */
+    private void updateCustomer(Customer customer) {
+        customer.setName(customerNameTextField.getText());
+        customer.setPhone(customerPhoneTextField.getText());
+        customer.setEmail(customerEmailTextField.getText());
+        customer.setAddress(customerAddressTextField.getText());
+
+        clientController.updateCustomer(customer);
+    }
+
+    /**
+     * Adds a new customer with the data from the text fields.
+     */
+    private void addCustomer() {
+        String name = customerNameTextField.getText();
+        String phone = customerPhoneTextField.getText();
+        String email = customerEmailTextField.getText();
+        String address = customerAddressTextField.getText();
+
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
+            showErrorDialog("Error", "Invalid input", "Please fill all fields.");
+            return;
+        }
+
+        Customer newCustomer = new Customer(name, email, phone, address);
+        clientController.createCustomer(newCustomer);
+    }
+
+    /**
+     * Loads the customers from the server and displays them in the list view.
+     */
+    private void loadCustomers() {
+        List<Customer> customers = clientController.getCustomers();
+        if (customers == null || customers.isEmpty()) {
+            showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
+            return;
+        }
+        ObservableList<Customer> customerNames = FXCollections.observableArrayList();
+        customerNames.addAll(customers);
+        customerListView.setItems(customerNames);
     }
 
     /**
@@ -422,239 +683,4 @@ public class LibraryController {
         alert.showAndWait();
     }
 
-    /**
-     * When the search lend button is clicked, the lends are searched and displayed in the list view.
-     */
-    @FXML
-    public void onSearchLendButtonClick(){
-        searchedLendListView.getItems().clear();
-
-        String title = titleLendTextField.getText();
-        LocalDate date = lendSearchDatePicker.getValue();
-        String cell = cellLendTextField.getText();
-        int b_id=0; //book id
-        int c_id=0; //customer id
-        boolean returned;
-        boolean sentinel = false;
-
-        if(returnedRadioButton.isSelected()) returned = true;
-        else if (notReturnedRadioButton.isSelected()) {
-            returned = false;
-            sentinel = true;
-        } else returned = false;
-
-        //checks if book and customer exists
-        if (!title.isEmpty()) {
-            List<Book> books = clientController.searchBooksBy(1, new Book(0, title, "", 0, Genre.Genre, 0));
-            if (books == null || books.isEmpty()) {
-                showErrorDialog("Error", "Book not found", "Book you are looking for is not found. Try something else.");
-                lendSearchClear();
-                return;
-            }
-            b_id = books.get(0).getId();
-        }
-        if(!cell.isEmpty()) {
-            List<Customer> customers = clientController.searchCustomersBy(2, new Customer("", "", cell, ""));
-            if (customers == null || customers.isEmpty()) {
-                showErrorDialog("Error", "Customer not found", "Customer you are looking for is not found. Try something else.");
-                lendSearchClear();
-                return;
-            }
-            c_id = customers.get(0).getId();
-        }
-
-        int choice=7;
-        if (b_id != 0 && c_id != 0 && date != null) choice = 0;
-        else if (b_id != 0 && c_id == 0 && date == null) choice = 1;
-        else if (b_id == 0 && c_id != 0 && date == null) choice = 2;
-        else if (b_id == 0 && c_id == 0 && date != null) choice = 3;
-        else if (b_id != 0 && c_id != 0 && date == null) choice = 4;
-        else if (b_id != 0 && c_id == 0 && date != null) choice = 5;
-        else if (b_id == 0 && c_id != 0 && date != null) choice = 6;
-
-
-        CLIUtils.clientDebug("Searching lends by " + choice);
-
-        List<Lends> lends = clientController.searchLendsBy(choice, b_id, date, c_id, returned, sentinel);
-        lendCheck_N_View(lends, searchedLendListView);
-        lendSearchClear();
-    }
-
-    @FXML
-    public void onAddCustomerButtonClick() {
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
-        if (selectedCustomer != null) {
-            updateCustomer(selectedCustomer);
-        } else {
-            addCustomer();
-        }
-        onRevertCustomerButtonClick();
-        loadCustomers();
-    }
-
-    private void updateCustomer(Customer customer) {
-        customer.setName(customerNameTextField.getText());
-        customer.setPhone(customerPhoneTextField.getText());
-        customer.setEmail(customerEmailTextField.getText());
-        customer.setAddress(customerAddressTextField.getText());
-
-        clientController.updateCustomer(customer);
-    }
-
-    private void addCustomer() {
-        Customer newCustomer = new Customer(
-                customerNameTextField.getText(),
-                customerEmailTextField.getText(),
-                customerPhoneTextField.getText(),
-                customerAddressTextField.getText()
-        );
-        clientController.createCustomer(newCustomer);
-    }
-
-    private void loadCustomers() {
-        List<Customer> customers = clientController.getCustomers();
-        if (customers == null || customers.isEmpty()) {
-            showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
-            return;
-        }
-        ObservableList<Customer> customerNames = FXCollections.observableArrayList();
-        customerNames.addAll(customers);
-        customerListView.setItems(customerNames);
-    }
-
-    public void onRevertCustomerButtonClick() {
-        customerNameTextField.clear();
-        customerPhoneTextField.clear();
-        customerEmailTextField.clear();
-        customerAddressTextField.clear();
-        addCustomerButton.setText("Add");
-    }
-
-    public void onDeleteLendButtonClick() {
-        Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
-        System.out.println("CLIENT | DEBUG INFO:  deleting this lend " + selectedLend);
-        clientController.deleteLend(selectedLend);
-        loadBooks();
-    }
-
-    public void onEditLendButtonClick() {
-        Lends selectedLend = searchedLendListView.getSelectionModel().getSelectedItem();
-        if (selectedLend == null) {
-            CLIUtils.clientInfo("No lend selected for editing.");
-            return;
-        }
-
-        Dialog<Lends> dialog = new Dialog<>();
-        dialog.setTitle("Edit Lend");
-
-        //set the button types.
-        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-        //create the fields and populate with current lend data.
-        Label customerLabel = new Label(clientController.readCustomer(selectedLend.getCustomerId()).getEmail());
-        DatePicker returnDatePicker = new DatePicker(selectedLend.getReturnDate());
-        Label booktitleLabel = new Label(clientController.readBook(selectedLend.getBookId()).getTitle());
-        ChoiceBox<Boolean> returnedChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(true, false)); //fill choice box with true and false
-        returnedChoiceBox.setValue(selectedLend.isReturned()); //set true if it's returned
-
-        CLIUtils.clientDebug("editing this lend " + selectedLend); //TODO: remove
-
-        //create a grid pane and add the fields
-        GridPane grid = new GridPane();
-        grid.add(new Label("Customer's email:"), 0, 0);
-        grid.add(customerLabel, 1, 0);
-        grid.add(new Label("Book's title:"), 0, 1);
-        grid.add(booktitleLabel, 1, 1);
-        grid.add(new Label("Return date:"), 0, 2);
-        grid.add(returnDatePicker, 1, 2);
-        grid.add(new Label("Returned:"), 0, 3);
-        grid.add(returnedChoiceBox, 1, 3);
-
-
-        dialog.getDialogPane().setContent(grid);
-
-        //convert the result to a Lends object when the save button is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
-                //selectedLend.setReturned(returnedChoiceBox.getValue());
-                selectedLend.setReturnDate(returnDatePicker.getValue());
-                if (!selectedLend.isReturned() && returnedChoiceBox.getValue()) {
-                    Book book = clientController.readBook(selectedLend.getBookId());    //TODO: check if it works
-                    if (book != null){
-                        book.setCopies(book.getCopies() + 1);
-                        clientController.updateBook(book);
-                    }
-                }
-                selectedLend.setReturned(returnedChoiceBox.getValue());
-                return selectedLend;
-            }
-            return null;
-        });
-
-        dialog.showAndWait().ifPresent(editedLend -> {
-            clientController.updateLend(editedLend);
-            List<Lends> lends = new ArrayList<>();
-            lends.add(clientController.readLend(editedLend));
-            lendCheck_N_View(lends, searchedLendListView);
-        });
-    }
-
-    public void onDeleteCustomerButtonClick() {
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
-        System.out.println("CLIENT | DEBUG INFO:  deleting this customer " + selectedCustomer);
-        clientController.deleteCustomer(selectedCustomer);
-        loadCustomers();
-    }
-
-    public void onSearchCustomerButtonClick(){
-        String name = customerNameTextField.getText();
-        String phone = customerPhoneTextField.getText();
-        String email = customerEmailTextField.getText();
-        String address = customerAddressTextField.getText();
-        int choice;
-        if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 0;
-        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 1;
-        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 2;
-        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 3;
-        else if(name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 4;
-        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 5;
-        else if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 6;
-        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 7;
-        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 8;
-        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 9;
-        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 10;
-        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 11;
-        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 12;
-        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 13;
-        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 14;
-        else choice = 15;
-
-        List<Customer> customers = clientController.searchCustomersBy(choice, new Customer(name, email, phone, address));
-        if(customers==null || customers.isEmpty()) showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
-        else {
-            ObservableList<Customer> customerNames = FXCollections.observableArrayList();
-            customerNames.addAll(customers);
-            customerListView.setItems(customerNames);
-        }
-    }
-
-    public void onNotReturnedRadioButtonClick(ActionEvent actionEvent) {
-        returnedRadioButton.setSelected(false);
-    }
-
-    public void onReturnedRadioButtonClick(ActionEvent actionEvent) {
-        notReturnedRadioButton.setSelected(false);
-    }
-
-    /**
-     * Clears the lend's search fields.
-     */
-    private void lendSearchClear() {
-        titleLendTextField.clear();
-        lendSearchDatePicker.setValue(null);
-        cellLendTextField.clear();
-        returnedRadioButton.setSelected(false);
-        notReturnedRadioButton.setSelected(false);
-    }
 }

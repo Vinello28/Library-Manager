@@ -2,14 +2,12 @@ package prj.library.networking;
 
 import prj.library.models.Book;
 import prj.library.models.Customer;
-import prj.library.models.Genre;
 import prj.library.models.Lends;
 import prj.library.networking.messages.*;
-
 import java.io.*;
 import java.net.*;
-import java.util.Date;
 import java.util.List;
+import prj.library.networking.NI.NetworkInterface;
 
 public class Client extends NetworkInterface {
     private static final String SERVER_IP = "localhost";

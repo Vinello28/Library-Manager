@@ -13,4 +13,6 @@ module prj.library {
     opens prj.library.models to javafx.fxml;
     exports prj.library.networking;
     opens prj.library.networking to javafx.fxml;
+    exports prj.library.networking.NI;
+    opens prj.library.networking.NI to javafx.fxml;
 }

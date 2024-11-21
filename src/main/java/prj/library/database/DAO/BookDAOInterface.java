@@ -1,4 +1,4 @@
-package prj.library.DAO;
+package prj.library.database.DAO;
 
 import prj.library.models.Book;
 import prj.library.models.Genre;

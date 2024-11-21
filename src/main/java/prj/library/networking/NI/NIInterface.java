@@ -1,4 +1,4 @@
-package prj.library.networking;
+package prj.library.networking.NI;
 
 public interface NIInterface {
 
