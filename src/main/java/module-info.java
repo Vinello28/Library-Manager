@@ -6,6 +6,7 @@ module prj.library {
     requires com.dlsc.formsfx;
     requires java.sql;
     requires mysql.connector.j;
+    requires java.desktop;
 
     opens prj.library to javafx.fxml;
     exports prj.library;
