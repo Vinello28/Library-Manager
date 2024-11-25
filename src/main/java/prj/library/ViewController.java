@@ -2,10 +2,11 @@ package prj.library;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import prj.library.models.Book;
 import prj.library.models.Customer;
 import prj.library.models.Genre;
@@ -14,11 +15,14 @@ import javafx.scene.layout.GridPane;
 import prj.library.networking.ClientController;
 import prj.library.utils.CLIUtils;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import static prj.library.utils.CLIUtils.*;
+import java.util.Map;
 
-
+/**
+ * The ViewController class is responsible for handling the GUI of the application.
+ */
 public class ViewController {
 
     private ClientController clientController;
@@ -32,15 +36,15 @@ public class ViewController {
     @FXML
     private Pane lendPane;
     @FXML
+    private Pane statsPane;
+    @FXML
     private Pane customersPane;
-    @FXML
-    private StackPane opStackPane;
-    @FXML
-    private Button addABButton;
     @FXML
     private TableView<Book> homeTableView;
     @FXML
     private TableView<Book> searchBookTableView;
+    @FXML
+    private TableView<Lends> searchLendTableView;
     @FXML
     private TableView<Customer> customersTableView;
     @FXML
@@ -78,6 +82,16 @@ public class ViewController {
     @FXML
     private TableColumn<Customer, String> addressCColumn;
     @FXML
+    private TableColumn<Lends, Integer> idLColumn;
+    @FXML
+    private TableColumn<Lends, Integer> bidLColumn;
+    @FXML
+    private TableColumn<Lends, Integer> cidLColumn;
+    @FXML
+    private TableColumn<Lends, String> returnLColumn;
+    @FXML
+    private TableColumn<Lends, Boolean> returnedLColumn;
+    @FXML
     private TextField titleABTextField;
     @FXML
     private TextField authorABTextField;
@@ -95,6 +109,28 @@ public class ViewController {
     private ChoiceBox<Genre> genreSBChoiceBox;
     @FXML
     private TextField yearSBTextField;
+    @FXML
+    private TextField titleLendTextField;
+    @FXML
+    private DatePicker returnLendDatePicker;
+    @FXML
+    private TextField phoneLendTextField;
+    @FXML
+    private ChoiceBox<Boolean> returnedLendChoiceBox;
+    @FXML
+    private Button addateCustomerButton;
+    @FXML
+    private TextField nameCustomerTextField;
+    @FXML
+    private TextField phoneCustomerTextField;
+    @FXML
+    private TextField emailCustomerTextField;
+    @FXML
+    private TextField addressCustomerTextField;
+    @FXML
+    private PieChart genrePieChart;
+    @FXML
+    private BarChart<String, Number> numusBarChart;
 
 
 
@@ -114,41 +150,32 @@ public class ViewController {
 
         hideAllPanes();
 
-        // Set up the home view
+        //Set up the home view
         showPane(homePane);
 
         initHomeTableView();
         initSearchTableView();
-        //initCustomersTableView();
+        initCustomersTableView();
+        initLendsTableView();
         initChoiceBoxes();
+        initGenrePieChart();
+        initNumusBarChart();
 
         loadBooks();
-        //add listeners for customers tableview to show add or update TODO: do this.
-    }
 
+        //Add listener to the ListView
+        customersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                //Update TextFields with selected customer data
+                nameCustomerTextField.setText(newValue.getName());
+                phoneCustomerTextField.setText(newValue.getPhone());
+                emailCustomerTextField.setText(newValue.getEmail());
+                addressCustomerTextField.setText(newValue.getAddress());
 
-    /**
-     * Shows the add book view.
-     */
-    private void showPane(Pane pane) {
-        pane.toFront();
-        pane.setVisible(true);
-    }
-
-    /**
-     * Shows the home view.
-     */
-    private void hideAllPanes() {
-        homePane.toBack();
-        homePane.setVisible(false);
-        addBookPane.toBack();
-        addBookPane.setVisible(false);
-        searchBooksPane.toBack();
-        searchBooksPane.setVisible(false);
-        lendPane.toBack();
-        lendPane.setVisible(false);
-        customersPane.toBack();
-        customersPane.setVisible(false);
+                //Change button text to "Update"
+                addateCustomerButton.setText("\uD83D\uDCA1 update");
+            }
+        });
     }
 
     @FXML
@@ -176,6 +203,8 @@ public class ViewController {
         } catch (IllegalArgumentException e) {
             showErrorDialog("Error", "Invalid input", "Please enter a valid genre.");
         }
+
+        clearBookFields();
     }
 
     @FXML
@@ -220,10 +249,6 @@ public class ViewController {
         clearSearchBooksFields();
     }
 
-
-    /**
-     * Edits the selected book from the list view of searched books.
-     */
     @FXML
     protected void onUpdateBookButtonClick() {
         Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();
@@ -284,9 +309,6 @@ public class ViewController {
         });
     }
 
-    /**
-     * Deletes the selected books from the list view of searched books.
-     */
     @FXML
     protected void onDeleteBookButtonClick() {
         Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();
@@ -300,9 +322,6 @@ public class ViewController {
         searchBookTableView.getItems().remove(selectedBook);
     }
 
-    /**
-     * Deletes the selected lends from the list view of searched lends.
-     */
     @FXML
     protected void onLendBookButtonClick() {
         Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();
@@ -315,7 +334,7 @@ public class ViewController {
         }
 
         Book refreshedBook = clientController.readBook(selectedBook.getId());
-        if (refreshedBook.getCopies() <= 0) {
+        if (refreshedBook.getCopies() < 1) {
             showErrorDialog("Error", "No copies available", "There are no copies of this book available.");
             return;
         }
@@ -348,7 +367,7 @@ public class ViewController {
         // Convert the result to a Book object when the save button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                if(clientController.readBook(selectedBook.getId()).getCopies() <= 0) {
+                if(clientController.readBook(selectedBook.getId()).getCopies() < 1) {
                     showErrorDialog("Error", "No copies available", "There are no copies of this book available.");
                     return null;
                 } else {
@@ -366,10 +385,211 @@ public class ViewController {
             clientController.updateBook(editedBook);
             List<Book> books = new ArrayList<>();
             books.add(clientController.readBook(editedBook.getId())); //TODO check to remove
+            showBooksOnTableView(books, searchBookTableView);
         });
     }
 
+    @FXML
+    protected void onLateLendButtonClick() {
+        List<Lends> lends = clientController.searchLateLends();
+        clearSearchLends();
+        showLendsOnTableView(lends, searchLendTableView);
+    }
 
+    @FXML
+    protected void onSearchLendButtonClick(){
+        searchLendTableView.getItems().clear();
+
+        String title = titleLendTextField.getText();
+        LocalDate date = returnLendDatePicker.getValue();
+        String cell = phoneLendTextField.getText();
+        Boolean unclepear = returnedLendChoiceBox.getValue();
+
+        int b_id=0; //book id
+        int c_id=0; //customer id
+        boolean returned;
+        boolean sentinel = false;
+
+        if(unclepear != null && unclepear) returned = true;
+        else if (unclepear != null && !unclepear) {
+            returned = false;
+            sentinel = true;
+        } else returned = false;
+
+        //checks if book and customer exists
+        if (!title.isEmpty()) {
+            List<Book> books = clientController.searchBooksBy(1, new Book(0, title, "", 0, Genre.Genre, 0));
+            if (books == null || books.isEmpty()) {
+                showErrorDialog("Error", "Book not found", "Book you are looking for is not found. Try something else.");
+                clearSearchLends();
+                return;
+            }
+            b_id = books.get(0).getId();
+        }
+        if(!cell.isEmpty()) {
+            List<Customer> customers = clientController.searchCustomersBy(2, new Customer("", "", cell, ""));
+            if (customers == null || customers.isEmpty()) {
+                showErrorDialog("Error", "Customer not found", "Customer you are looking for is not found. Try something else.");
+                clearSearchLends();
+                return;
+            }
+            c_id = customers.get(0).getId();
+        }
+
+        int choice=7;
+        if (b_id != 0 && c_id != 0 && date != null) choice = 0;
+        else if (b_id != 0 && c_id == 0 && date == null) choice = 1;
+        else if (b_id == 0 && c_id != 0 && date == null) choice = 2;
+        else if (b_id == 0 && c_id == 0 && date != null) choice = 3;
+        else if (b_id != 0 && c_id != 0 && date == null) choice = 4;
+        else if (b_id != 0 && c_id == 0 && date != null) choice = 5;
+        else if (b_id == 0 && c_id != 0 && date != null) choice = 6;
+
+        List<Lends> lends = clientController.searchLendsBy(choice, b_id, date, c_id, returned, sentinel);
+        showLendsOnTableView(lends, searchLendTableView);
+        clearSearchLends();
+    }
+
+    @FXML
+    protected void onReturnLendButtonClick() {
+        Lends selectedLend = searchLendTableView.getSelectionModel().getSelectedItem();
+        if (selectedLend == null) {
+            showErrorDialog("Error", "No lend selected", "Please select a lend to return.");
+            return;
+        }
+
+        Book book = clientController.readBook(selectedLend.getBookId());
+
+        book.setCopies(book.getCopies()+1);
+        clientController.updateBook(book);
+        selectedLend.setReturned(true);
+        clientController.updateLend(selectedLend);
+
+        List<Lends> lends = new ArrayList<>();
+        lends.add(clientController.readLend(selectedLend));
+        showLendsOnTableView(lends, searchLendTableView);
+        clearSearchLends();
+    }
+
+    @FXML
+    protected void onDeleteLendButtonClick() {
+        Lends selectedLend = searchLendTableView.getSelectionModel().getSelectedItem();
+        if (selectedLend == null) {
+            showErrorDialog("Error", "No lend selected", "Please select a lend to delete.");
+            return;
+        }
+
+        clientController.deleteLend(selectedLend);
+        searchLendTableView.getItems().remove(selectedLend);
+        clearSearchLends();
+    }
+
+    @FXML
+    protected void onUpdateLendButtonClick() {
+        Lends selectedLend = searchLendTableView.getSelectionModel().getSelectedItem();
+        if (selectedLend == null) {
+            showErrorDialog("Error", "No lend selected", "Please select a lend to update.");
+            return;
+        }
+
+        Dialog<Lends> dialog = new Dialog<>();
+        dialog.setTitle("Update Lend");
+
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        Label customerLabel = new Label(clientController.readCustomer(selectedLend.getCustomerId()).getName());
+        DatePicker returnDatePicker = new DatePicker();
+        Label booktitleLabel = new Label(clientController.readBook(selectedLend.getBookId()).getTitle());
+
+        GridPane grid = new GridPane();
+        grid.add(new Label("Customer:"), 0, 0);
+        grid.add(customerLabel, 1, 0);
+        grid.add(new Label("Return date:"), 0, 1);
+        grid.add(returnDatePicker, 1, 1);
+        grid.add(new Label("Book's title:"), 0, 2);
+        grid.add(booktitleLabel, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                selectedLend.setReturnDate(returnDatePicker.getValue());
+                return selectedLend;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(editedLend -> {
+            clientController.updateLend(editedLend);
+            List<Lends> lends = new ArrayList<>();
+            lends.add(clientController.readLend(editedLend));
+            showLendsOnTableView(lends, searchLendTableView);
+        });
+        clearSearchLends();
+    }
+
+    @FXML
+    protected void onAddateCustomerButtonClick() {
+        Customer selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
+        if (selectedCustomer != null) {
+            updateCustomer(selectedCustomer);
+        } else {
+            addCustomer();
+        }
+    }
+
+    @FXML
+    protected void onDeleteCustomerButtonClick() {
+        Customer selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
+        if(selectedCustomer == null) {
+            showErrorDialog("Error", "No customer selected", "Please select a customer to delete.");
+            return;
+        }
+        clientController.deleteCustomer(selectedCustomer);
+        customersTableView.getSelectionModel().clearSelection();
+        onCancelCustomerButtonClick();
+        customersTableView.getItems().remove(selectedCustomer);
+    }
+
+    @FXML
+    protected void onSearchCustomerButtonClick(){
+        String name = nameCustomerTextField.getText();
+        String phone = phoneCustomerTextField.getText();
+        String email = emailCustomerTextField.getText();
+        String address = addressCustomerTextField.getText();
+        int choice;
+        if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 0;
+        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 1;
+        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 2;
+        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 3;
+        else if(name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 4;
+        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && address.isEmpty()) choice = 5;
+        else if(!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 6;
+        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 7;
+        else if(!name.isEmpty() && phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 8;
+        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && address.isEmpty()) choice = 9;
+        else if(name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 10;
+        else if(name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 11;
+        else if(!name.isEmpty() && phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 12;
+        else if(name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !address.isEmpty()) choice = 13;
+        else if(!name.isEmpty() && !phone.isEmpty() && email.isEmpty() && !address.isEmpty()) choice = 14;
+        else choice = 15;
+
+        List<Customer> customers = clientController.searchCustomersBy(choice, new Customer(name, email, phone, address));
+        if(customers==null || customers.isEmpty()) showErrorDialog("Error", "No customers found", "Customers you are looking for are not found. Try something else.");
+        else {
+            ObservableList<Customer> customerNames = FXCollections.observableArrayList();
+            customerNames.addAll(customers);
+            customersTableView.setItems(customerNames);
+        }
+    }
+
+    @FXML
+    protected void onCancelCustomerButtonClick() {
+        clearSearchCustomers();
+        addateCustomerButton.setText("\uD83D\uDE4B add");
+    }
 
     @FXML
     public void onHomeClick(){
@@ -400,6 +620,14 @@ public class ViewController {
     public void onCustomerClick(){
         hideAllPanes();
         showPane(customersPane);
+    }
+
+    @FXML
+    public void onStatsClick(){
+        hideAllPanes();
+        showPane(statsPane);
+        updateGenreChart();
+        updateCustomerLendsBarChart();
     }
 
     /**
@@ -466,6 +694,17 @@ public class ViewController {
     }
 
     /**
+     * Initializes the lends table view.
+     */
+    private void initLendsTableView() {
+        idLColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        bidLColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        cidLColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        returnLColumn.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        returnedLColumn.setCellValueFactory(new PropertyValueFactory<>("returned"));
+    }
+
+    /**
      * Initializes the customers table view.
      */
     private void initCustomersTableView() {
@@ -474,6 +713,49 @@ public class ViewController {
         emailCColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         phoneCColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         addressCColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+    }
+
+    /**
+     * Updates the customer with the data from the text fields.
+     * @param customer the customer to update
+     */
+    private void updateCustomer(Customer customer) {
+        customer.setName(nameCustomerTextField.getText());
+        customer.setPhone(phoneCustomerTextField.getText());
+        customer.setEmail(emailCustomerTextField.getText());
+        customer.setAddress(addressCustomerTextField.getText());
+
+        clientController.updateCustomer(customer);
+
+        List<Customer> customers = new ArrayList<>();
+        customers.add(clientController.readCustomer(customer.getId()));
+        showCustomersOnTableView(customers, customersTableView);
+        onCancelCustomerButtonClick();
+
+    }
+
+    /**
+     * Adds a new customer with the data from the text fields.
+     */
+    private void addCustomer() {
+        String name = nameCustomerTextField.getText();
+        String phone = phoneCustomerTextField.getText();
+        String email = emailCustomerTextField.getText();
+        String address = addressCustomerTextField.getText();
+
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
+            showErrorDialog("Error", "Invalid input", "Please fill all fields.");
+            return;
+        }
+
+        Customer newCustomer = new Customer(name, email, phone, address);
+        clientController.createCustomer(newCustomer);
+
+        List<Customer> customers = new ArrayList<>();
+
+        customers = clientController.searchCustomersBy(0, new Customer(name, email, phone, address));
+        showCustomersOnTableView(customers, customersTableView);
+        clearSearchCustomers();
     }
 
     /**
@@ -491,17 +773,224 @@ public class ViewController {
     }
 
     /**
+     * Shows the lends on the given table view.
+     * @param lends the lends to show
+     * @param tableView the table view to show the lends on
+     */
+    private void showLendsOnTableView(List<Lends> lends, TableView tableView) {
+        if (lends == null) {
+            showErrorDialog("Error", "Critical error", "Could not connect to the server. Please try again later.");
+            return;
+        }
+
+        ObservableList<Lends> observableList = FXCollections.observableArrayList(lends);
+        tableView.setItems(observableList);
+    }
+
+    /**
      * Initializes choice boxes.
      */
     private void initChoiceBoxes() {
         genreABChoiceBox.getItems().addAll(Genre.values());
         genreSBChoiceBox.getItems().addAll(Genre.values());
+        returnedLendChoiceBox.getItems().addAll(true, false);
     }
 
+    /**
+     * Clears the book fields.
+     */
+    private void clearBookFields() {
+        titleABTextField.clear();
+        authorABTextField.clear();
+        genreABChoiceBox.setValue(null);
+        yearABTextField.clear();
+        copiesABTextField.clear();
+    }
+
+    /**
+     * Clears the search books fields.
+     */
     private void clearSearchBooksFields() {
         titleSBTextField.clear();
         authorSBTextField.clear();
         yearSBTextField.clear();
         genreSBChoiceBox.setValue(null);
     }
+
+    /**
+     * Clears the search lends fields.
+     */
+    private void clearSearchLends() {
+        titleLendTextField.clear();
+        returnLendDatePicker.setValue(null);
+        phoneLendTextField.clear();
+        returnedLendChoiceBox.setValue(null);
+    }
+
+    /**
+     * Clears the search customers fields.
+     */
+    private void clearSearchCustomers() {
+        nameCustomerTextField.clear();
+        phoneCustomerTextField.clear();
+        emailCustomerTextField.clear();
+        addressCustomerTextField.clear();
+    }
+
+    /**
+     * Shows the add book view.
+     */
+    private void showPane(Pane pane) {
+        pane.toFront();
+        pane.setVisible(true);
+    }
+
+    /**
+     * Shows the home view.
+     */
+    private void hideAllPanes() {
+        homePane.toBack();
+        homePane.setVisible(false);
+        addBookPane.toBack();
+        addBookPane.setVisible(false);
+        searchBooksPane.toBack();
+        searchBooksPane.setVisible(false);
+        lendPane.toBack();
+        lendPane.setVisible(false);
+        customersPane.toBack();
+        customersPane.setVisible(false);
+        statsPane.toBack();
+        statsPane.setVisible(false);
+    }
+
+
+    /**
+     * Updates the genre pie chart.
+     */
+    public void updateGenreChart() {
+        Map<Genre, Long> genreStats = clientController.calculateGenreLendingStats();
+
+        // Calcola il totale dei prestiti per il calcolo delle percentuali
+        long totalLends = genreStats.values().stream().mapToLong(Long::longValue).sum();
+
+        // Crea i dati per il PieChart
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        genreStats.forEach((genre, count) -> {
+            // Calcola la percentuale
+            double percentage = (count.doubleValue() / totalLends) * 100;
+            // Aggiungi i dati al PieChart con la percentuale formattata
+            pieChartData.add(new PieChart.Data(
+                    String.format("%s (%.1f%%)", genre.toString(), percentage),
+                    count
+            ));
+        });
+
+        // Aggiorna il PieChart
+        genrePieChart.setData(pieChartData);
+        genrePieChart.setTitle("Lends Distribution by Genre");
+    }
+
+    /**
+     * Initializes the genre pie chart.
+     */
+    private void initGenrePieChart() {
+        genrePieChart.setLabelLineLength(10);
+        genrePieChart.setLabelsVisible(true);
+        genrePieChart.setStartAngle(90);
+    }
+
+    /**
+     * Updates the customer lending chart.
+     */
+    public void updateCustomerLendsBarChart() {
+        numusBarChart.getData().clear();
+
+        // Crea una nuova serie per i dati
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Distribution of Lends by Customers");
+
+        // Ottieni le statistiche
+        Map<Customer, Integer> customerStats = clientController.calculateCustomerLendingStats();
+
+        // Ordina i clienti per numero di prestiti (decrescente)
+        customerStats.entrySet().stream()
+                .sorted(Map.Entry.<Customer, Integer>comparingByValue().reversed())
+                .forEach(entry -> {
+                    Customer customer = entry.getKey();
+                    Integer lendCount = entry.getValue();
+
+                    if (lendCount > 0) {  // Mostra solo clienti con almeno un prestito
+                        // Crea l'etichetta per il cliente
+                        String customerLabel = String.format("ID: %d", customer.getId());
+
+                        // Aggiungi i dati alla serie con il valore numerico corretto
+                        XYChart.Data<String, Number> data = new XYChart.Data<>(customerLabel, lendCount);
+                        series.getData().add(data);
+                    }
+                });
+
+        // Aggiungi la serie al grafico
+        numusBarChart.getData().add(series);
+
+        // Imposta il range dell'asse Y
+        NumberAxis yAxis = (NumberAxis) numusBarChart.getYAxis();
+        yAxis.setAutoRanging(false);
+        int maxLends = customerStats.values().stream()
+                .mapToInt(Integer::intValue)
+                .max()
+                .orElse(10);
+        yAxis.setUpperBound(maxLends + 1);
+        yAxis.setLowerBound(0);
+        yAxis.setTickUnit(1);
+
+        // Personalizza il grafico
+        numusBarChart.setTitle("Lends per customer");
+        CategoryAxis xAxis = (CategoryAxis) numusBarChart.getXAxis();
+        xAxis.setLabel("Customers");
+        yAxis.setLabel("# of Lends");
+
+        // Aggiungi tooltip e stile hover
+        series.getData().forEach(data -> {
+            Node bar = data.getNode();
+            Tooltip tooltip = new Tooltip(
+                    String.format("Customer: %s%n Lends: %d",
+                            data.getXValue(),
+                            data.getYValue().intValue())
+            );
+            Tooltip.install(bar, tooltip);
+
+            // Effetto hover
+            bar.setOnMouseEntered(e -> bar.setStyle("-fx-bar-fill: #ff8c00;"));
+            bar.setOnMouseExited(e -> bar.setStyle(""));
+        });
+    }
+
+    /**
+     * Initializes the BarChart.
+     */
+    private void initNumusBarChart() {
+        numusBarChart.setTitle("Lends Distribution by Customers");
+
+        //configures the x and y axis
+        CategoryAxis xAxis = (CategoryAxis) numusBarChart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) numusBarChart.getYAxis();
+
+        xAxis.setLabel("Customers");
+        yAxis.setLabel("# of Lends");
+
+        //forces the Y axis to use only integer numbers
+        yAxis.setTickUnit(1);
+        yAxis.setMinorTickVisible(false);
+
+        //rotate the labels of the x-axis for better readability
+        xAxis.setTickLabelRotation(45);
+
+        numusBarChart.setAnimated(true);
+        numusBarChart.setBarGap(8);
+        numusBarChart.setCategoryGap(20);
+
+        numusBarChart.getStyleClass().add("custom-bar-chart");
+    }
+
 }

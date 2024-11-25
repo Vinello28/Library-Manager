@@ -5,11 +5,13 @@ import prj.library.models.Customer;
 import prj.library.models.Genre;
 import prj.library.models.Lends;
 import prj.library.networking.messages.Operation;
-import prj.library.utils.CLIUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The ClientController class is responsible for handling the communication between the client and the server.
@@ -152,11 +154,6 @@ public class ClientController implements ClientControllerInterface {
         return client.receiveMessageLends();
     }
 
-    public List<Lends> refreshLends() {
-        client.sendMessage(Operation.REFRESH_LENDS, null);
-        return client.receiveMessageLends();
-    }
-
     public Boolean createCustomer(Customer customer) {
         client.sendMessage(Operation.ADD_CUSTOMER, customer);
         return client.receiveMessageBoolean();
@@ -187,6 +184,29 @@ public class ClientController implements ClientControllerInterface {
         Operation m = choseSearchOpCustomers(choice);
         client.sendMessage(m, tmp);
         return client.receiveMessageCustomers();
+    }
+
+    public Map<Genre, Long> calculateGenreLendingStats() {
+        List<Lends> allLends = getLends();
+
+        return allLends.stream()
+                .map(lend -> readBook(lend.getBookId()))  //obtain the book for each lend
+                .filter(book -> book != null)  //filter out null books
+                .collect(Collectors.groupingBy(
+                        Book::getGenre,  //group by genre
+                        Collectors.counting()  //count the number of lends for each genre
+                ));
+    }
+
+    public Map<Customer, Integer> calculateCustomerLendingStats() {
+        Map<Customer, Integer> customerLendCount = new HashMap<>();
+
+        List<Customer> allCustomers = getCustomers();
+        for (Customer customer : allCustomers) {
+            customerLendCount.put(customer, getLendCountByCustomer(customer));
+        }
+
+        return customerLendCount;
     }
 
     /**
@@ -234,6 +254,19 @@ public class ClientController implements ClientControllerInterface {
         if (choice == 13) return Operation.SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS;
         if (choice == 14) return Operation.SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS;
         return Operation.GET_CUSTOMERS;
+    }
+
+    /**
+     * Method to calculate the number of lends per customer.
+     * @param customer the given customer
+     * @return number of lends per customer
+     */
+    private Integer getLendCountByCustomer(Customer customer) {
+        List<Lends> allLends = getLends();
+
+        return Math.toIntExact(allLends.stream()
+                .filter(lend -> (lend.getCustomerId() == customer.getId()))
+                .count());
     }
 
     /**

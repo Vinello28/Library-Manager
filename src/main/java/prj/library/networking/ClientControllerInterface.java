@@ -2,9 +2,13 @@ package prj.library.networking;
 
 import prj.library.models.Book;
 import prj.library.models.Customer;
+import prj.library.models.Genre;
 import prj.library.models.Lends;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Interface for the client controller.
@@ -109,13 +113,6 @@ public interface ClientControllerInterface {
     List<Lends> searchLendsBy(int choice, int b_id, LocalDate returnDate, int c_id, Boolean returned, Boolean sentinel);
 
     /**
-     * Refreshes the list of lends.
-     *
-     * @return a list of all lends
-     */
-    List<Lends> refreshLends();
-
-    /**
      * Sends a request to the server to create a customer.
      *
      * @param customer the customer to create
@@ -162,5 +159,17 @@ public interface ClientControllerInterface {
      * @return a list of customers that match the search criteria
      */
     List<Customer> searchCustomersBy(int choice, Customer customer);
+
+    /**
+     * Calculates the number of lends for each genre.
+     * @return a map with the genre and the number of lends
+     */
+     Map<Genre, Long> calculateGenreLendingStats();
+
+    /**
+     * Calculates the number of lends for each customer.
+     * @return a map with the customer and the number of lends
+     */
+     Map<Customer, Integer> calculateCustomerLendingStats();
 
 }

@@ -15,6 +15,13 @@ public class Lends implements Serializable {
     private boolean returned;
 
 
+    /**
+     * Creates a lend object
+     * @param bookId the id of the book
+     * @param customerId the id of the customer
+     * @param returnDate the date the book should be returned
+     * @param returned if the book has been returned
+     */
     public Lends(int bookId, int customerId, LocalDate returnDate, boolean returned) {
         this.bookId = bookId;
         this.customerId = customerId;

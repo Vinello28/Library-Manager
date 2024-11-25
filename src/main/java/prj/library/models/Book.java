@@ -2,6 +2,9 @@ package prj.library.models;
 
 import java.io.Serializable;
 
+/**
+ * Book class that represents a book object
+ */
 public class Book implements Serializable {
 
     private int id;
@@ -11,9 +14,20 @@ public class Book implements Serializable {
     private Genre genre;
     private int copies;
 
+    /**
+     * Default constructor
+     */
     public Book() {
     }
 
+    /**
+     * Constructor
+     * @param title of the book
+     * @param author of the book
+     * @param year of the book (integer)
+     * @param genre of the book (enum)
+     * @param copies of the book (integer)
+     */
     public Book(String title, String author, int year, Genre genre, int copies) {
         this.title = title;
         this.author = author;
@@ -22,6 +36,15 @@ public class Book implements Serializable {
         this.copies = copies;
     }
 
+    /**
+     * Constructor
+     * @param id of the book
+     * @param title of the book
+     * @param author of the book
+     * @param year of the book (integer)
+     * @param genre of the book (enum)
+     * @param copies of the book (integer)
+     */
     public Book(int id, String title, String author, int year, Genre genre, int copies) {
         this.id = id;
         this.title = title;
@@ -31,7 +54,13 @@ public class Book implements Serializable {
         this.copies = copies;
     }
 
-    // Constructor without copies used for searching purposes
+    /**
+     * Constructor without copies used for searching purposes
+     * @param title of the book
+     * @param author of the book
+     * @param year of the book (integer)
+     * @param genre of the book (enum)
+     */
     public Book(String title, String author, int year, Genre genre) {
         this.title = title;
         this.author = author;

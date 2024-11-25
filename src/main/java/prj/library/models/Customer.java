@@ -2,6 +2,9 @@ package prj.library.models;
 
 import java.io.Serializable;
 
+/**
+ * Customer class that represents a customer object
+ */
 public class Customer implements Serializable {
     private int id;
     private String name;
@@ -9,6 +12,13 @@ public class Customer implements Serializable {
     private String phone;
     private String address;
 
+    /**
+     * Constructor for the Customer class without id
+     * @param name name of the customer
+     * @param email email of the customer
+     * @param phone phone number of the customer
+     * @param address address of the customer
+     */
     public Customer(String name, String email, String phone, String address) {
         this.name = name;
         this.email = email;
@@ -16,6 +26,14 @@ public class Customer implements Serializable {
         this.address = address;
     }
 
+    /**
+     * Constructor for the Customer class with id
+     * @param id id of the customer
+     * @param name name of the customer
+     * @param email email of the customer
+     * @param phone phone number of the customer
+     * @param address address of the customer
+     */
     public Customer(int id, String name, String email, String phone, String address) {
         this.id = id;
         this.name = name;
@@ -24,6 +42,9 @@ public class Customer implements Serializable {
         this.address = address;
     }
 
+    /**
+     * Default constructor
+     */
     public Customer() {
     }
 
