@@ -1,0 +1,233 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BookDAOInterface</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.database.DAO</a>
+</div>
+
+<h1>Coverage Summary for Class: BookDAOInterface (prj.library.database.DAO)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">BookDAOInterface</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.database.DAO;
+&nbsp;
+&nbsp;import prj.library.models.Book;
+&nbsp;import prj.library.models.Genre;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface for the BookDAO class
+&nbsp; */
+&nbsp;public interface BookDAOInterface {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * creates a new book in the database
+&nbsp;     * @param book the book to be created
+&nbsp;     */
+&nbsp;    void createBook(Book book);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * deletes a book from the database
+&nbsp;     * @param id the id of the book to be deleted
+&nbsp;     */
+&nbsp;    void deleteBook(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * updates a book in the database
+&nbsp;     * @param book the book to be updated
+&nbsp;     */
+&nbsp;    void updateBook(Book book);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets all books from the database
+&nbsp;     * @param id the id of the book
+&nbsp;     * @return a list of all books
+&nbsp;     */
+&nbsp;    Book readBook(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets all books from the database
+&nbsp;     * @return a list of all books
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getAllBooks();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title
+&nbsp;     * @param title the title of the book
+&nbsp;     * @return a list of books with the given title
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitle(String title);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by author
+&nbsp;     * @param author the author of the book
+&nbsp;     * @return a list of books with the given author
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByAuthor(String author);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by genre
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given genre
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByGenre(Genre genre);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by year
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByYear(int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title and author
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @return a list of books with the given title and author
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitleAuthor(String title, String author);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title and genre
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given title and genre
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitleGenre(String title, Genre genre);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitleYear(String title, int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by author and genre
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given author and genre
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByAuthorGenre(String author, Genre genre);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by author and year
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given author and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByAuthorYear(String author, int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by genre and year
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given genre and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByGenreYear(Genre genre, int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title, author and genre
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given title, author and genre
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitleAuthorGenre(String title, String author, Genre genre);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title, author and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title, author and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitleAuthorYear(String title, String author, int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title, genre and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title, genre and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByTitleGenreYear(String title, Genre genre, int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by author, genre and year
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given author, genre and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByAuthorGenreYear(String author, Genre genre, int year);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * gets books by title, author, genre and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title, author, genre and year
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooksByAllParam(String title, String author, Genre genre, int year);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

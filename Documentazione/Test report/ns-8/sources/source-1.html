@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CLIUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: CLIUtils (prj.library.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CLIUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7,1%
+  </span>
+  <span class="absValue">
+    (1/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6,7%
+  </span>
+  <span class="absValue">
+    (1/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.utils;
+&nbsp;
+&nbsp;import prj.library.networking.messages.Message;
+&nbsp;
+&nbsp;import java.net.InetAddress;
+&nbsp;import java.net.UnknownHostException;
+&nbsp;
+<b class="nc">&nbsp;public class CLIUtils {</b>
+&nbsp;    public static void serverStart() {
+<b class="nc">&nbsp;        System.out.println(&quot;SERVER | INFO: Server is starting...&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void serverStarted() {
+<b class="nc">&nbsp;        System.out.println(&quot;SERVER | INFO: Server started&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void serverListening(int port) {
+&nbsp;        try {
+<b class="nc">&nbsp;            System.out.println(&quot;SERVER | INFO: Server is listening on port &quot; + port + &quot; at &quot; + InetAddress.getLocalHost().getHostAddress());</b>
+&nbsp;        } catch (UnknownHostException e) {
+<b class="nc">&nbsp;            System.out.println(&quot;SERVER | CRITICAL_ERROR: exception message -&gt; &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void serverCriticalError(String message) {
+<b class="fc">&nbsp;        System.out.println(&quot;SERVER | CRITICAL_ERROR: exception message -&gt; &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientConnected() {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Client connected&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientDisconnected() {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Client disconnected&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientCriticalError(String message) {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | CRITICAL_ERROR: exception message -&gt; &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientRequest(String message) {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Client request -&gt; &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientResponse(String message) {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Server response -&gt; &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientInfo(String message) {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientError(Message message) {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | ERROR: &quot; + message.getMessage());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void clientDebug(String message) {
+<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | DEBUG_INFO: &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void serverDebug(String message) {
+<b class="nc">&nbsp;        System.out.println(&quot;SERVER | DEBUG_INFO: &quot; + message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

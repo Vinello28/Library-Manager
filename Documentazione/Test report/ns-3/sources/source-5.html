@@ -1,0 +1,239 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > LendsDAOInterface</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.database.DAO</a>
+</div>
+
+<h1>Coverage Summary for Class: LendsDAOInterface (prj.library.database.DAO)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">LendsDAOInterface</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.database.DAO;
+&nbsp;
+&nbsp;import prj.library.models.Lends;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface for the LendsDAO class
+&nbsp; */
+&nbsp;public interface LendsDAOInterface {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Create a new lend
+&nbsp;     * @param lend the lend to be created
+&nbsp;     */
+&nbsp;    void createLend(Lends lend);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Update a lend
+&nbsp;     * @param lend the lend to be updated
+&nbsp;     */
+&nbsp;    void updateLend(Lends lend);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Delete a lend
+&nbsp;     * @param lend the lend to be deleted
+&nbsp;     */
+&nbsp;    void deleteLend(Lends lend);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get a lend by its id
+&nbsp;     * @param id the id of the lend
+&nbsp;     * @return the lend with the given id
+&nbsp;     */
+&nbsp;    Lends readLend(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all lends
+&nbsp;     * @return a list of all lends
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLends();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all lends that have been returned or not
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends with specified return status
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsReturned(Boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all lends by a customer id
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @return a list of all lends by the customer with the given id
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByCustomerId(int customerId);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all lends by a book id
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @return a list of all lends by the book with the given id
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByBookId(int bookId);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all late lends
+&nbsp;     * @return a list of all late lends
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLateLends();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get Lends by return date
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @return a list of all lends with the given return date
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByReturnDate(LocalDate returnDate);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by all parameters including returned
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByAllReturned(int bookId, int customerId, LocalDate returnDate, boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by all parameters excluding returned
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByAll(int bookId, int customerId, LocalDate returnDate);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by all parameters excluding return date
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByBookIdCustomerIdReturned(int bookId, int customerId, boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by all parameters excluding customer id
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByBookIdReturnDateReturned(int bookId, LocalDate returnDate, boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by all parameters excluding book id
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByCustomerIdReturnDateReturned(int customerId, LocalDate returnDate, boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by book id and customer id
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByBookIdCustomerId(int bookId, int customerId);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by book id and return date
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByBookIdReturnDate(int bookId, LocalDate returnDate);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by book id and returned
+&nbsp;     * @param bookId the id of the book
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByBookIdReturned(int bookId, boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by customer id and return date
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByCustomerIdReturnDate(int customerId, LocalDate returnDate);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by customer id and returned
+&nbsp;     * @param customerId the id of the customer
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByCustomerIdReturned(int customerId, boolean returned);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get lends by return date and returned
+&nbsp;     * @param returnDate the return date of the lend
+&nbsp;     * @param returned the return status of the lend
+&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLendsByReturnDateReturned(LocalDate returnDate, boolean returned);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

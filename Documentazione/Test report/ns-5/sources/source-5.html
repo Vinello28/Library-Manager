@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ClientControllerInterface</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.networking</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientControllerInterface (prj.library.networking)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ClientControllerInterface</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.networking;
+&nbsp;
+&nbsp;import prj.library.models.Book;
+&nbsp;import prj.library.models.Customer;
+&nbsp;import prj.library.models.Genre;
+&nbsp;import prj.library.models.Lends;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface for the client controller.
+&nbsp; */
+&nbsp;public interface ClientControllerInterface {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to create a book.
+&nbsp;     *
+&nbsp;     * @param book the book to create
+&nbsp;     * @return true if the book was created, false otherwise
+&nbsp;     */
+&nbsp;    Boolean createBook(Book book);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to update a book.
+&nbsp;     *
+&nbsp;     * @param book the book to update
+&nbsp;     * @return true if the book was updated, false otherwise
+&nbsp;     */
+&nbsp;    Boolean updateBook(Book book);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to read a book.
+&nbsp;     *
+&nbsp;     * @param id the id of the book to read
+&nbsp;     * @return the book with the given id
+&nbsp;     */
+&nbsp;    Book readBook(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to get all books.
+&nbsp;     *
+&nbsp;     * @return a list of all books
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; getBooks();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to delete a book.
+&nbsp;     *
+&nbsp;     * @param id the book to delete
+&nbsp;     * @return true if the book was created, false otherwise
+&nbsp;     */
+&nbsp;    Boolean deleteBook(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Searches for books by the given parameters.
+&nbsp;     *
+&nbsp;     * @param choice the choice of search
+&nbsp;     * @param tmp the book to search for
+&nbsp;     * @return a list of books that match the search criteria
+&nbsp;     */
+&nbsp;    List&lt;Book&gt; searchBooksBy(int choice, Book tmp);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to create a lend.
+&nbsp;     *
+&nbsp;     * @param lend the lend to create
+&nbsp;     * @return true if the lend was created, false otherwise
+&nbsp;     */
+&nbsp;    Boolean createLend(Lends lend);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to update a lend.
+&nbsp;     *
+&nbsp;     * @param lend the lend to update
+&nbsp;     * @return true if the lend was updated, false otherwise
+&nbsp;     */
+&nbsp;    Boolean updateLend(Lends lend);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to read a lend.
+&nbsp;     *
+&nbsp;     * @param id the id of the lend to read
+&nbsp;     * @return the lend with the given id
+&nbsp;     */
+&nbsp;    Lends readLend(Lends id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to get all lends.
+&nbsp;     *
+&nbsp;     * @return a list of all lends
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; getLends();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to delete a lend.
+&nbsp;     *
+&nbsp;     * @param lend the lend to delete
+&nbsp;     * @return true if the lend was created, false otherwise
+&nbsp;     */
+&nbsp;    Boolean deleteLend(Lends lend);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Searches for lends by the given parameters.
+&nbsp;     * @param choice the choice of search
+&nbsp;     * @param b_id the book id
+&nbsp;     * @param returnDate the return date
+&nbsp;     * @param c_id the customer id
+&nbsp;     * @param returned the returned status
+&nbsp;     * @param sentinel the sentinel status
+&nbsp;     * @return a list of lends that match the search criteria
+&nbsp;     */
+&nbsp;    List&lt;Lends&gt; searchLendsBy(int choice, int b_id, LocalDate returnDate, int c_id, Boolean returned, Boolean sentinel);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to create a customer.
+&nbsp;     *
+&nbsp;     * @param customer the customer to create
+&nbsp;     * @return true if the customer was created, false otherwise
+&nbsp;     */
+&nbsp;    Boolean createCustomer(Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to update a customer.
+&nbsp;     *
+&nbsp;     * @param customer the customer to update
+&nbsp;     * @return true if the customer was updated, false otherwise
+&nbsp;     */
+&nbsp;    Boolean updateCustomer(Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to read a customer.
+&nbsp;     *
+&nbsp;     * @param id the id of the customer to read
+&nbsp;     * @return the customer with the given id
+&nbsp;     */
+&nbsp;    Customer readCustomer(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to get all customers.
+&nbsp;     *
+&nbsp;     * @return a list of all customers
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; getCustomers();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a request to the server to delete a customer.
+&nbsp;     * @param customer the customer to delete
+&nbsp;     * @return true if the customer was created, false otherwise
+&nbsp;     */
+&nbsp;    Boolean deleteCustomer(Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Searches for customers by the given parameters.
+&nbsp;     *
+&nbsp;     * @param choice the choice of search
+&nbsp;     * @param customer the customer to search for
+&nbsp;     * @return a list of customers that match the search criteria
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomersBy(int choice, Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the number of lends for each genre.
+&nbsp;     * @return a map with the genre and the number of lends
+&nbsp;     */
+&nbsp;     Map&lt;Genre, Long&gt; calculateGenreLendingStats();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the number of lends for each customer.
+&nbsp;     * @return a map with the customer and the number of lends
+&nbsp;     */
+&nbsp;     Map&lt;Customer, Integer&gt; calculateCustomerLendingStats();
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

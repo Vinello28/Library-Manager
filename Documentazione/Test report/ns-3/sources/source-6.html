@@ -1,0 +1,234 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CustomerDAOInterface</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.database.DAO</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerDAOInterface (prj.library.database.DAO)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">CustomerDAOInterface</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.database.DAO;
+&nbsp;
+&nbsp;import prj.library.models.Customer;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface for the CustomerDAO class
+&nbsp; */
+&nbsp;public interface CustomerDAOInterface {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new customer
+&nbsp;     * @param customer the customer to be created
+&nbsp;     */
+&nbsp;    void createCustomer (Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates a customer
+&nbsp;     * @param customer the customer to be updated
+&nbsp;     */
+&nbsp;    void updateCustomer (Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a customer
+&nbsp;     * @param customer the customer to be deleted
+&nbsp;     */
+&nbsp;
+&nbsp;    void deleteCustomer (Customer customer);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a customer by their ID
+&nbsp;     * @param id the ID of the customer
+&nbsp;     * @return the customer with the given ID
+&nbsp;     */
+&nbsp;    Customer readCustomer (int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a customer by their name
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @return the customer with the given name
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByName (String name);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a customer by their phone number
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @return the customer with the given phone number
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByPhoneNumber (String phoneNumber);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a customer by their email
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @return the customer with the given email
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByEmail (String email);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds all customers
+&nbsp;     * @return a list of all customers
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; readAllCustomers ();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by address
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByAddress (String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name and phone number
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @return a list of customers with the given name and phone number
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByNameAndPhoneNumber (String name, String phoneNumber);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name and email
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @return a list of customers with the given name and email
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByNameAndEmail (String name, String email);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name and address
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given name and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByNameAndAddress (String name, String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by phone number and email
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @return a list of customers with the given phone number and email
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByPhoneNumberAndEmail (String phoneNumber, String email);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by phone number and address
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given phone number and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByPhoneNumberAndAddress (String phoneNumber, String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by email and address
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given email and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByEmailAndAddress (String email, String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name, phone number and email
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @return a list of customers with the given name, phone number and email
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByNameAndPhoneNumberAndEmail (String name, String phoneNumber, String email);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name, phone number and address
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given name, phone number and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByNameAndPhoneNumberAndAddress (String name, String phoneNumber, String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name, email and address
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given name, email and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByNameAndEmailAndAddress (String name, String email, String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by phone number, email and address
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given phone number, email and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByPhoneNumberAndEmailAndAddress (String phoneNumber, String email, String address);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds customers by name, phone number, email and address
+&nbsp;     * @param name the name of the customer
+&nbsp;     * @param phoneNumber the phone number of the customer
+&nbsp;     * @param email the email of the customer
+&nbsp;     * @param address the address of the customer
+&nbsp;     * @return a list of customers with the given name, phone number, email and address
+&nbsp;     */
+&nbsp;    List&lt;Customer&gt; searchCustomerByAll (String name, String phoneNumber, String email, String address);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

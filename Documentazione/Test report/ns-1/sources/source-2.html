@@ -1,0 +1,1112 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ViewController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library</a>
+</div>
+
+<h1>Coverage Summary for Class: ViewController (prj.library)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ViewController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/55)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/372)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/448)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library;
+&nbsp;import javafx.collections.FXCollections;
+&nbsp;import javafx.collections.ObservableList;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.scene.Node;
+&nbsp;import javafx.scene.chart.*;
+&nbsp;import javafx.scene.control.*;
+&nbsp;import javafx.scene.control.cell.PropertyValueFactory;
+&nbsp;import javafx.scene.layout.Pane;
+&nbsp;import prj.library.models.Book;
+&nbsp;import prj.library.models.Customer;
+&nbsp;import prj.library.models.Genre;
+&nbsp;import prj.library.models.Lends;
+&nbsp;import javafx.scene.layout.GridPane;
+&nbsp;import prj.library.networking.ClientController;
+&nbsp;import prj.library.utils.CLIUtils;
+&nbsp;import java.io.IOException;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * The ViewController class is responsible for handling the GUI of the application.
+&nbsp; */
+&nbsp;public class ViewController {
+&nbsp;
+&nbsp;    private ClientController clientController;
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    private Pane homePane;
+&nbsp;    @FXML
+&nbsp;    private Pane addBookPane;
+&nbsp;    @FXML
+&nbsp;    private Pane searchBooksPane;
+&nbsp;    @FXML
+&nbsp;    private Pane lendPane;
+&nbsp;    @FXML
+&nbsp;    private Pane statsPane;
+&nbsp;    @FXML
+&nbsp;    private Pane customersPane;
+&nbsp;    @FXML
+&nbsp;    private TableView&lt;Book&gt; homeTableView;
+&nbsp;    @FXML
+&nbsp;    private TableView&lt;Book&gt; searchBookTableView;
+&nbsp;    @FXML
+&nbsp;    private TableView&lt;Lends&gt; searchLendTableView;
+&nbsp;    @FXML
+&nbsp;    private TableView&lt;Customer&gt; customersTableView;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Integer&gt; idHColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, String&gt; titleHColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, String&gt; authorHColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Genre&gt; genreHColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Integer&gt; yearHColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Integer&gt; copiesHColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Integer&gt; idSColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, String&gt; titleSColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, String&gt; authorSColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Genre&gt; genreSColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Integer&gt; yearSColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Book, Integer&gt; copiesSColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Customer, Integer&gt; idCColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Customer, String&gt; nameCColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Customer, String&gt; emailCColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Customer, String&gt; phoneCColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Customer, String&gt; addressCColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Lends, Integer&gt; idLColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Lends, Integer&gt; bidLColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Lends, Integer&gt; cidLColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Lends, String&gt; returnLColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;Lends, Boolean&gt; returnedLColumn;
+&nbsp;    @FXML
+&nbsp;    private TextField titleABTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField authorABTextField;
+&nbsp;    @FXML
+&nbsp;    private ChoiceBox&lt;Genre&gt; genreABChoiceBox;
+&nbsp;    @FXML
+&nbsp;    private TextField yearABTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField copiesABTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField titleSBTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField authorSBTextField;
+&nbsp;    @FXML
+&nbsp;    private ChoiceBox&lt;Genre&gt; genreSBChoiceBox;
+&nbsp;    @FXML
+&nbsp;    private TextField yearSBTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField titleLendTextField;
+&nbsp;    @FXML
+&nbsp;    private DatePicker returnLendDatePicker;
+&nbsp;    @FXML
+&nbsp;    private TextField phoneLendTextField;
+&nbsp;    @FXML
+&nbsp;    private ChoiceBox&lt;Boolean&gt; returnedLendChoiceBox;
+&nbsp;    @FXML
+&nbsp;    private Button addateCustomerButton;
+&nbsp;    @FXML
+&nbsp;    private TextField nameCustomerTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField phoneCustomerTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField emailCustomerTextField;
+&nbsp;    @FXML
+&nbsp;    private TextField addressCustomerTextField;
+&nbsp;    @FXML
+&nbsp;    private PieChart genrePieChart;
+&nbsp;    @FXML
+&nbsp;    private BarChart&lt;String, Number&gt; numusBarChart;
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    public ViewController() {</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            clientController = new ClientController();</b>
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            if (clientController != null) clientController.close();</b>
+<b class="nc">&nbsp;            CLIUtils.clientCriticalError(e.getMessage());</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Critical error&quot;, &quot;Could not connect to the server. Please try again later.&quot;);</b>
+<b class="nc">&nbsp;            LibraryApplication.close();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void initialize() {
+&nbsp;
+<b class="nc">&nbsp;        hideAllPanes();</b>
+&nbsp;
+&nbsp;        //Set up the home view
+<b class="nc">&nbsp;        showPane(homePane);</b>
+&nbsp;
+<b class="nc">&nbsp;        initHomeTableView();</b>
+<b class="nc">&nbsp;        initSearchTableView();</b>
+<b class="nc">&nbsp;        initCustomersTableView();</b>
+<b class="nc">&nbsp;        initLendsTableView();</b>
+<b class="nc">&nbsp;        initChoiceBoxes();</b>
+<b class="nc">&nbsp;        initGenrePieChart();</b>
+<b class="nc">&nbsp;        initNumusBarChart();</b>
+&nbsp;
+<b class="nc">&nbsp;        loadBooks();</b>
+&nbsp;
+&nbsp;        //Add listener to the ListView
+<b class="nc">&nbsp;        customersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<b class="nc">&nbsp;            if (newValue != null) {</b>
+&nbsp;                //Update TextFields with selected customer data
+<b class="nc">&nbsp;                nameCustomerTextField.setText(newValue.getName());</b>
+<b class="nc">&nbsp;                phoneCustomerTextField.setText(newValue.getPhone());</b>
+<b class="nc">&nbsp;                emailCustomerTextField.setText(newValue.getEmail());</b>
+<b class="nc">&nbsp;                addressCustomerTextField.setText(newValue.getAddress());</b>
+&nbsp;
+&nbsp;                //Change button text to &quot;Update&quot;
+<b class="nc">&nbsp;                addateCustomerButton.setText(&quot;\uD83D\uDCA1 update&quot;);</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    private void onAddBookButtonClick(){
+<b class="nc">&nbsp;        String title = titleABTextField.getText();</b>
+<b class="nc">&nbsp;        String author = authorABTextField.getText();</b>
+<b class="nc">&nbsp;        Genre genre = genreABChoiceBox.getValue();</b>
+<b class="nc">&nbsp;        String year = yearABTextField.getText();</b>
+<b class="nc">&nbsp;        String copies = copiesABTextField.getText();</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        if(title.isEmpty() || author.isEmpty() || genre == null || year.isEmpty() || copies.isEmpty()) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Invalid input&quot;, &quot;Please fill all fields.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            int yearInt = Integer.parseInt(year);</b>
+<b class="nc">&nbsp;            int copiesInt = Integer.parseInt(copies);</b>
+&nbsp;
+<b class="nc">&nbsp;            Book book = new Book(title, author, yearInt, genre, copiesInt);</b>
+<b class="nc">&nbsp;            clientController.createBook(book);</b>
+&nbsp;        } catch (NumberFormatException e) {
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Invalid input&quot;, &quot;Please enter a valid year and number of copies.&quot;);</b>
+&nbsp;        } catch (IllegalArgumentException e) {
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Invalid input&quot;, &quot;Please enter a valid genre.&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        clearBookFields();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    private void onCancelButtonClick(){
+<b class="nc">&nbsp;        titleABTextField.clear();</b>
+<b class="nc">&nbsp;        authorABTextField.clear();</b>
+<b class="nc">&nbsp;        genreABChoiceBox.setValue(null);</b>
+<b class="nc">&nbsp;        yearABTextField.clear();</b>
+<b class="nc">&nbsp;        copiesABTextField.clear();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onSearchBookButtonClick() {
+<b class="nc">&nbsp;        String title = titleSBTextField.getText();</b>
+<b class="nc">&nbsp;        String author = authorSBTextField.getText();</b>
+<b class="nc">&nbsp;        int year = yearSBTextField.getText().isEmpty() ? 0 : Integer.parseInt(yearSBTextField.getText());</b>
+<b class="nc">&nbsp;        Genre genre = genreSBChoiceBox.getValue();</b>
+&nbsp;        List&lt;Book&gt; books;
+<b class="nc">&nbsp;        int choice = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre != null) choice = 0;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre == null) choice = 1;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre == null) choice = 2;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre == null) choice = 3;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre != null) choice = 4;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre == null) choice = 5;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre == null) choice = 6;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre != null) choice = 7;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre == null) choice = 8;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre != null) choice = 9;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre != null) choice = 10;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre == null) choice = 11;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre != null) choice = 12;</b>
+<b class="nc">&nbsp;        if(!title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre != null) choice = 13;</b>
+<b class="nc">&nbsp;        if(title.isEmpty() &amp;&amp; !author.isEmpty() &amp;&amp; year != 0 &amp;&amp; genre != null) choice = 14;</b>
+<b class="nc">&nbsp;        if (title.isEmpty() &amp;&amp; author.isEmpty() &amp;&amp; year == 0 &amp;&amp; genre == null) choice = 15;</b>
+&nbsp;
+<b class="nc">&nbsp;        Book tmp = new Book(title, author, year, genre);</b>
+<b class="nc">&nbsp;        books = clientController.searchBooksBy(choice, tmp);</b>
+<b class="nc">&nbsp;        showBooksOnTableView(books, searchBookTableView);</b>
+&nbsp;
+<b class="nc">&nbsp;        clearSearchBooksFields();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onUpdateBookButtonClick() {
+<b class="nc">&nbsp;        Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (selectedBook == null) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;No book selected for editing.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Dialog&lt;Book&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;        dialog.setTitle(&quot;Edit Book&quot;);</b>
+&nbsp;
+&nbsp;        // Set the button types.
+<b class="nc">&nbsp;        ButtonType saveButtonType = new ButtonType(&quot;Save&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);</b>
+&nbsp;
+&nbsp;        // Create the fields and populate with current book data.
+<b class="nc">&nbsp;        TextField titleField = new TextField(selectedBook.getTitle());</b>
+<b class="nc">&nbsp;        TextField authorField = new TextField(selectedBook.getAuthor());</b>
+<b class="nc">&nbsp;        TextField yearField = new TextField(String.valueOf(selectedBook.getYear()));</b>
+<b class="nc">&nbsp;        ChoiceBox&lt;Genre&gt; genreChoiceBox = new ChoiceBox&lt;&gt;(FXCollections.observableArrayList(Genre.values()));</b>
+<b class="nc">&nbsp;        genreChoiceBox.setValue(selectedBook.getGenre());</b>
+<b class="nc">&nbsp;        TextField copiesField = new TextField(String.valueOf(selectedBook.getCopies()));</b>
+&nbsp;
+&nbsp;        // Create a grid pane and add the fields
+<b class="nc">&nbsp;        GridPane grid = new GridPane();</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Title:&quot;), 0, 0);</b>
+<b class="nc">&nbsp;        grid.add(titleField, 1, 0);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Author:&quot;), 0, 1);</b>
+<b class="nc">&nbsp;        grid.add(authorField, 1, 1);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Year:&quot;), 0, 2);</b>
+<b class="nc">&nbsp;        grid.add(yearField, 1, 2);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Genre:&quot;), 0, 3);</b>
+<b class="nc">&nbsp;        grid.add(genreChoiceBox, 1, 3);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Copies:&quot;), 0, 4);</b>
+<b class="nc">&nbsp;        grid.add(copiesField, 1, 4);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.getDialogPane().setContent(grid);</b>
+&nbsp;
+&nbsp;        // Convert the result to a Book object when the save button is clicked.
+<b class="nc">&nbsp;        dialog.setResultConverter(dialogButton -&gt; {</b>
+<b class="nc">&nbsp;            if (dialogButton == saveButtonType) {</b>
+<b class="nc">&nbsp;                selectedBook.setTitle(titleField.getText());</b>
+<b class="nc">&nbsp;                selectedBook.setAuthor(authorField.getText());</b>
+<b class="nc">&nbsp;                selectedBook.setYear(Integer.parseInt(yearField.getText()));</b>
+<b class="nc">&nbsp;                selectedBook.setGenre(genreChoiceBox.getValue());</b>
+<b class="nc">&nbsp;                selectedBook.setCopies(Integer.parseInt(copiesField.getText()));</b>
+<b class="nc">&nbsp;                return selectedBook;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        dialog.showAndWait().ifPresent(editedBook -&gt; {</b>
+<b class="nc">&nbsp;            clientController.updateBook(editedBook);</b>
+<b class="nc">&nbsp;            List&lt;Book&gt; books = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;            books.add(clientController.readBook(editedBook.getId()));</b>
+<b class="nc">&nbsp;            showBooksOnTableView(books, searchBookTableView);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onDeleteBookButtonClick() {
+<b class="nc">&nbsp;        Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (selectedBook == null) {</b>
+<b class="nc">&nbsp;            CLIUtils.clientInfo(&quot;No book selected for editing.&quot;);</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No book selected&quot;, &quot;Please select a book to delete.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        clientController.deleteBook(selectedBook.getId());</b>
+<b class="nc">&nbsp;        searchBookTableView.getItems().remove(selectedBook);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onLendBookButtonClick() {
+<b class="nc">&nbsp;        Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc">&nbsp;        final Lends[] lend = new Lends[1];</b>
+&nbsp;
+<b class="nc">&nbsp;        if (selectedBook == null) {</b>
+<b class="nc">&nbsp;            CLIUtils.clientInfo(&quot;No book selected for editing.&quot;);</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No book selected&quot;, &quot;Please select a book to lend.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Book refreshedBook = clientController.readBook(selectedBook.getId());</b>
+<b class="nc">&nbsp;        if (refreshedBook.getCopies() &lt; 1) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No copies available&quot;, &quot;There are no copies of this book available.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Dialog&lt;Book&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;        dialog.setTitle(&quot;Lend Book&quot;);</b>
+&nbsp;
+&nbsp;        // Set the button types.
+<b class="nc">&nbsp;        ButtonType saveButtonType = new ButtonType(&quot;Save&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);</b>
+&nbsp;
+&nbsp;        // Create the fields and populate with current book data.
+<b class="nc">&nbsp;        ChoiceBox&lt;Customer&gt; customerChoiceBox = new ChoiceBox&lt;&gt;();</b>
+<b class="nc">&nbsp;        customerChoiceBox.getItems().addAll(clientController.getCustomers());</b>
+<b class="nc">&nbsp;        DatePicker returnDatePicker = new DatePicker();</b>
+<b class="nc">&nbsp;        Label booktitleLabel = new Label(selectedBook.getTitle());</b>
+&nbsp;
+&nbsp;        // Create a grid pane and add the fields
+<b class="nc">&nbsp;        GridPane grid = new GridPane();</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Chose customer:&quot;), 0, 0);</b>
+<b class="nc">&nbsp;        grid.add(customerChoiceBox, 1, 0);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Return date:&quot;), 0, 1);</b>
+<b class="nc">&nbsp;        grid.add(returnDatePicker, 1, 1);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Book&#39;s title:&quot;), 0, 2);</b>
+<b class="nc">&nbsp;        grid.add(booktitleLabel, 1, 2);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.getDialogPane().setContent(grid);</b>
+<b class="nc">&nbsp;        lend[0] = null;</b>
+&nbsp;
+&nbsp;        // Convert the result to a Book object when the save button is clicked.
+<b class="nc">&nbsp;        dialog.setResultConverter(dialogButton -&gt; {</b>
+<b class="nc">&nbsp;            if (dialogButton == saveButtonType) {</b>
+<b class="nc">&nbsp;                if(clientController.readBook(selectedBook.getId()).getCopies() &lt; 1) {</b>
+<b class="nc">&nbsp;                    showErrorDialog(&quot;Error&quot;, &quot;No copies available&quot;, &quot;There are no copies of this book available.&quot;);</b>
+<b class="nc">&nbsp;                    return null;</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    selectedBook.setCopies(selectedBook.getCopies()-1);</b>
+<b class="nc">&nbsp;                    return selectedBook;</b>
+&nbsp;                }
+&nbsp;            } else {
+<b class="nc">&nbsp;                return null;</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        dialog.showAndWait().ifPresent(editedBook -&gt; {</b>
+<b class="nc">&nbsp;            lend[0] = new Lends(selectedBook.getId(), customerChoiceBox.getValue().getId(),returnDatePicker.getValue(), false);</b>
+<b class="nc">&nbsp;            clientController.createLend(lend[0]);</b>
+<b class="nc">&nbsp;            clientController.updateBook(editedBook);</b>
+<b class="nc">&nbsp;            List&lt;Book&gt; books = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;            books.add(clientController.readBook(editedBook.getId())); //TODO check to remove</b>
+<b class="nc">&nbsp;            showBooksOnTableView(books, searchBookTableView);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onLateLendButtonClick() {
+<b class="nc">&nbsp;        List&lt;Lends&gt; lends = clientController.searchLateLends();</b>
+<b class="nc">&nbsp;        clearSearchLends();</b>
+<b class="nc">&nbsp;        showLendsOnTableView(lends, searchLendTableView);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onSearchLendButtonClick(){
+<b class="nc">&nbsp;        searchLendTableView.getItems().clear();</b>
+&nbsp;
+<b class="nc">&nbsp;        String title = titleLendTextField.getText();</b>
+<b class="nc">&nbsp;        LocalDate date = returnLendDatePicker.getValue();</b>
+<b class="nc">&nbsp;        String cell = phoneLendTextField.getText();</b>
+<b class="nc">&nbsp;        Boolean unclepear = returnedLendChoiceBox.getValue();</b>
+&nbsp;
+<b class="nc">&nbsp;        int b_id=0; //book id</b>
+<b class="nc">&nbsp;        int c_id=0; //customer id</b>
+&nbsp;        boolean returned;
+<b class="nc">&nbsp;        boolean sentinel = false;</b>
+&nbsp;
+<b class="nc">&nbsp;        if(unclepear != null &amp;&amp; unclepear) returned = true;</b>
+<b class="nc">&nbsp;        else if (unclepear != null &amp;&amp; !unclepear) {</b>
+<b class="nc">&nbsp;            returned = false;</b>
+<b class="nc">&nbsp;            sentinel = true;</b>
+<b class="nc">&nbsp;        } else returned = false;</b>
+&nbsp;
+&nbsp;        //checks if book and customer exists
+<b class="nc">&nbsp;        if (!title.isEmpty()) {</b>
+<b class="nc">&nbsp;            List&lt;Book&gt; books = clientController.searchBooksBy(1, new Book(0, title, &quot;&quot;, 0, Genre.Genre, 0));</b>
+<b class="nc">&nbsp;            if (books == null || books.isEmpty()) {</b>
+<b class="nc">&nbsp;                showErrorDialog(&quot;Error&quot;, &quot;Book not found&quot;, &quot;Book you are looking for is not found. Try something else.&quot;);</b>
+<b class="nc">&nbsp;                clearSearchLends();</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="nc">&nbsp;            b_id = books.get(0).getId();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if(!cell.isEmpty()) {</b>
+<b class="nc">&nbsp;            List&lt;Customer&gt; customers = clientController.searchCustomersBy(2, new Customer(&quot;&quot;, &quot;&quot;, cell, &quot;&quot;));</b>
+<b class="nc">&nbsp;            if (customers == null || customers.isEmpty()) {</b>
+<b class="nc">&nbsp;                showErrorDialog(&quot;Error&quot;, &quot;Customer not found&quot;, &quot;Customer you are looking for is not found. Try something else.&quot;);</b>
+<b class="nc">&nbsp;                clearSearchLends();</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="nc">&nbsp;            c_id = customers.get(0).getId();</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        int choice=7;</b>
+<b class="nc">&nbsp;        if (b_id != 0 &amp;&amp; c_id != 0 &amp;&amp; date != null) choice = 0;</b>
+<b class="nc">&nbsp;        else if (b_id != 0 &amp;&amp; c_id == 0 &amp;&amp; date == null) choice = 1;</b>
+<b class="nc">&nbsp;        else if (b_id == 0 &amp;&amp; c_id != 0 &amp;&amp; date == null) choice = 2;</b>
+<b class="nc">&nbsp;        else if (b_id == 0 &amp;&amp; c_id == 0 &amp;&amp; date != null) choice = 3;</b>
+<b class="nc">&nbsp;        else if (b_id != 0 &amp;&amp; c_id != 0 &amp;&amp; date == null) choice = 4;</b>
+<b class="nc">&nbsp;        else if (b_id != 0 &amp;&amp; c_id == 0 &amp;&amp; date != null) choice = 5;</b>
+<b class="nc">&nbsp;        else if (b_id == 0 &amp;&amp; c_id != 0 &amp;&amp; date != null) choice = 6;</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Lends&gt; lends = clientController.searchLendsBy(choice, b_id, date, c_id, returned, sentinel);</b>
+<b class="nc">&nbsp;        showLendsOnTableView(lends, searchLendTableView);</b>
+<b class="nc">&nbsp;        clearSearchLends();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onReturnLendButtonClick() {
+<b class="nc">&nbsp;        Lends selectedLend = searchLendTableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc">&nbsp;        if (selectedLend == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No lend selected&quot;, &quot;Please select a lend to return.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Book book = clientController.readBook(selectedLend.getBookId());</b>
+&nbsp;
+<b class="nc">&nbsp;        book.setCopies(book.getCopies()+1);</b>
+<b class="nc">&nbsp;        clientController.updateBook(book);</b>
+<b class="nc">&nbsp;        selectedLend.setReturned(true);</b>
+<b class="nc">&nbsp;        clientController.updateLend(selectedLend);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        lends.add(clientController.readLend(selectedLend));</b>
+<b class="nc">&nbsp;        showLendsOnTableView(lends, searchLendTableView);</b>
+<b class="nc">&nbsp;        clearSearchLends();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onDeleteLendButtonClick() {
+<b class="nc">&nbsp;        Lends selectedLend = searchLendTableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc">&nbsp;        if (selectedLend == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No lend selected&quot;, &quot;Please select a lend to delete.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        clientController.deleteLend(selectedLend);</b>
+<b class="nc">&nbsp;        searchLendTableView.getItems().remove(selectedLend);</b>
+<b class="nc">&nbsp;        clearSearchLends();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onUpdateLendButtonClick() {
+<b class="nc">&nbsp;        Lends selectedLend = searchLendTableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc">&nbsp;        if (selectedLend == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No lend selected&quot;, &quot;Please select a lend to update.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Dialog&lt;Lends&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;        dialog.setTitle(&quot;Update Lend&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        ButtonType saveButtonType = new ButtonType(&quot;Save&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);</b>
+&nbsp;
+<b class="nc">&nbsp;        Label customerLabel = new Label(clientController.readCustomer(selectedLend.getCustomerId()).getName());</b>
+<b class="nc">&nbsp;        DatePicker returnDatePicker = new DatePicker();</b>
+<b class="nc">&nbsp;        Label booktitleLabel = new Label(clientController.readBook(selectedLend.getBookId()).getTitle());</b>
+&nbsp;
+<b class="nc">&nbsp;        GridPane grid = new GridPane();</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Customer:&quot;), 0, 0);</b>
+<b class="nc">&nbsp;        grid.add(customerLabel, 1, 0);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Return date:&quot;), 0, 1);</b>
+<b class="nc">&nbsp;        grid.add(returnDatePicker, 1, 1);</b>
+<b class="nc">&nbsp;        grid.add(new Label(&quot;Book&#39;s title:&quot;), 0, 2);</b>
+<b class="nc">&nbsp;        grid.add(booktitleLabel, 1, 2);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.getDialogPane().setContent(grid);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.setResultConverter(dialogButton -&gt; {</b>
+<b class="nc">&nbsp;            if (dialogButton == saveButtonType) {</b>
+<b class="nc">&nbsp;                selectedLend.setReturnDate(returnDatePicker.getValue());</b>
+<b class="nc">&nbsp;                return selectedLend;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        dialog.showAndWait().ifPresent(editedLend -&gt; {</b>
+<b class="nc">&nbsp;            clientController.updateLend(editedLend);</b>
+<b class="nc">&nbsp;            List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;            lends.add(clientController.readLend(editedLend));</b>
+<b class="nc">&nbsp;            showLendsOnTableView(lends, searchLendTableView);</b>
+&nbsp;        });
+<b class="nc">&nbsp;        clearSearchLends();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onAddateCustomerButtonClick() {
+<b class="nc">&nbsp;        Customer selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc">&nbsp;        if (selectedCustomer != null) {</b>
+<b class="nc">&nbsp;            updateCustomer(selectedCustomer);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            addCustomer();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onDeleteCustomerButtonClick() {
+<b class="nc">&nbsp;        Customer selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc">&nbsp;        if(selectedCustomer == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No customer selected&quot;, &quot;Please select a customer to delete.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        clientController.deleteCustomer(selectedCustomer);</b>
+<b class="nc">&nbsp;        customersTableView.getSelectionModel().clearSelection();</b>
+<b class="nc">&nbsp;        onCancelCustomerButtonClick();</b>
+<b class="nc">&nbsp;        customersTableView.getItems().remove(selectedCustomer);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onSearchCustomerButtonClick(){
+<b class="nc">&nbsp;        String name = nameCustomerTextField.getText();</b>
+<b class="nc">&nbsp;        String phone = phoneCustomerTextField.getText();</b>
+<b class="nc">&nbsp;        String email = emailCustomerTextField.getText();</b>
+<b class="nc">&nbsp;        String address = addressCustomerTextField.getText();</b>
+&nbsp;        int choice;
+<b class="nc">&nbsp;        if(!name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 0;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; address.isEmpty()) choice = 1;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; address.isEmpty()) choice = 2;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; address.isEmpty()) choice = 3;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 4;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; address.isEmpty()) choice = 5;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; address.isEmpty()) choice = 6;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; address.isEmpty()) choice = 7;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 8;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; address.isEmpty()) choice = 9;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 10;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 11;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 12;</b>
+<b class="nc">&nbsp;        else if(name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; !email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 13;</b>
+<b class="nc">&nbsp;        else if(!name.isEmpty() &amp;&amp; !phone.isEmpty() &amp;&amp; email.isEmpty() &amp;&amp; !address.isEmpty()) choice = 14;</b>
+<b class="nc">&nbsp;        else choice = 15;</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Customer&gt; customers = clientController.searchCustomersBy(choice, new Customer(name, email, phone, address));</b>
+<b class="nc">&nbsp;        if(customers==null || customers.isEmpty()) showErrorDialog(&quot;Error&quot;, &quot;No customers found&quot;, &quot;Customers you are looking for are not found. Try something else.&quot;);</b>
+&nbsp;        else {
+<b class="nc">&nbsp;            ObservableList&lt;Customer&gt; customerNames = FXCollections.observableArrayList();</b>
+<b class="nc">&nbsp;            customerNames.addAll(customers);</b>
+<b class="nc">&nbsp;            customersTableView.setItems(customerNames);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    protected void onCancelCustomerButtonClick() {
+<b class="nc">&nbsp;        clearSearchCustomers();</b>
+<b class="nc">&nbsp;        addateCustomerButton.setText(&quot;\uD83D\uDE4B add&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onHomeClick(){
+<b class="nc">&nbsp;        hideAllPanes();</b>
+<b class="nc">&nbsp;        showPane(homePane);</b>
+<b class="nc">&nbsp;        loadBooks();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onAddClick(){
+<b class="nc">&nbsp;        hideAllPanes();</b>
+<b class="nc">&nbsp;        showPane(addBookPane);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onSearchClick(){
+<b class="nc">&nbsp;        hideAllPanes();</b>
+<b class="nc">&nbsp;        showPane(searchBooksPane);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onLendClick(){
+<b class="nc">&nbsp;        hideAllPanes();</b>
+<b class="nc">&nbsp;        showPane(lendPane);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onCustomerClick(){
+<b class="nc">&nbsp;        hideAllPanes();</b>
+<b class="nc">&nbsp;        showPane(customersPane);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onStatsClick(){
+<b class="nc">&nbsp;        hideAllPanes();</b>
+<b class="nc">&nbsp;        showPane(statsPane);</b>
+<b class="nc">&nbsp;        updateGenreChart();</b>
+<b class="nc">&nbsp;        updateCustomerLendsBarChart();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows an error dialog with the given title, header and content.
+&nbsp;     * @param title the title of the dialog
+&nbsp;     * @param header the header of the dialog
+&nbsp;     * @param content the content of the dialog
+&nbsp;     */
+&nbsp;    private void showErrorDialog(String title, String header, String content) {
+<b class="nc">&nbsp;        Alert alert = new Alert(Alert.AlertType.ERROR);</b>
+<b class="nc">&nbsp;        alert.setTitle(title);</b>
+<b class="nc">&nbsp;        alert.setHeaderText(header);</b>
+<b class="nc">&nbsp;        alert.setContentText(content);</b>
+<b class="nc">&nbsp;        alert.showAndWait();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the books on the given table view.
+&nbsp;     * @param books the books to show
+&nbsp;     * @param tableView the table view to show the books on
+&nbsp;     */
+&nbsp;    private void showBooksOnTableView(List&lt;Book&gt; books, TableView tableView) {
+&nbsp;
+<b class="nc">&nbsp;        if(books == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Critical error&quot;, &quot;Could not connect to the server. Please try again later.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        ObservableList&lt;Book&gt; observableList = FXCollections.observableArrayList(books);</b>
+<b class="nc">&nbsp;        tableView.setItems(observableList);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Loads the books from the server and shows them on the home table view.
+&nbsp;     * This method is called when the home view is shown.
+&nbsp;     */
+&nbsp;    private void loadBooks() {
+<b class="nc">&nbsp;        List&lt;Book&gt; books = clientController.getBooks();</b>
+<b class="nc">&nbsp;        showBooksOnTableView(books, homeTableView);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the home table view.
+&nbsp;     */
+&nbsp;    private void initHomeTableView() {
+<b class="nc">&nbsp;        idHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
+<b class="nc">&nbsp;        titleHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;title&quot;));</b>
+<b class="nc">&nbsp;        authorHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;author&quot;));</b>
+<b class="nc">&nbsp;        genreHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;( &quot;genre&quot;));</b>
+<b class="nc">&nbsp;        yearHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;year&quot;));</b>
+<b class="nc">&nbsp;        copiesHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;copies&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the search table view.
+&nbsp;     */
+&nbsp;    private void initSearchTableView() {
+<b class="nc">&nbsp;        idSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
+<b class="nc">&nbsp;        titleSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;title&quot;));</b>
+<b class="nc">&nbsp;        authorSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;author&quot;));</b>
+<b class="nc">&nbsp;        genreSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;( &quot;genre&quot;));</b>
+<b class="nc">&nbsp;        yearSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;year&quot;));</b>
+<b class="nc">&nbsp;        copiesSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;copies&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the lends table view.
+&nbsp;     */
+&nbsp;    private void initLendsTableView() {
+<b class="nc">&nbsp;        idLColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
+<b class="nc">&nbsp;        bidLColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;bookId&quot;));</b>
+<b class="nc">&nbsp;        cidLColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;customerId&quot;));</b>
+<b class="nc">&nbsp;        returnLColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;returnDate&quot;));</b>
+<b class="nc">&nbsp;        returnedLColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;returned&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the customers table view.
+&nbsp;     */
+&nbsp;    private void initCustomersTableView() {
+<b class="nc">&nbsp;        idCColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
+<b class="nc">&nbsp;        nameCColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;name&quot;));</b>
+<b class="nc">&nbsp;        emailCColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;email&quot;));</b>
+<b class="nc">&nbsp;        phoneCColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;phone&quot;));</b>
+<b class="nc">&nbsp;        addressCColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;address&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the customer with the data from the text fields.
+&nbsp;     * @param customer the customer to update
+&nbsp;     */
+&nbsp;    private void updateCustomer(Customer customer) {
+<b class="nc">&nbsp;        customer.setName(nameCustomerTextField.getText());</b>
+<b class="nc">&nbsp;        customer.setPhone(phoneCustomerTextField.getText());</b>
+<b class="nc">&nbsp;        customer.setEmail(emailCustomerTextField.getText());</b>
+<b class="nc">&nbsp;        customer.setAddress(addressCustomerTextField.getText());</b>
+&nbsp;
+<b class="nc">&nbsp;        clientController.updateCustomer(customer);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Customer&gt; customers = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        customers.add(clientController.readCustomer(customer.getId()));</b>
+<b class="nc">&nbsp;        showCustomersOnTableView(customers, customersTableView);</b>
+<b class="nc">&nbsp;        onCancelCustomerButtonClick();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a new customer with the data from the text fields.
+&nbsp;     */
+&nbsp;    private void addCustomer() {
+<b class="nc">&nbsp;        String name = nameCustomerTextField.getText();</b>
+<b class="nc">&nbsp;        String phone = phoneCustomerTextField.getText();</b>
+<b class="nc">&nbsp;        String email = emailCustomerTextField.getText();</b>
+<b class="nc">&nbsp;        String address = addressCustomerTextField.getText();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Invalid input&quot;, &quot;Please fill all fields.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Customer newCustomer = new Customer(name, email, phone, address);</b>
+<b class="nc">&nbsp;        clientController.createCustomer(newCustomer);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Customer&gt; customers = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        customers = clientController.searchCustomersBy(0, new Customer(name, email, phone, address));</b>
+<b class="nc">&nbsp;        showCustomersOnTableView(customers, customersTableView);</b>
+<b class="nc">&nbsp;        clearSearchCustomers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the customers on the given table view.
+&nbsp;     * @param customers the customers to show
+&nbsp;     * @param tableView the table view to show the customers on
+&nbsp;     */
+&nbsp;    private void showCustomersOnTableView(List&lt;Customer&gt; customers, TableView tableView) {
+<b class="nc">&nbsp;        if(customers == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Critical error&quot;, &quot;Could not connect to the server. Please try again later.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        ObservableList&lt;Customer&gt; observableList = FXCollections.observableArrayList(customers);</b>
+<b class="nc">&nbsp;        tableView.setItems(observableList);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the lends on the given table view.
+&nbsp;     * @param lends the lends to show
+&nbsp;     * @param tableView the table view to show the lends on
+&nbsp;     */
+&nbsp;    private void showLendsOnTableView(List&lt;Lends&gt; lends, TableView tableView) {
+<b class="nc">&nbsp;        if (lends == null) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Critical error&quot;, &quot;Could not connect to the server. Please try again later.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        ObservableList&lt;Lends&gt; observableList = FXCollections.observableArrayList(lends);</b>
+<b class="nc">&nbsp;        tableView.setItems(observableList);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes choice boxes.
+&nbsp;     */
+&nbsp;    private void initChoiceBoxes() {
+<b class="nc">&nbsp;        genreABChoiceBox.getItems().addAll(Genre.values());</b>
+<b class="nc">&nbsp;        genreSBChoiceBox.getItems().addAll(Genre.values());</b>
+<b class="nc">&nbsp;        returnedLendChoiceBox.getItems().addAll(true, false);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears the book fields.
+&nbsp;     */
+&nbsp;    private void clearBookFields() {
+<b class="nc">&nbsp;        titleABTextField.clear();</b>
+<b class="nc">&nbsp;        authorABTextField.clear();</b>
+<b class="nc">&nbsp;        genreABChoiceBox.setValue(null);</b>
+<b class="nc">&nbsp;        yearABTextField.clear();</b>
+<b class="nc">&nbsp;        copiesABTextField.clear();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears the search books fields.
+&nbsp;     */
+&nbsp;    private void clearSearchBooksFields() {
+<b class="nc">&nbsp;        titleSBTextField.clear();</b>
+<b class="nc">&nbsp;        authorSBTextField.clear();</b>
+<b class="nc">&nbsp;        yearSBTextField.clear();</b>
+<b class="nc">&nbsp;        genreSBChoiceBox.setValue(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears the search lends fields.
+&nbsp;     */
+&nbsp;    private void clearSearchLends() {
+<b class="nc">&nbsp;        titleLendTextField.clear();</b>
+<b class="nc">&nbsp;        returnLendDatePicker.setValue(null);</b>
+<b class="nc">&nbsp;        phoneLendTextField.clear();</b>
+<b class="nc">&nbsp;        returnedLendChoiceBox.setValue(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears the search customers fields.
+&nbsp;     */
+&nbsp;    private void clearSearchCustomers() {
+<b class="nc">&nbsp;        nameCustomerTextField.clear();</b>
+<b class="nc">&nbsp;        phoneCustomerTextField.clear();</b>
+<b class="nc">&nbsp;        emailCustomerTextField.clear();</b>
+<b class="nc">&nbsp;        addressCustomerTextField.clear();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the add book view.
+&nbsp;     */
+&nbsp;    private void showPane(Pane pane) {
+<b class="nc">&nbsp;        pane.toFront();</b>
+<b class="nc">&nbsp;        pane.setVisible(true);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the home view.
+&nbsp;     */
+&nbsp;    private void hideAllPanes() {
+<b class="nc">&nbsp;        homePane.toBack();</b>
+<b class="nc">&nbsp;        homePane.setVisible(false);</b>
+<b class="nc">&nbsp;        addBookPane.toBack();</b>
+<b class="nc">&nbsp;        addBookPane.setVisible(false);</b>
+<b class="nc">&nbsp;        searchBooksPane.toBack();</b>
+<b class="nc">&nbsp;        searchBooksPane.setVisible(false);</b>
+<b class="nc">&nbsp;        lendPane.toBack();</b>
+<b class="nc">&nbsp;        lendPane.setVisible(false);</b>
+<b class="nc">&nbsp;        customersPane.toBack();</b>
+<b class="nc">&nbsp;        customersPane.setVisible(false);</b>
+<b class="nc">&nbsp;        statsPane.toBack();</b>
+<b class="nc">&nbsp;        statsPane.setVisible(false);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the genre pie chart.
+&nbsp;     */
+&nbsp;    public void updateGenreChart() {
+<b class="nc">&nbsp;        Map&lt;Genre, Long&gt; genreStats = clientController.calculateGenreLendingStats();</b>
+&nbsp;
+&nbsp;        // Calcola il totale dei prestiti per il calcolo delle percentuali
+<b class="nc">&nbsp;        long totalLends = genreStats.values().stream().mapToLong(Long::longValue).sum();</b>
+&nbsp;
+&nbsp;        // Crea i dati per il PieChart
+<b class="nc">&nbsp;        ObservableList&lt;PieChart.Data&gt; pieChartData = FXCollections.observableArrayList();</b>
+&nbsp;
+<b class="nc">&nbsp;        genreStats.forEach((genre, count) -&gt; {</b>
+&nbsp;            // Calcola la percentuale
+<b class="nc">&nbsp;            double percentage = (count.doubleValue() / totalLends) * 100;</b>
+&nbsp;            // Aggiungi i dati al PieChart con la percentuale formattata
+<b class="nc">&nbsp;            pieChartData.add(new PieChart.Data(</b>
+<b class="nc">&nbsp;                    String.format(&quot;%s (%.1f%%)&quot;, genre.toString(), percentage),</b>
+<b class="nc">&nbsp;                    count</b>
+&nbsp;            ));
+&nbsp;        });
+&nbsp;
+&nbsp;        // Aggiorna il PieChart
+<b class="nc">&nbsp;        genrePieChart.setData(pieChartData);</b>
+<b class="nc">&nbsp;        genrePieChart.setTitle(&quot;Lends Distribution by Genre&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the genre pie chart.
+&nbsp;     */
+&nbsp;    private void initGenrePieChart() {
+<b class="nc">&nbsp;        genrePieChart.setLabelLineLength(10);</b>
+<b class="nc">&nbsp;        genrePieChart.setLabelsVisible(true);</b>
+<b class="nc">&nbsp;        genrePieChart.setStartAngle(90);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the customer lending chart.
+&nbsp;     */
+&nbsp;    public void updateCustomerLendsBarChart() {
+<b class="nc">&nbsp;        numusBarChart.getData().clear();</b>
+&nbsp;
+&nbsp;        // Crea una nuova serie per i dati
+<b class="nc">&nbsp;        XYChart.Series&lt;String, Number&gt; series = new XYChart.Series&lt;&gt;();</b>
+<b class="nc">&nbsp;        series.setName(&quot;Distribution of Lends by Customers&quot;);</b>
+&nbsp;
+&nbsp;        // Ottieni le statistiche
+<b class="nc">&nbsp;        Map&lt;Customer, Integer&gt; customerStats = clientController.calculateCustomerLendingStats();</b>
+&nbsp;
+&nbsp;        // Ordina i clienti per numero di prestiti (decrescente)
+<b class="nc">&nbsp;        customerStats.entrySet().stream()</b>
+<b class="nc">&nbsp;                .sorted(Map.Entry.&lt;Customer, Integer&gt;comparingByValue().reversed())</b>
+<b class="nc">&nbsp;                .forEach(entry -&gt; {</b>
+<b class="nc">&nbsp;                    Customer customer = entry.getKey();</b>
+<b class="nc">&nbsp;                    Integer lendCount = entry.getValue();</b>
+&nbsp;
+<b class="nc">&nbsp;                    if (lendCount &gt; 0) {  // Mostra solo clienti con almeno un prestito</b>
+&nbsp;                        // Crea l&#39;etichetta per il cliente
+<b class="nc">&nbsp;                        String customerLabel = String.format(&quot;ID: %d&quot;, customer.getId());</b>
+&nbsp;
+&nbsp;                        // Aggiungi i dati alla serie con il valore numerico corretto
+<b class="nc">&nbsp;                        XYChart.Data&lt;String, Number&gt; data = new XYChart.Data&lt;&gt;(customerLabel, lendCount);</b>
+<b class="nc">&nbsp;                        series.getData().add(data);</b>
+&nbsp;                    }
+&nbsp;                });
+&nbsp;
+&nbsp;        // Aggiungi la serie al grafico
+<b class="nc">&nbsp;        numusBarChart.getData().add(series);</b>
+&nbsp;
+&nbsp;        // Imposta il range dell&#39;asse Y
+<b class="nc">&nbsp;        NumberAxis yAxis = (NumberAxis) numusBarChart.getYAxis();</b>
+<b class="nc">&nbsp;        yAxis.setAutoRanging(false);</b>
+<b class="nc">&nbsp;        int maxLends = customerStats.values().stream()</b>
+<b class="nc">&nbsp;                .mapToInt(Integer::intValue)</b>
+<b class="nc">&nbsp;                .max()</b>
+<b class="nc">&nbsp;                .orElse(10);</b>
+<b class="nc">&nbsp;        yAxis.setUpperBound(maxLends + 1);</b>
+<b class="nc">&nbsp;        yAxis.setLowerBound(0);</b>
+<b class="nc">&nbsp;        yAxis.setTickUnit(1);</b>
+&nbsp;
+&nbsp;        // Personalizza il grafico
+<b class="nc">&nbsp;        numusBarChart.setTitle(&quot;Lends per customer&quot;);</b>
+<b class="nc">&nbsp;        CategoryAxis xAxis = (CategoryAxis) numusBarChart.getXAxis();</b>
+<b class="nc">&nbsp;        xAxis.setLabel(&quot;Customers&quot;);</b>
+<b class="nc">&nbsp;        yAxis.setLabel(&quot;# of Lends&quot;);</b>
+&nbsp;
+&nbsp;        // Aggiungi tooltip e stile hover
+<b class="nc">&nbsp;        series.getData().forEach(data -&gt; {</b>
+<b class="nc">&nbsp;            Node bar = data.getNode();</b>
+<b class="nc">&nbsp;            Tooltip tooltip = new Tooltip(</b>
+<b class="nc">&nbsp;                    String.format(&quot;Customer: %s%n Lends: %d&quot;,</b>
+<b class="nc">&nbsp;                            data.getXValue(),</b>
+<b class="nc">&nbsp;                            data.getYValue().intValue())</b>
+&nbsp;            );
+<b class="nc">&nbsp;            Tooltip.install(bar, tooltip);</b>
+&nbsp;
+&nbsp;            // Effetto hover
+<b class="nc">&nbsp;            bar.setOnMouseEntered(e -&gt; bar.setStyle(&quot;-fx-bar-fill: #ff8c00;&quot;));</b>
+<b class="nc">&nbsp;            bar.setOnMouseExited(e -&gt; bar.setStyle(&quot;&quot;));</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the BarChart.
+&nbsp;     */
+&nbsp;    private void initNumusBarChart() {
+<b class="nc">&nbsp;        numusBarChart.setTitle(&quot;Lends Distribution by Customers&quot;);</b>
+&nbsp;
+&nbsp;        //configures the x and y axis
+<b class="nc">&nbsp;        CategoryAxis xAxis = (CategoryAxis) numusBarChart.getXAxis();</b>
+<b class="nc">&nbsp;        NumberAxis yAxis = (NumberAxis) numusBarChart.getYAxis();</b>
+&nbsp;
+<b class="nc">&nbsp;        xAxis.setLabel(&quot;Customers&quot;);</b>
+<b class="nc">&nbsp;        yAxis.setLabel(&quot;# of Lends&quot;);</b>
+&nbsp;
+&nbsp;        //forces the Y axis to use only integer numbers
+<b class="nc">&nbsp;        yAxis.setTickUnit(1);</b>
+<b class="nc">&nbsp;        yAxis.setMinorTickVisible(false);</b>
+&nbsp;
+&nbsp;        //rotate the labels of the x-axis for better readability
+<b class="nc">&nbsp;        xAxis.setTickLabelRotation(45);</b>
+&nbsp;
+<b class="nc">&nbsp;        numusBarChart.setAnimated(true);</b>
+<b class="nc">&nbsp;        numusBarChart.setBarGap(8);</b>
+<b class="nc">&nbsp;        numusBarChart.setCategoryGap(20);</b>
+&nbsp;
+<b class="nc">&nbsp;        numusBarChart.getStyleClass().add(&quot;custom-bar-chart&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

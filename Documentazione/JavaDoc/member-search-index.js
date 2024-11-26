@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"prj.library.database","c":"DatabaseController","l":"closeConnection(Connection)","url":"closeConnection(java.sql.Connection)"},{"p":"prj.library.database","c":"DatabaseController","l":"DatabaseController()","url":"%3Cinit%3E()"},{"p":"prj.library.database","c":"DatabaseController","l":"getConnection()"}]

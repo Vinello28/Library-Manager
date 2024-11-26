@@ -1,0 +1,241 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MessageFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.networking.messages</a>
+</div>
+
+<h1>Coverage Summary for Class: MessageFactory (prj.library.networking.messages)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MessageFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13%
+  </span>
+  <span class="absValue">
+    (9/69)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    63,6%
+  </span>
+  <span class="absValue">
+    (7/11)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MessageFactory$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13%
+  </span>
+  <span class="absValue">
+    (9/69)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (8/12)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.networking.messages;
+&nbsp;
+&nbsp;import prj.library.models.*;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;
+<b class="nc">&nbsp;public class MessageFactory {</b>
+&nbsp;    public static Message createMessage(Operation operation, Object messageContent) {
+<b class="pc">&nbsp;        switch (operation) {</b>
+&nbsp;            case ADD_BOOK:
+&nbsp;            case GET_BOOK:
+&nbsp;            case GET_BOOKS:
+&nbsp;            case UPDATE_BOOK:
+&nbsp;            case REMOVE_BOOK:
+&nbsp;            case RESP_BOOK:
+&nbsp;            case SEARCH_BY_TITLE_GENRE:
+&nbsp;            case SEARCH_BY_ALL:
+&nbsp;            case SEARCH_BY_AUTHOR:
+&nbsp;            case SEARCH_BY_AUTHOR_GENRE:
+&nbsp;            case SEARCH_BY_AUTHOR_GENRE_YEAR:
+&nbsp;            case SEARCH_BY_AUTHOR_YEAR:
+&nbsp;            case SEARCH_BY_GENRE:
+&nbsp;            case SEARCH_BY_GENRE_YEAR:
+&nbsp;            case SEARCH_BY_TITLE:
+&nbsp;            case SEARCH_BY_TITLE_AUTHOR:
+&nbsp;            case SEARCH_BY_TITLE_AUTHOR_YEAR:
+&nbsp;            case SEARCH_BY_TITLE_AUTHOR_GENRE:
+&nbsp;            case SEARCH_BY_TITLE_YEAR:
+&nbsp;            case SEARCH_BY_YEAR:
+&nbsp;            case SEARCH_BY_TITLE_GENRE_YEAR:
+<b class="fc">&nbsp;                return new BookMessage(operation, (Book) messageContent);</b>
+&nbsp;            case ADD_LEND:
+&nbsp;            case GET_LEND:
+&nbsp;            case UPDATE_LEND:
+&nbsp;            case REMOVE_LEND:
+&nbsp;            case RESP_LEND:
+&nbsp;            case GET_LENDS:
+&nbsp;            case SEARCH_LEND_BY_ALL:
+&nbsp;            case SEARCH_LEND_BY_BOOK:
+&nbsp;            case SEARCH_LEND_BY_RETURN_DATE:
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER:
+&nbsp;            case SEARCH_LEND_BY_LATE:
+&nbsp;            case SEARCH_LEND_BY_BOOK_RETURNED:
+&nbsp;            case SEARCH_LEND_BY_RETURN_DATE_RETURNED:
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER_RETURNED:
+&nbsp;            case SEARCH_LEND_BY_BOOK_CUSTOMER:
+&nbsp;            case SEARCH_LEND_BY_BOOK_RETURN_DATE:
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE:
+&nbsp;            case SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED:
+&nbsp;            case SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED:
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
+&nbsp;            case SEARCH_LEND_BY_ALL_RETURNED:
+&nbsp;            case GET_LENDS_RETURNED:
+<b class="fc">&nbsp;                return new LendMessage(operation, (Lends) messageContent);</b>
+&nbsp;            case RESULT_BOOKS:
+<b class="fc">&nbsp;                return new BooksListMessage(operation, (ArrayList&lt;Book&gt;) messageContent);</b>
+&nbsp;            case RESULT_LENDS:
+&nbsp;            case REFRESH_LENDS:
+<b class="fc">&nbsp;                return new LendsListMessage(operation, (ArrayList&lt;Lends&gt;) messageContent);</b>
+&nbsp;            case ADD_CUSTOMER:
+&nbsp;            case GET_CUSTOMER:
+&nbsp;            case UPDATE_CUSTOMER:
+&nbsp;            case REMOVE_CUSTOMER:
+&nbsp;            case GET_CUSTOMERS:
+&nbsp;            case RESP_CUSTOMER:
+&nbsp;            case SEARCH_CUSTOMER_BY_ALL:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME:
+&nbsp;            case SEARCH_CUSTOMER_BY_PHONE:
+&nbsp;            case SEARCH_CUSTOMER_BY_EMAIL:
+&nbsp;            case SEARCH_CUSTOMER_BY_ADDRESS:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_PHONE:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_EMAIL:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_ADDRESS:
+&nbsp;            case SEARCH_CUSTOMER_BY_PHONE_EMAIL:
+&nbsp;            case SEARCH_CUSTOMER_BY_PHONE_ADDRESS:
+&nbsp;            case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS:
+&nbsp;            case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
+<b class="fc">&nbsp;                return new CustomerMessage(operation, (Customer) messageContent);</b>
+&nbsp;            case RESULT_CUSTOMERS:
+<b class="fc">&nbsp;                return new CustomersListMessage(operation, (ArrayList&lt;Customer&gt;) messageContent);</b>
+&nbsp;            case GENERIC_RESPONSE:
+<b class="nc">&nbsp;                return new GenericMessage((Boolean) messageContent);</b>
+&nbsp;            default:
+<b class="nc">&nbsp;                System.out.println(&quot;Invalid operation: &quot; + operation);</b>
+<b class="nc">&nbsp;                return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>

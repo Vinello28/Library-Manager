@@ -1,0 +1,571 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ClientHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.networking</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientHandler (prj.library.networking)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/134)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/128)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ClientHandler$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/134)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/129)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.networking;
+&nbsp;
+&nbsp;import java.net.Socket;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import prj.library.models.Book;
+&nbsp;import prj.library.models.Customer;
+&nbsp;import prj.library.models.Lends;
+&nbsp;import prj.library.database.DAO.*;
+&nbsp;import prj.library.networking.NI.NetworkInterface;
+&nbsp;import prj.library.networking.messages.*;
+&nbsp;import static prj.library.utils.CLIUtils.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Class that handles the client requests.
+&nbsp; */
+&nbsp;public class ClientHandler extends NetworkInterface implements Runnable {
+&nbsp;    private BookDAO bookDAO;
+&nbsp;    private LendsDAO lendDAO;
+&nbsp;    private CustomerDAO customerDAO;
+&nbsp;
+&nbsp;
+&nbsp;    public ClientHandler(Socket socket) {
+<b class="nc">&nbsp;        super(socket);</b>
+<b class="nc">&nbsp;        bookDAO = new BookDAO();</b>
+<b class="nc">&nbsp;        lendDAO = new LendsDAO();</b>
+<b class="nc">&nbsp;        customerDAO = new CustomerDAO();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void run() {
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            Message message = (Message) receive();</b>
+<b class="nc">&nbsp;            if (message == null) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;SERVER | ERROR: Message is null&quot;);</b>
+&nbsp;                break;
+&nbsp;            }
+<b class="nc">&nbsp;            System.out.println(&quot;SERVER | INFO: received message &quot; + message.getOperation() + &quot; &quot; + message.getMessage());</b>
+&nbsp;
+<b class="nc">&nbsp;            switch (message.getOperation()) {</b>
+&nbsp;                case ADD_BOOK:
+&nbsp;                case GET_BOOK:
+&nbsp;                case UPDATE_BOOK:
+&nbsp;                case REMOVE_BOOK:
+&nbsp;                case GET_BOOKS:
+<b class="nc">&nbsp;                    handleBookOperation((BookMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                case SEARCH_BY_ALL:
+&nbsp;                case SEARCH_BY_TITLE:
+&nbsp;                case SEARCH_BY_AUTHOR:
+&nbsp;                case SEARCH_BY_GENRE:
+&nbsp;                case SEARCH_BY_YEAR:
+&nbsp;                case SEARCH_BY_TITLE_AUTHOR:
+&nbsp;                case SEARCH_BY_TITLE_GENRE:
+&nbsp;                case SEARCH_BY_TITLE_YEAR:
+&nbsp;                case SEARCH_BY_AUTHOR_GENRE:
+&nbsp;                case SEARCH_BY_AUTHOR_YEAR:
+&nbsp;                case SEARCH_BY_GENRE_YEAR:
+&nbsp;                case SEARCH_BY_TITLE_AUTHOR_GENRE:
+&nbsp;                case SEARCH_BY_TITLE_AUTHOR_YEAR:
+&nbsp;                case SEARCH_BY_TITLE_GENRE_YEAR:
+&nbsp;                case SEARCH_BY_AUTHOR_GENRE_YEAR:
+<b class="nc">&nbsp;                    handleSearchBookOperation((BookMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                case ADD_LEND:
+&nbsp;                case GET_LEND:
+&nbsp;                case UPDATE_LEND:
+&nbsp;                case REMOVE_LEND:
+&nbsp;                case GET_LENDS:
+<b class="nc">&nbsp;                    handleLendOperation((LendMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                case SEARCH_LEND_BY_ALL:
+&nbsp;                case SEARCH_LEND_BY_BOOK:
+&nbsp;                case SEARCH_LEND_BY_RETURN_DATE:
+&nbsp;                case SEARCH_LEND_BY_CUSTOMER:
+&nbsp;                case SEARCH_LEND_BY_ALL_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_BOOK_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_CUSTOMER_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_RETURN_DATE_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_BOOK_CUSTOMER:
+&nbsp;                case SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_BOOK_RETURN_DATE:
+&nbsp;                case SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE:
+&nbsp;                case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
+&nbsp;                case SEARCH_LEND_BY_LATE:
+&nbsp;                case GET_LENDS_RETURNED:
+<b class="nc">&nbsp;                    handleSearchLendOperation((LendMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                case ADD_CUSTOMER:
+&nbsp;                case GET_CUSTOMER:
+&nbsp;                case UPDATE_CUSTOMER:
+&nbsp;                case REMOVE_CUSTOMER:
+&nbsp;                case GET_CUSTOMERS:
+<b class="nc">&nbsp;                    handleCustomerOperation((CustomerMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                case SEARCH_CUSTOMER_BY_ALL:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME:
+&nbsp;                case SEARCH_CUSTOMER_BY_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_PHONE:
+&nbsp;                case SEARCH_CUSTOMER_BY_EMAIL:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_PHONE:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_EMAIL:
+&nbsp;                case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_PHONE_EMAIL:
+&nbsp;                case SEARCH_CUSTOMER_BY_PHONE_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
+<b class="nc">&nbsp;                    handleSearchCustomersMessage((CustomerMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                default:
+<b class="nc">&nbsp;                    serverCriticalError(&quot;Invalid operation into client handler&quot;);</b>
+&nbsp;                    break;
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;     /**
+&nbsp;     * Handles the search book operations
+&nbsp;     * @param message the message containing the search operation
+&nbsp;     */
+&nbsp;    private void handleSearchBookOperation(BookMessage message) {
+<b class="nc">&nbsp;        Book received = message.getBook();</b>
+<b class="nc">&nbsp;        List &lt;Book&gt; results = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (message.getOperation()) {</b>
+&nbsp;            case SEARCH_BY_TITLE:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitle(received.getTitle());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_AUTHOR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByAuthor(received.getAuthor());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_GENRE:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByGenre(received.getGenre());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByYear(received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_ALL:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByAllParam(received.getTitle(), received.getAuthor(), received.getGenre(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_TITLE_AUTHOR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitleAuthor(received.getTitle(), received.getAuthor());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_TITLE_GENRE:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitleGenre(received.getTitle(), received.getGenre());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_TITLE_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitleYear(received.getTitle(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_AUTHOR_GENRE:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByAuthorGenre(received.getAuthor(), received.getGenre());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_AUTHOR_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByAuthorYear(received.getAuthor(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_GENRE_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByGenreYear(received.getGenre(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_TITLE_AUTHOR_GENRE:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitleAuthorGenre(received.getTitle(), received.getAuthor(), received.getGenre());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_TITLE_AUTHOR_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitleAuthorYear(received.getTitle(), received.getAuthor(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_TITLE_GENRE_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByTitleGenreYear(received.getTitle(), received.getGenre(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_BY_AUTHOR_GENRE_YEAR:
+<b class="nc">&nbsp;                results = bookDAO.getBooksByAuthorGenreYear(received.getAuthor(), received.getGenre(), received.getYear());</b>
+&nbsp;                break;
+&nbsp;            default:
+<b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into search book operation&quot;);</b>
+&nbsp;                break;
+&nbsp;        }
+<b class="nc">&nbsp;        send(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList&lt;Book&gt;(results)));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the search lend operations
+&nbsp;     * @param message the message containing the search operation
+&nbsp;     */
+&nbsp;    private void handleSearchLendOperation(LendMessage message) {
+<b class="nc">&nbsp;        Lends received = message.getLend();</b>
+<b class="nc">&nbsp;        List &lt;Lends&gt; results = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        boolean ok = true;</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (message.getOperation()) {</b>
+&nbsp;            case SEARCH_LEND_BY_LATE:
+<b class="nc">&nbsp;                results = lendDAO.getLateLends();</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_ALL:
+<b class="nc">&nbsp;                results = lendDAO.getLends();</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_BOOK:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByBookId(received.getBookId());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_RETURN_DATE:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByReturnDate(received.getReturnDate());</b>
+&nbsp;                break;
+&nbsp;                case SEARCH_LEND_BY_CUSTOMER:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByCustomerId(received.getCustomerId());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_ALL_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByAllReturned(received.getBookId(), received.getCustomerId(), received.getReturnDate(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_BOOK_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByBookIdReturned(received.getBookId(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByCustomerIdReturned(received.getCustomerId(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_RETURN_DATE_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByReturnDateReturned(received.getReturnDate(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_BOOK_CUSTOMER:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByBookIdCustomerId(received.getBookId(), received.getCustomerId());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_BOOK_CUSTOMER_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByBookIdCustomerIdReturned(received.getBookId(), received.getCustomerId(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_BOOK_RETURN_DATE:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByBookIdReturnDate(received.getBookId(), received.getReturnDate());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_BOOK_RETURN_DATE_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByBookIdReturnDateReturned(received.getBookId(), received.getReturnDate(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByCustomerIdReturnDate(received.getCustomerId(), received.getReturnDate());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsByCustomerIdReturnDateReturned(received.getCustomerId(), received.getReturnDate(), received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            case GET_LENDS_RETURNED:
+<b class="nc">&nbsp;                results = lendDAO.getLendsReturned(received.isReturned());</b>
+&nbsp;                break;
+&nbsp;            default:
+<b class="nc">&nbsp;                ok = false;</b>
+<b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into search lend operation&quot;);</b>
+&nbsp;                break;
+&nbsp;        }
+<b class="nc">&nbsp;        if(ok)send(MessageFactory.createMessage(Operation.RESULT_LENDS, new ArrayList&lt;Lends&gt;(results)));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the book CRUD operations
+&nbsp;     * @param bookMessage the message containing the book operation
+&nbsp;     */
+&nbsp;    private void handleBookOperation(BookMessage bookMessage) {
+<b class="nc">&nbsp;        switch (bookMessage.getOperation()) {</b>
+&nbsp;            case ADD_BOOK:
+<b class="nc">&nbsp;                bookDAO.createBook(bookMessage.getBook());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case GET_BOOK:
+<b class="nc">&nbsp;                Book book = bookDAO.readBook(bookMessage.getBook().getId());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.RESP_BOOK, book));</b>
+&nbsp;            break;
+&nbsp;            case UPDATE_BOOK:
+<b class="nc">&nbsp;                bookDAO.updateBook(bookMessage.getBook());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case REMOVE_BOOK:
+<b class="nc">&nbsp;                bookDAO.deleteBook(bookMessage.getBook().getId());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case GET_BOOKS:
+<b class="nc">&nbsp;                List&lt;Book&gt; books = bookDAO.getAllBooks();</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.RESULT_BOOKS, new ArrayList&lt;&gt;(books)));</b>
+&nbsp;            break;
+&nbsp;            default:
+<b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into book operation&quot;);</b>
+&nbsp;            break;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the lend CRUD operations
+&nbsp;     * @param lendMessage the message containing the lend operation
+&nbsp;     */
+&nbsp;    private void handleLendOperation(LendMessage lendMessage) {
+<b class="nc">&nbsp;        switch (lendMessage.getOperation()) {</b>
+&nbsp;            case ADD_LEND:
+<b class="nc">&nbsp;                lendDAO.createLend(lendMessage.getLend());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case GET_LEND:
+<b class="nc">&nbsp;                Lends lend = lendDAO.readLend(lendMessage.getLend().getId());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.RESP_LEND, lend));</b>
+&nbsp;            break;
+&nbsp;            case UPDATE_LEND:
+<b class="nc">&nbsp;                lendDAO.updateLend(lendMessage.getLend());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case REMOVE_LEND:
+<b class="nc">&nbsp;                int id = lendMessage.getLend().getBookId();</b>
+<b class="nc">&nbsp;                lendDAO.deleteLend(lendMessage.getLend());</b>
+<b class="nc">&nbsp;                System.out.println(&quot;SERVER | INFO: Lend removed&quot;);</b>
+<b class="nc">&nbsp;                System.out.println(&quot;SERVER | DEBUG_INFO: Setting book available, id: &quot; + id);</b>
+<b class="nc">&nbsp;                Book book = bookDAO.readBook(id);</b>
+<b class="nc">&nbsp;                book.setAvailable();</b>
+<b class="nc">&nbsp;                bookDAO.updateBook(book);</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case GET_LENDS:
+<b class="nc">&nbsp;                List&lt;Lends&gt; lends = lendDAO.getLends();</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.RESULT_LENDS, new ArrayList&lt;&gt;(lends)));</b>
+&nbsp;            break;
+&nbsp;            default:
+<b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into lend operation&quot;);</b>
+&nbsp;            break;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the customer CRUD operations
+&nbsp;     * @param customerMessage the message containing the customer operation
+&nbsp;     */
+&nbsp;    private void handleCustomerOperation(CustomerMessage customerMessage) {
+<b class="nc">&nbsp;        switch (customerMessage.getOperation()) {</b>
+&nbsp;            case ADD_CUSTOMER:
+<b class="nc">&nbsp;                customerDAO.createCustomer(customerMessage.getCustomer());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case GET_CUSTOMER:
+<b class="nc">&nbsp;                Customer customer = customerDAO.readCustomer(customerMessage.getCustomer().getId());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.RESP_CUSTOMER, customer));</b>
+&nbsp;            break;
+&nbsp;            case UPDATE_CUSTOMER:
+<b class="nc">&nbsp;                customerDAO.updateCustomer(customerMessage.getCustomer());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case REMOVE_CUSTOMER:
+<b class="nc">&nbsp;                Customer received = customerMessage.getCustomer();</b>
+<b class="nc">&nbsp;                List&lt;Lends&gt; lends = lendDAO.getLendsByCustomerId(received.getId());</b>
+<b class="nc">&nbsp;                if(lends != null &amp;&amp; !lends.isEmpty()){</b>
+<b class="nc">&nbsp;                    for(Lends lend : lends){</b>
+<b class="nc">&nbsp;                        lendDAO.deleteLend(lend);</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;                customerDAO.deleteCustomer(customerMessage.getCustomer());</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
+&nbsp;            break;
+&nbsp;            case GET_CUSTOMERS:
+<b class="nc">&nbsp;                List&lt;Customer&gt; customers = customerDAO.readAllCustomers();</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.RESULT_CUSTOMERS, new ArrayList&lt;&gt;(customers)));</b>
+&nbsp;            break;
+&nbsp;            default:
+<b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into customer operation&quot;);</b>
+&nbsp;            break;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the search customer operations
+&nbsp;     * @param customerMessage the message containing the search operation
+&nbsp;     */
+&nbsp;    private void handleSearchCustomersMessage(CustomerMessage customerMessage){
+<b class="nc">&nbsp;        Customer received = customerMessage.getCustomer();</b>
+<b class="nc">&nbsp;        List &lt;Customer&gt; results = null;</b>
+<b class="nc">&nbsp;        boolean ok = true;</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (customerMessage.getOperation()) {</b>
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByName(received.getName());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByAddress(received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_PHONE:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByPhoneNumber(received.getPhone());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_EMAIL:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByEmail(received.getEmail());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByNameAndAddress(received.getName(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_PHONE:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByNameAndPhoneNumber(received.getName(), received.getPhone());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_EMAIL:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByNameAndEmail(received.getName(), received.getEmail());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_EMAIL_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByEmailAndAddress(received.getEmail(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;                case SEARCH_CUSTOMER_BY_PHONE_EMAIL:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByPhoneNumberAndEmail(received.getPhone(), received.getEmail());</b>
+&nbsp;                break;
+&nbsp;                case SEARCH_CUSTOMER_BY_PHONE_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByPhoneNumberAndAddress(received.getPhone(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByNameAndPhoneNumberAndEmail(received.getName(), received.getPhone(), received.getEmail());</b>
+&nbsp;                break;
+&nbsp;                case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByNameAndPhoneNumberAndAddress(received.getName(), received.getPhone(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_NAME_EMAIL_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByNameAndEmailAndAddress(received.getName(), received.getEmail(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByPhoneNumberAndEmailAndAddress(received.getPhone(), received.getEmail(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            case SEARCH_CUSTOMER_BY_ALL:
+<b class="nc">&nbsp;                results = customerDAO.searchCustomerByAll(received.getName(), received.getPhone(), received.getEmail(), received.getAddress());</b>
+&nbsp;                break;
+&nbsp;            default:
+<b class="nc">&nbsp;                ok = false;</b>
+<b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into search customer operation&quot;);</b>
+&nbsp;                break;
+&nbsp;        }
+<b class="nc">&nbsp;        if(ok)send(MessageFactory.createMessage(Operation.RESULT_CUSTOMERS, new ArrayList&lt;Customer&gt;(results)));</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-26 07:56</div>
+</div>
+</body>
+</html>
