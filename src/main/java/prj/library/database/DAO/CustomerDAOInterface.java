@@ -65,6 +65,7 @@ public interface CustomerDAOInterface {
     /**
      * Finds customers by address
      * @param address the address of the customer
+     * @return a list of customers with the given address
      */
     List<Customer> searchCustomerByAddress (String address);
 
@@ -72,6 +73,7 @@ public interface CustomerDAOInterface {
      * Finds customers by name and phone number
      * @param name the name of the customer
      * @param phoneNumber the phone number of the customer
+     * @return a list of customers with the given name and phone number
      */
     List<Customer> searchCustomerByNameAndPhoneNumber (String name, String phoneNumber);
 
@@ -79,6 +81,7 @@ public interface CustomerDAOInterface {
      * Finds customers by name and email
      * @param name the name of the customer
      * @param email the email of the customer
+     * @return a list of customers with the given name and email
      */
     List<Customer> searchCustomerByNameAndEmail (String name, String email);
 
@@ -86,6 +89,7 @@ public interface CustomerDAOInterface {
      * Finds customers by name and address
      * @param name the name of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given name and address
      */
     List<Customer> searchCustomerByNameAndAddress (String name, String address);
 
@@ -93,6 +97,7 @@ public interface CustomerDAOInterface {
      * Finds customers by phone number and email
      * @param phoneNumber the phone number of the customer
      * @param email the email of the customer
+     * @return a list of customers with the given phone number and email
      */
     List<Customer> searchCustomerByPhoneNumberAndEmail (String phoneNumber, String email);
 
@@ -100,6 +105,7 @@ public interface CustomerDAOInterface {
      * Finds customers by phone number and address
      * @param phoneNumber the phone number of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given phone number and address
      */
     List<Customer> searchCustomerByPhoneNumberAndAddress (String phoneNumber, String address);
 
@@ -107,6 +113,7 @@ public interface CustomerDAOInterface {
      * Finds customers by email and address
      * @param email the email of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given email and address
      */
     List<Customer> searchCustomerByEmailAndAddress (String email, String address);
 
@@ -115,6 +122,7 @@ public interface CustomerDAOInterface {
      * @param name the name of the customer
      * @param phoneNumber the phone number of the customer
      * @param email the email of the customer
+     * @return a list of customers with the given name, phone number and email
      */
     List<Customer> searchCustomerByNameAndPhoneNumberAndEmail (String name, String phoneNumber, String email);
 
@@ -123,6 +131,7 @@ public interface CustomerDAOInterface {
      * @param name the name of the customer
      * @param phoneNumber the phone number of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given name, phone number and address
      */
     List<Customer> searchCustomerByNameAndPhoneNumberAndAddress (String name, String phoneNumber, String address);
 
@@ -131,6 +140,7 @@ public interface CustomerDAOInterface {
      * @param name the name of the customer
      * @param email the email of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given name, email and address
      */
     List<Customer> searchCustomerByNameAndEmailAndAddress (String name, String email, String address);
 
@@ -139,6 +149,7 @@ public interface CustomerDAOInterface {
      * @param phoneNumber the phone number of the customer
      * @param email the email of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given phone number, email and address
      */
     List<Customer> searchCustomerByPhoneNumberAndEmailAndAddress (String phoneNumber, String email, String address);
 
@@ -148,6 +159,7 @@ public interface CustomerDAOInterface {
      * @param phoneNumber the phone number of the customer
      * @param email the email of the customer
      * @param address the address of the customer
+     * @return a list of customers with the given name, phone number, email and address
      */
     List<Customer> searchCustomerByAll (String name, String phoneNumber, String email, String address);
 

@@ -30,6 +30,7 @@ public class DatabaseController {
 
     /**
      * Closes the connection to the database
+     * @param connection the connection to close
      */
     public static void closeConnection(Connection connection) {
         try {

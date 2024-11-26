@@ -29,6 +29,7 @@ public interface BookDAOInterface {
 
     /**
      * gets all books from the database
+     * @param id the id of the book
      * @return a list of all books
      */
     Book readBook(int id);

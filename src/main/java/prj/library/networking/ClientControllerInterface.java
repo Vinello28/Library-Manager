@@ -97,17 +97,19 @@ public interface ClientControllerInterface {
     /**
      * Sends a request to the server to delete a lend.
      *
-     * @param id the lend to delete
+     * @param lend the lend to delete
      * @return true if the lend was created, false otherwise
      */
     Boolean deleteLend(Lends lend);
 
     /**
      * Searches for lends by the given parameters.
-     *
      * @param choice the choice of search
-     * @param book the book of the lend
-     * @param returnDate the return date of the lend
+     * @param b_id the book id
+     * @param returnDate the return date
+     * @param c_id the customer id
+     * @param returned the returned status
+     * @param sentinel the sentinel status
      * @return a list of lends that match the search criteria
      */
     List<Lends> searchLendsBy(int choice, int b_id, LocalDate returnDate, int c_id, Boolean returned, Boolean sentinel);
@@ -145,8 +147,7 @@ public interface ClientControllerInterface {
 
     /**
      * Sends a request to the server to delete a customer.
-     *
-     * @param id the customer to delete
+     * @param customer the customer to delete
      * @return true if the customer was created, false otherwise
      */
     Boolean deleteCustomer(Customer customer);
