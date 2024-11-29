@@ -109,7 +109,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
                 case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
                 case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
-                    handleSearchCustomersMessage((CustomerMessage) message);
+                    handleSearchCustomersOperation((CustomerMessage) message);
                     break;
                 default:
                     serverCriticalError("Invalid operation into client handler");
@@ -358,7 +358,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
      * Handles the search customer operations
      * @param customerMessage the message containing the search operation
      */
-    private void handleSearchCustomersMessage(CustomerMessage customerMessage){
+    private void handleSearchCustomersOperation(CustomerMessage customerMessage){
         Customer received = customerMessage.getCustomer();
         List <Customer> results = null;
         boolean ok = true;
