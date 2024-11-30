@@ -35,7 +35,7 @@ public class ClientController implements ClientControllerInterface {
     }
 
     public Book readBook(int id) {
-        Book book = new Book(id, "", "", 0, Genre.Genre, 0);
+        Book book = new Book(id, "", "", 0, Genre.NULL, 0);
         client.sendMessage(Operation.GET_BOOK, book);
         return client.receiveMessageBook();
     }
@@ -46,7 +46,7 @@ public class ClientController implements ClientControllerInterface {
     }
 
     public Boolean deleteBook(int id) {
-        Book book = new Book(id, "", "", 0, Genre.Genre, 0);
+        Book book = new Book(id, "", "", 0, Genre.NULL, 0);
         client.sendMessage(Operation.REMOVE_BOOK, book);
         return client.receiveMessageBoolean();
     }

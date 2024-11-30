@@ -15,6 +15,5 @@ public enum Genre {
     THRILLER,
     WESTERN,
     FICTION,
-    NULL, // Null,
-    Genre
+    NULL // Null,
 }

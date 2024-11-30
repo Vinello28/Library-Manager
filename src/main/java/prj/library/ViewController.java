@@ -418,7 +418,7 @@ public class ViewController {
 
         //checks if book and customer exists
         if (!title.isEmpty()) {
-            List<Book> books = clientController.searchBooksBy(1, new Book(0, title, "", 0, Genre.Genre, 0));
+            List<Book> books = clientController.searchBooksBy(1, new Book(0, title, "", 0, Genre.NULL, 0));
             if (books == null || books.isEmpty()) {
                 showErrorDialog("Error", "Book not found", "Book you are looking for is not found. Try something else.");
                 clearSearchLends();

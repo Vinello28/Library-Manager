@@ -27,7 +27,7 @@ public class BookDAO implements BookDAOInterface {
             pstmt.setString(2, book.getAuthor());
             pstmt.setInt(3, book.getYear());
             if (book.getGenre() != null) pstmt.setInt(4, book.getGenre().ordinal());
-            else pstmt.setNull(4, Genre.Genre.ordinal());
+            else pstmt.setNull(4, Genre.NULL.ordinal());
             pstmt.setInt(5, book.getCopies());
             pstmt.executeUpdate();
         }catch (SQLException e) {
@@ -318,7 +318,6 @@ public class BookDAO implements BookDAOInterface {
             while (rs.next()) {
                 books.add(bookExtractor(rs));
             }
-            System.out.println("SERVER | DEBUG INFO: returning books " + books);
             return books;
         }
     }
@@ -335,9 +334,8 @@ public class BookDAO implements BookDAOInterface {
         book.setTitle(rs.getString("title"));
         book.setAuthor(rs.getString("author"));
         book.setYear(rs.getInt("year"));
-        book.setGenre(rs.getInt("genre") != 0 ? Genre.values()[rs.getInt("genre")] : Genre.Genre);
+        book.setGenre(rs.getInt("genre") != 0 ? Genre.values()[rs.getInt("genre")] : Genre.NULL);
         book.setCopies(rs.getInt("copies"));
-        System.out.println("SERVER | DEBUG INFO: extracted book " + book);
         return book;
     }
 
