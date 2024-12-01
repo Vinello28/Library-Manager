@@ -209,6 +209,11 @@ public class ClientController implements ClientControllerInterface {
         return customerLendCount;
     }
 
+    public int getNotReturnedLendsCount() {
+        client.sendMessage(Operation.GET_LENDS_NR_COUNT, null);
+        return client.receiveMessageInt();
+    }
+
     /**
      * Choses the search operation based on the choice.
      * @param choice the choice of search

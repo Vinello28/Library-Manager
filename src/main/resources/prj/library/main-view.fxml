@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.ViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.ViewController">
    <top>
       <Pane prefHeight="128.0" prefWidth="1290.0" style="-fx-background-color: #0a004d;" BorderPane.alignment="CENTER">
          <children>
@@ -421,7 +433,7 @@
                   </Button>
                </children>
             </Pane>
-            <Pane fx:id="statsPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" visible="false">
+            <Pane fx:id="statsPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
                <children>
                   <PieChart fx:id="genrePieChart" layoutX="139.0" layoutY="192.0" prefHeight="323.0" prefWidth="394.0" />
                   <BarChart fx:id="numusBarChart" layoutX="609.0" layoutY="179.0" prefHeight="357.0" prefWidth="416.0">
@@ -440,6 +452,16 @@
                   <Label layoutX="196.0" layoutY="76.0" prefHeight="67.0" prefWidth="745.0" text="Application statistics" textFill="#0a004d">
                      <font>
                         <Font name="Arial" size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="182.0" layoutY="593.0" text="Lends not yet returned: " textFill="#0a004d">
+                     <font>
+                        <Font name="Arial" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelCount" layoutX="399.0" layoutY="593.0" prefHeight="23.0" prefWidth="77.0" textFill="#0a004d">
+                     <font>
+                        <Font name="Arial Bold Italic" size="20.0" />
                      </font>
                   </Label>
                </children>

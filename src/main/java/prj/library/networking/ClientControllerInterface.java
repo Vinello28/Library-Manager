@@ -173,4 +173,9 @@ public interface ClientControllerInterface {
      */
      Map<Customer, Integer> calculateCustomerLendingStats();
 
+     /**
+     * Calculates the number of lends not returned.
+      * @return the number of lends not returned
+     */
+     int getNotReturnedLendsCount();
 }

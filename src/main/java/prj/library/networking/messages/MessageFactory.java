@@ -51,6 +51,7 @@ public class MessageFactory {
             case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
             case SEARCH_LEND_BY_ALL_RETURNED:
             case GET_LENDS_RETURNED:
+            case GET_LENDS_NR_COUNT:
                 return new LendMessage(operation, (Lends) messageContent);
             case RESULT_BOOKS:
                 return new BooksListMessage(operation, (ArrayList<Book>) messageContent);
@@ -82,7 +83,7 @@ public class MessageFactory {
             case RESULT_CUSTOMERS:
                 return new CustomersListMessage(operation, (ArrayList<Customer>) messageContent);
             case GENERIC_RESPONSE:
-                return new GenericMessage((Boolean) messageContent);
+                return new GenericMessage(operation, messageContent);
             default:
                 System.out.println("Invalid operation: " + operation);
                 return null;

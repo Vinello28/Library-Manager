@@ -131,6 +131,8 @@ public class ViewController {
     private PieChart genrePieChart;
     @FXML
     private BarChart<String, Number> numusBarChart;
+    @FXML
+    private Label labelCount;
 
 
 
@@ -403,15 +405,15 @@ public class ViewController {
         String title = titleLendTextField.getText();
         LocalDate date = returnLendDatePicker.getValue();
         String cell = phoneLendTextField.getText();
-        Boolean unclepear = returnedLendChoiceBox.getValue();
+        Boolean retVal = returnedLendChoiceBox.getValue();
 
         int b_id=0; //book id
         int c_id=0; //customer id
         boolean returned;
         boolean sentinel = false;
 
-        if(unclepear != null && unclepear) returned = true;
-        else if (unclepear != null && !unclepear) {
+        if(retVal != null && retVal) returned = true;
+        else if (retVal != null && !retVal) {
             returned = false;
             sentinel = true;
         } else returned = false;
@@ -628,6 +630,7 @@ public class ViewController {
         showPane(statsPane);
         updateGenreChart();
         updateCustomerLendsBarChart();
+        updateLendCount();
     }
 
     /**
@@ -863,7 +866,6 @@ public class ViewController {
         statsPane.setVisible(false);
     }
 
-
     /**
      * Updates the genre pie chart.
      */
@@ -993,4 +995,11 @@ public class ViewController {
         numusBarChart.getStyleClass().add("custom-bar-chart");
     }
 
+    /**
+     * Updates the lend count label.
+     */
+    private void updateLendCount() {
+        int lendCount = clientController.getNotReturnedLendsCount();
+        labelCount.setText(String.format("%d", lendCount));
+    }
 }

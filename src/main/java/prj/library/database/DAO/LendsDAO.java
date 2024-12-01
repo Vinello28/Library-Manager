@@ -360,6 +360,23 @@ public class LendsDAO implements LendsDAOInterface {
         return lends;
     }
 
+    public synchronized int getNotReturnedLendsCount() {
+        int count = 0;
+        Connection connection = getConnection();
+        String query = "SELECT COUNT(*) FROM lends WHERE returned = false";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        }
+        closeConnection(connection);
+        return count;
+    }
+
     /**
      * Get lends by statement
      * @param preparedStatement the prepared statement

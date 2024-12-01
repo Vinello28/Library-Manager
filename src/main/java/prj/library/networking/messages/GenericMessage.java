@@ -5,14 +5,21 @@ package prj.library.networking.messages;
  */
 public class GenericMessage extends Message {
 
-    public GenericMessage(Object message) {
-        super(Operation.GENERIC_RESPONSE, message);
+    public GenericMessage(Operation op, Object message) {
+        super(op, message);
     }
 
     /**
      * @return the response
      */
-    public Boolean getResponse() {
+    public Boolean getResponseBoolean() {
         return (Boolean) message;
+    }
+
+    /**
+     * @return the response
+     */
+    public int getResponseInt() {
+        return (int) message;
     }
 }

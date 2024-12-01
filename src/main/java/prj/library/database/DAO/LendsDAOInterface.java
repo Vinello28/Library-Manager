@@ -168,4 +168,10 @@ public interface LendsDAOInterface {
      * @return a list of all lends that match the given parameters
      */
     List<Lends> getLendsByReturnDateReturned(LocalDate returnDate, boolean returned);
+
+    /**
+     * Get the count of all lends that have not been returned
+     * @return the count of all lends that have not been returned
+     */
+    int getNotReturnedLendsCount();
 }

@@ -11,11 +11,11 @@ class GenericMessageTest {
 
     @BeforeEach
     void setUp() {
-        genericMessage = new GenericMessage(true);
+        genericMessage = new GenericMessage(Operation.GENERIC_RESPONSE, true);
     }
 
     @Test
     void getResponse() {
-        assertTrue(genericMessage.getResponse());
+        assertTrue(genericMessage.getResponseBoolean());
     }
 }

@@ -67,8 +67,19 @@ public class Client extends NetworkInterface {
      */
     public Boolean receiveMessageBoolean() {
         GenericMessage m = (GenericMessage) receiveMessage();
-        return m.getResponse();
+        return m.getResponseBoolean();
     }
+
+    /**
+     * Receives a generic message from the server.
+     *
+     * @return the message received as a Int
+     */
+    public int receiveMessageInt() {
+        GenericMessage m = (GenericMessage) receiveMessage();
+        return m.getResponseInt();
+    }
+
 
     /**
      * Receives a message from the server.

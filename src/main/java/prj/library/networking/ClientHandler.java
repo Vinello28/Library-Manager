@@ -85,6 +85,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
                 case SEARCH_LEND_BY_LATE:
                 case GET_LENDS_RETURNED:
+                case GET_LENDS_NR_COUNT:
                     handleSearchLendOperation((LendMessage) message);
                     break;
                 case ADD_CUSTOMER:
@@ -237,6 +238,10 @@ public class ClientHandler extends NetworkInterface implements Runnable {
             case GET_LENDS_RETURNED:
                 results = lendDAO.getLendsReturned(received.isReturned());
                 break;
+            case GET_LENDS_NR_COUNT:
+                int res = lendDAO.getNotReturnedLendsCount();
+                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, res));
+                return;
             default:
                 ok = false;
                 serverCriticalError("Invalid operation into search lend operation");
