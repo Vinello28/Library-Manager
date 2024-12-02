@@ -1,3 +1,5 @@
+![logo](https://github.com/user-attachments/assets/dfce9c5e-e89b-410f-b1e1-e0b39bfacc42)
+
 # Library Management System
 
 This project is a Library Management System built using Java and Maven. It provides functionalities to manage books and customers in a library database.
