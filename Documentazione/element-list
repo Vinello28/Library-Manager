@@ -1,0 +1,10 @@
+module:prj.library
+prj.library
+prj.library.database
+prj.library.database.DAO
+prj.library.models
+prj.library.networking
+prj.library.networking.messages
+prj.library.networking.NI
+prj.library.notification
+prj.library.utils
