@@ -6,4 +6,5 @@ prj.library.models
 prj.library.networking
 prj.library.networking.messages
 prj.library.networking.NI
+prj.library.notification
 prj.library.utils
