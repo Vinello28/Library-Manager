@@ -7,6 +7,7 @@ module prj.library {
     requires java.sql;
     requires mysql.connector.j;
     requires java.desktop;
+    requires java.mail;
 
     opens prj.library to javafx.fxml;
     exports prj.library;

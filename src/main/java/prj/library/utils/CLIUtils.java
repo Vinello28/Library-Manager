@@ -26,6 +26,14 @@ public class CLIUtils {
         System.out.println("SERVER | CRITICAL_ERROR: exception message -> " + message);
     }
 
+    public static void serverInfo(String message) {
+        System.out.println("SERVER | INFO: " + message);
+    }
+
+    public static void serverError(String message) {
+        System.out.println("SERVER | ERROR: " + message);
+    }
+
     public static void clientConnected() {
         System.out.println("CLIENT | INFO: Client connected");
     }

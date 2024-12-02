@@ -1,6 +1,7 @@
 package prj.library.database.DAO;
 
 import prj.library.models.Lends;
+import prj.library.notification.VirtualLend;
 import prj.library.utils.CLIUtils;
 import java.sql.*;
 import java.time.LocalDate;
@@ -375,6 +376,28 @@ public class LendsDAO implements LendsDAOInterface {
         }
         closeConnection(connection);
         return count;
+    }
+
+    public synchronized List<VirtualLend> getLateLendsNotification() {
+        List<VirtualLend> lends = new ArrayList<>();
+        Connection connection = getConnection();
+        String query = "SELECT b.title, c.email, c.name, l.return_date FROM lends l " +
+                "JOIN books b ON l.book_id = b.id " +
+                "JOIN customers c ON l.customer_id = c.id_c " +
+                "WHERE l.return_date < ? AND l.returned = false";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDate(1, Date.valueOf(LocalDate.now()));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                VirtualLend lend = new VirtualLend(resultSet.getString("title"), resultSet.getString("email"), resultSet.getString("name"), resultSet.getDate("return_date").toLocalDate());
+                lends.add(lend);
+            }
+        } catch (SQLException e) {
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        }
+        closeConnection(connection);
+        return lends;
     }
 
     /**

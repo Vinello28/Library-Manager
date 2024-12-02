@@ -214,6 +214,11 @@ public class ClientController implements ClientControllerInterface {
         return client.receiveMessageInt();
     }
 
+    public Boolean sendAlerts() {
+        client.sendMessage(Operation.ALERT_ALL, null);
+        return client.receiveMessageBoolean();
+    }
+
     /**
      * Choses the search operation based on the choice.
      * @param choice the choice of search

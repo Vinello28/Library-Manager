@@ -9,6 +9,9 @@ import prj.library.models.Lends;
 import prj.library.database.DAO.*;
 import prj.library.networking.NI.NetworkInterface;
 import prj.library.networking.messages.*;
+import prj.library.notification.EmailNotificationService;
+import prj.library.notification.NotificationScheduler;
+import prj.library.utils.CLIUtils;
 import static prj.library.utils.CLIUtils.*;
 
 /**
@@ -18,13 +21,17 @@ public class ClientHandler extends NetworkInterface implements Runnable {
     private BookDAO bookDAO;
     private LendsDAO lendDAO;
     private CustomerDAO customerDAO;
-
+    private EmailNotificationService notificationService;
 
     public ClientHandler(Socket socket) {
         super(socket);
         bookDAO = new BookDAO();
         lendDAO = new LendsDAO();
         customerDAO = new CustomerDAO();
+
+        notificationService = new EmailNotificationService(lendDAO);
+        NotificationScheduler scheduler = new NotificationScheduler(notificationService);
+        scheduler.startScheduler();
     }
 
     @Override
@@ -32,10 +39,11 @@ public class ClientHandler extends NetworkInterface implements Runnable {
         while (true) {
             Message message = (Message) receive();
             if (message == null) {
-                System.out.println("SERVER | ERROR: Message is null");
+                serverError("Message is null");
                 break;
             }
-            System.out.println("SERVER | INFO: received message " + message.getOperation() + " " + message.getMessage());
+
+            CLIUtils.serverInfo("Received message " + message.getOperation() + " " + message.getMessage());
 
             switch (message.getOperation()) {
                 case ADD_BOOK:
@@ -112,8 +120,12 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                 case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
                     handleSearchCustomersOperation((CustomerMessage) message);
                     break;
+                case ALERT_ALL:
+                    notificationService.checkAndSendNotifications();
+                    send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
+                    break;
                 default:
-                    serverCriticalError("Invalid operation into client handler");
+                    serverError("Invalid operation into client handler");
                     break;
             }
         }

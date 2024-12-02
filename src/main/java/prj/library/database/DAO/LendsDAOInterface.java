@@ -1,6 +1,7 @@
 package prj.library.database.DAO;
 
 import prj.library.models.Lends;
+import prj.library.notification.VirtualLend;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -174,4 +175,10 @@ public interface LendsDAOInterface {
      * @return the count of all lends that have not been returned
      */
     int getNotReturnedLendsCount();
+
+    /**
+     * Return all lends that are late and have not been returned in virtual lend format
+     * @return a list of all late lends in virtual lend format
+     */
+    List<VirtualLend> getLateLendsNotification();
 }

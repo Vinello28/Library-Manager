@@ -271,7 +271,7 @@
                         <Font name="Arial Bold" size="22.0" />
                      </font>
                   </Button>
-                  <Button fx:id="deleteLendButton" layoutX="246.0" layoutY="479.0" mnemonicParsing="false" onAction="#onDeleteLendButtonClick" prefHeight="43.0" prefWidth="128.0" style="-fx-background-color: red;" text="🗑 delete" textFill="WHITE">
+                  <Button fx:id="deleteLendButton" layoutX="250.0" layoutY="534.0" mnemonicParsing="false" onAction="#onDeleteLendButtonClick" prefHeight="43.0" prefWidth="128.0" style="-fx-background-color: red;" text="🗑 delete" textFill="WHITE">
                      <font>
                         <Font name="Arial Bold" size="22.0" />
                      </font>
@@ -341,6 +341,11 @@
                   <DatePicker fx:id="returnLendDatePicker" layoutX="208.0" layoutY="240.0" prefHeight="33.0" prefWidth="246.0" />
                   <ChoiceBox fx:id="returnedLendChoiceBox" layoutX="206.0" layoutY="285.0" prefHeight="27.0" prefWidth="248.0" style="-fx-border-color: white;" />
                   <Button fx:id="lateLendButton" layoutX="174.0" layoutY="357.0" mnemonicParsing="false" onAction="#onLateLendButtonClick" prefHeight="43.0" prefWidth="132.0" style="-fx-background-color: #10008d;" text="⌛ late" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="alertButton" layoutX="237.0" layoutY="474.0" mnemonicParsing="false" onAction="#onAlertClick" prefHeight="43.0" prefWidth="153.0" style="-fx-background-color: yellow;" text="🔔 late alert">
                      <font>
                         <Font name="Arial Bold" size="22.0" />
                      </font>
@@ -433,7 +438,7 @@
                   </Button>
                </children>
             </Pane>
-            <Pane fx:id="statsPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+            <Pane fx:id="statsPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" visible="false">
                <children>
                   <PieChart fx:id="genrePieChart" layoutX="139.0" layoutY="192.0" prefHeight="323.0" prefWidth="394.0" />
                   <BarChart fx:id="numusBarChart" layoutX="609.0" layoutY="179.0" prefHeight="357.0" prefWidth="416.0">

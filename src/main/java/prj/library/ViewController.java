@@ -386,7 +386,7 @@ public class ViewController {
             clientController.createLend(lend[0]);
             clientController.updateBook(editedBook);
             List<Book> books = new ArrayList<>();
-            books.add(clientController.readBook(editedBook.getId())); //TODO check to remove
+            books.add(clientController.readBook(editedBook.getId()));
             showBooksOnTableView(books, searchBookTableView);
         });
     }
@@ -632,6 +632,20 @@ public class ViewController {
         updateCustomerLendsBarChart();
         updateLendCount();
     }
+
+    @FXML
+    public void onAlertClick(){
+        Boolean tmp = clientController.sendAlerts();
+
+        CLIUtils.clientInfo("sending mail notifications to customers with late returns");
+
+        if (tmp) {
+            showErrorDialog("Alert", "Alerts sent", "Alerts have been sent to customers with late returns.");
+        } else {
+            showErrorDialog("Error", "No alerts sent", "No alerts have been sent to customers with late returns.");
+        }
+    }
+
 
     /**
      * Shows an error dialog with the given title, header and content.

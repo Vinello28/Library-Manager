@@ -83,6 +83,7 @@ public class MessageFactory {
             case RESULT_CUSTOMERS:
                 return new CustomersListMessage(operation, (ArrayList<Customer>) messageContent);
             case GENERIC_RESPONSE:
+            case ALERT_ALL:
                 return new GenericMessage(operation, messageContent);
             default:
                 System.out.println("Invalid operation: " + operation);

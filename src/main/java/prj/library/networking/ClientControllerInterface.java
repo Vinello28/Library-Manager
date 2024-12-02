@@ -178,4 +178,10 @@ public interface ClientControllerInterface {
       * @return the number of lends not returned
      */
      int getNotReturnedLendsCount();
+
+    /**
+     * Sends a request to the server to send alerts to customers.
+     * @return the status of the operation
+     */
+     Boolean sendAlerts();
 }
