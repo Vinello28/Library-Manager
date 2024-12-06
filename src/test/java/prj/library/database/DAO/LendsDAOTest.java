@@ -1,10 +1,15 @@
 package prj.library.database.DAO;
 
 import org.junit.jupiter.api.*;
+import prj.library.models.Book;
+import prj.library.models.Customer;
+import prj.library.models.Genre;
 import prj.library.models.Lends;
+import prj.library.notification.VirtualLend;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,15 +17,37 @@ import static org.junit.jupiter.api.Assertions.*;
 class LendsDAOTest {
     private static LendsDAO lendsDAO;
     private static Lends testLend;
-    private static final int TEST_BOOK_ID = 234;
-    private static final int TEST_CUSTOMER_ID = 1;
-    private static final LocalDate TEST_RETURN_DATE = LocalDate.now().plusDays(14);
+    private static Book book;
+    private static Customer customer;
+
+    private static int TEST_BOOK_ID;
+    private static int TEST_CUSTOMER_ID;
+    private static final LocalDate TEST_RETURN_DATE = LocalDate.now().plusDays(7);
     private static final boolean TEST_RETURNED = false;
+
 
     @BeforeAll
     static void setUp() {
         lendsDAO = new LendsDAO();
+        BookDAO bookDAO = new BookDAO();
+        CustomerDAO customerDAO = new CustomerDAO();
+        book = new Book("Test Book", "Test Author", 2021, Genre.MYSTERY, 1);
+        customer = new Customer("Test Customer", "Test Email", "Test Phone", "Test Address");
+        bookDAO.createBook(book);
+        customerDAO.createCustomer(customer);
+
+        TEST_BOOK_ID = bookDAO.getBooksByAllParam("Test Book", "Test Author", Genre.MYSTERY, 2021).get(0).getId();
+        TEST_CUSTOMER_ID = customerDAO.searchCustomerByAll("Test Customer", "Test Phone", "Test Email", "Test Address").get(0).getId();
+
         testLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID, TEST_RETURN_DATE, TEST_RETURNED);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        BookDAO bookDAO = new BookDAO();
+        CustomerDAO customerDAO = new CustomerDAO();
+        bookDAO.deleteBook(book.getId());
+        customerDAO.deleteCustomer(customer);
     }
 
     @Test
@@ -63,7 +90,6 @@ class LendsDAOTest {
         assertNotNull(updatedLend, "Updated lend should not be null");
         assertTrue(updatedLend.isReturned(), "Lend should be marked as returned");
     }
-
 
     @Test
     @Order(4)
@@ -191,5 +217,42 @@ class LendsDAOTest {
 
         //Cleanup
         lendsDAO.deleteLend(newLend);
+    }
+
+    @Test
+    void testGetLendsByCustomerIdReturnDateReturned() {
+
+        Lends newLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID, TEST_RETURN_DATE, true);
+        lendsDAO.createLend(newLend);
+
+        List<Lends> filteredLends = lendsDAO.getLendsByCustomerIdReturnDateReturned(
+                TEST_CUSTOMER_ID, TEST_RETURN_DATE, true);
+
+        assertFalse(filteredLends.isEmpty(), "Filtered lends list should not be empty");
+        assertTrue(filteredLends.stream().anyMatch(l ->
+                        l.getCustomerId() == TEST_CUSTOMER_ID &&
+                                l.getReturnDate().equals(TEST_RETURN_DATE) &&
+                                l.isReturned()),
+                "All lends should match all test criteria");
+
+        lendsDAO.deleteLend(newLend);
+    }
+
+    @Test
+    void testGetLateLendsNotification(){
+
+        Lends lateLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID,
+                LocalDate.now().minusDays(10), false);
+        lendsDAO.createLend(lateLend);
+
+        List<VirtualLend> lateLends = lendsDAO.getLateLendsNotification();
+
+        assertFalse(lateLends.isEmpty(), "Late lends list should not be empty");
+        assertTrue(lateLends.stream().anyMatch(l ->
+                        Objects.equals(l.getCustomerName(), "Test Customer") && Objects.equals(l.getBookTitle(), "Test Book")),
+                "Should find at least one late and unreturned lend");
+
+
+        lendsDAO.deleteLend(lateLend);
     }
 }

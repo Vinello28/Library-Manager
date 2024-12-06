@@ -72,10 +72,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    72,6%
+    72,4%
   </span>
   <span class="absValue">
-    (146/201)
+    (144/199)
   </span>
 </td>
 </tr>
@@ -116,7 +116,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            pstmt.setString(2, book.getAuthor());</b>
 <b class="fc">&nbsp;            pstmt.setInt(3, book.getYear());</b>
 <b class="pc">&nbsp;            if (book.getGenre() != null) pstmt.setInt(4, book.getGenre().ordinal());</b>
-<b class="nc">&nbsp;            else pstmt.setNull(4, Genre.Genre.ordinal());</b>
+<b class="nc">&nbsp;            else pstmt.setNull(4, Genre.NULL.ordinal());</b>
 <b class="fc">&nbsp;            pstmt.setInt(5, book.getCopies());</b>
 <b class="fc">&nbsp;            pstmt.executeUpdate();</b>
 &nbsp;        }catch (SQLException e) {
@@ -407,7 +407,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            while (rs.next()) {</b>
 <b class="fc">&nbsp;                books.add(bookExtractor(rs));</b>
 &nbsp;            }
-<b class="fc">&nbsp;            System.out.println(&quot;SERVER | DEBUG INFO: returning books &quot; + books);</b>
 <b class="fc">&nbsp;            return books;</b>
 &nbsp;        }
 &nbsp;    }
@@ -424,9 +423,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;        book.setTitle(rs.getString(&quot;title&quot;));</b>
 <b class="fc">&nbsp;        book.setAuthor(rs.getString(&quot;author&quot;));</b>
 <b class="fc">&nbsp;        book.setYear(rs.getInt(&quot;year&quot;));</b>
-<b class="fc">&nbsp;        book.setGenre(rs.getInt(&quot;genre&quot;) != 0 ? Genre.values()[rs.getInt(&quot;genre&quot;)] : Genre.Genre);</b>
+<b class="fc">&nbsp;        book.setGenre(rs.getInt(&quot;genre&quot;) != 0 ? Genre.values()[rs.getInt(&quot;genre&quot;)] : Genre.NULL);</b>
 <b class="fc">&nbsp;        book.setCopies(rs.getInt(&quot;copies&quot;));</b>
-<b class="fc">&nbsp;        System.out.println(&quot;SERVER | DEBUG INFO: extracted book &quot; + book);</b>
 <b class="fc">&nbsp;        return book;</b>
 &nbsp;    }
 &nbsp;
@@ -454,7 +452,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-11-26 07:56</div>
+    <div style="float:right;">generated on 2024-12-06 12:15</div>
 </div>
 </body>
 </html>

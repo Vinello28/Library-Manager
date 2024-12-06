@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > CLIUtils</title>
+  <title>Coverage Report > EmailNotificationService</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,21 +19,22 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">prj.library.utils</a>
+    <a href="../index.html">prj.library.notification</a>
 </div>
 
-<h1>Coverage Summary for Class: CLIUtils (prj.library.utils)</h1>
+<h1>Coverage Summary for Class: EmailNotificationService (prj.library.notification)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
 <th class="coverageStat 
 ">
-  Class, %
+  Method, %
 </th>
 <th class="coverageStat 
 ">
-  Method, %
+  Branch, %
 </th>
 <th class="coverageStat 
 ">
@@ -41,33 +42,78 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">CLIUtils</td>
+  <td class="name">EmailNotificationService</td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    0%
   </span>
   <span class="absValue">
-    (1/1)
+    (0/4)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    7,1%
+    0%
   </span>
   <span class="absValue">
-    (1/14)
+    (0/2)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    6,7%
+    0%
   </span>
   <span class="absValue">
-    (1/15)
+    (0/30)
   </span>
 </td>
 </tr>
-
+  <tr>
+    <td class="name">EmailNotificationService$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+</tr>
 </table>
 
 <br/>
@@ -75,71 +121,113 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.utils;
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.notification;
 &nbsp;
-&nbsp;import prj.library.networking.messages.Message;
 &nbsp;
-&nbsp;import java.net.InetAddress;
-&nbsp;import java.net.UnknownHostException;
+&nbsp;import javax.mail.Session;
+&nbsp;import prj.library.database.DAO.LendsDAO;
+&nbsp;import prj.library.models.Lends;
+&nbsp;import prj.library.utils.CLIUtils;
+&nbsp;import prj.library.utils.ConfigLoader;
+&nbsp;import javax.mail.Message;
+&nbsp;import javax.mail.MessagingException;
+&nbsp;import javax.mail.Transport;
+&nbsp;import javax.mail.internet.InternetAddress;
+&nbsp;import javax.mail.internet.MimeMessage;
+&nbsp;import javax.mail.*;
+&nbsp;import javax.mail.PasswordAuthentication;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Properties;
 &nbsp;
-<b class="nc">&nbsp;public class CLIUtils {</b>
-&nbsp;    public static void serverStart() {
-<b class="nc">&nbsp;        System.out.println(&quot;SERVER | INFO: Server is starting...&quot;);</b>
+&nbsp;/**
+&nbsp; * Service to send email notifications to customers
+&nbsp; */
+&nbsp;public class EmailNotificationService {
+&nbsp;    private final String username;
+&nbsp;    private final String password;
+&nbsp;    private final String smtpHost;
+&nbsp;    private final String smtpPort;
+&nbsp;    private final LendsDAO lendDAO;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor
+&nbsp;     * @param lendDAO the DAO to access the database
+&nbsp;     */
+<b class="nc">&nbsp;    public EmailNotificationService(LendsDAO lendDAO) {</b>
+<b class="nc">&nbsp;        this.lendDAO = lendDAO;</b>
+<b class="nc">&nbsp;        this.username = ConfigLoader.getProperty(&quot;email.username&quot;);</b>
+<b class="nc">&nbsp;        this.password = ConfigLoader.getProperty(&quot;email.password&quot;);</b>
+<b class="nc">&nbsp;        this.smtpHost = ConfigLoader.getProperty(&quot;email.smtp.host&quot;);</b>
+<b class="nc">&nbsp;        this.smtpPort = ConfigLoader.getProperty(&quot;email.smtp.port&quot;);</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public static void serverStarted() {
-<b class="nc">&nbsp;        System.out.println(&quot;SERVER | INFO: Server started&quot;);</b>
+&nbsp;    /**
+&nbsp;     * Create a new session to send emails
+&nbsp;     * @return the session
+&nbsp;     */
+&nbsp;    private Session createSession() {
+<b class="nc">&nbsp;        Properties props = new Properties();</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.starttls.enable&quot;, &quot;true&quot;);</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.host&quot;, smtpHost);</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.port&quot;, smtpPort);</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.ssl.trust&quot;, &quot;smtp.gmail.com&quot;);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        return Session.getInstance(props, new Authenticator() {</b>
+&nbsp;            @Override
+&nbsp;            protected PasswordAuthentication getPasswordAuthentication() {
+<b class="nc">&nbsp;                return new PasswordAuthentication(username, password);</b>
+&nbsp;            }
+&nbsp;        });
 &nbsp;    }
 &nbsp;
-&nbsp;    public static void serverListening(int port) {
+&nbsp;    /**
+&nbsp;     * Send an email notification to a customer
+&nbsp;     * @param toEmail the email address of the customer
+&nbsp;     * @param customerName the name of the customer
+&nbsp;     * @param bookTitle the title of the book
+&nbsp;     * @param dueDate the due date of the book
+&nbsp;     */
+&nbsp;    public void sendExpirationNotification(String toEmail, String customerName, String bookTitle, LocalDate dueDate) {
 &nbsp;        try {
-<b class="nc">&nbsp;            System.out.println(&quot;SERVER | INFO: Server is listening on port &quot; + port + &quot; at &quot; + InetAddress.getLocalHost().getHostAddress());</b>
-&nbsp;        } catch (UnknownHostException e) {
-<b class="nc">&nbsp;            System.out.println(&quot;SERVER | CRITICAL_ERROR: exception message -&gt; &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            Session session = createSession();</b>
+<b class="nc">&nbsp;            Message message = new MimeMessage(session);</b>
+<b class="nc">&nbsp;            message.setFrom(new InternetAddress(username));</b>
+<b class="nc">&nbsp;            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));</b>
+<b class="nc">&nbsp;            message.setSubject(&quot;Book return reminder&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            String content = String.format(</b>
+&nbsp;                    &quot;Hi %s !,\n\n&quot; +
+&nbsp;                            &quot;We remind you that your book&#39;s lend \&quot;%s\&quot; ends on %s.\n&quot; +
+&nbsp;                            &quot;Please return the book within the expiration date.\n\n&quot; +
+&nbsp;                            &quot;Have a nice day!,\nThe Library Team&quot;,
+&nbsp;                    customerName, bookTitle, dueDate);
+&nbsp;
+<b class="nc">&nbsp;            message.setText(content);</b>
+<b class="nc">&nbsp;            Transport.send(message);</b>
+&nbsp;
+&nbsp;        } catch (MessagingException e) {
+<b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Mail notification sending error: &quot; + e.getMessage());</b>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
-&nbsp;    public static void serverCriticalError(String message) {
-<b class="fc">&nbsp;        System.out.println(&quot;SERVER | CRITICAL_ERROR: exception message -&gt; &quot; + message);</b>
+&nbsp;    /**
+&nbsp;     * Check for expiring loans and send notifications
+&nbsp;     */
+&nbsp;    public void checkAndSendNotifications() {
+<b class="nc">&nbsp;        List&lt;VirtualLend&gt; expiringLoans = lendDAO.getLateLendsNotification();</b>
+<b class="nc">&nbsp;        System.out.println(expiringLoans);</b>
+<b class="nc">&nbsp;        for (VirtualLend loan : expiringLoans) {</b>
+<b class="nc">&nbsp;            sendExpirationNotification(</b>
+<b class="nc">&nbsp;                    loan.getCustomerEmail(),</b>
+<b class="nc">&nbsp;                    loan.getCustomerName(),</b>
+<b class="nc">&nbsp;                    loan.getBookTitle(),</b>
+<b class="nc">&nbsp;                    loan.getReturnDate()</b>
+&nbsp;            );
+&nbsp;        }
 &nbsp;    }
-&nbsp;
-&nbsp;    public static void clientConnected() {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Client connected&quot;);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientDisconnected() {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Client disconnected&quot;);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientCriticalError(String message) {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | CRITICAL_ERROR: exception message -&gt; &quot; + message);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientRequest(String message) {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Client request -&gt; &quot; + message);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientResponse(String message) {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: Server response -&gt; &quot; + message);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientInfo(String message) {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | INFO: &quot; + message);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientError(Message message) {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | ERROR: &quot; + message.getMessage());</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void clientDebug(String message) {
-<b class="nc">&nbsp;        System.out.println(&quot;CLIENT | DEBUG_INFO: &quot; + message);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    public static void serverDebug(String message) {
-<b class="nc">&nbsp;        System.out.println(&quot;SERVER | DEBUG_INFO: &quot; + message);</b>
-&nbsp;    }
-&nbsp;
-&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -164,7 +252,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-11-26 07:56</div>
+    <div style="float:right;">generated on 2024-12-06 12:15</div>
 </div>
 </body>
 </html>

@@ -56,7 +56,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/134)
+    (0/137)
   </span>
 </td>
 <td class="coverageStat">
@@ -64,7 +64,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/128)
+    (0/135)
   </span>
 </td>
 </tr>
@@ -102,7 +102,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/134)
+    (0/137)
   </span>
 </td>
 <td class="coverageStat">
@@ -110,7 +110,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/129)
+    (0/136)
   </span>
 </td>
 </tr>
@@ -132,6 +132,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import prj.library.database.DAO.*;
 &nbsp;import prj.library.networking.NI.NetworkInterface;
 &nbsp;import prj.library.networking.messages.*;
+&nbsp;import prj.library.notification.EmailNotificationService;
+&nbsp;import prj.library.notification.NotificationScheduler;
+&nbsp;import prj.library.utils.CLIUtils;
 &nbsp;import static prj.library.utils.CLIUtils.*;
 &nbsp;
 &nbsp;/**
@@ -141,13 +144,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    private BookDAO bookDAO;
 &nbsp;    private LendsDAO lendDAO;
 &nbsp;    private CustomerDAO customerDAO;
-&nbsp;
+&nbsp;    private EmailNotificationService notificationService;
 &nbsp;
 &nbsp;    public ClientHandler(Socket socket) {
 <b class="nc">&nbsp;        super(socket);</b>
 <b class="nc">&nbsp;        bookDAO = new BookDAO();</b>
 <b class="nc">&nbsp;        lendDAO = new LendsDAO();</b>
 <b class="nc">&nbsp;        customerDAO = new CustomerDAO();</b>
+&nbsp;
+<b class="nc">&nbsp;        notificationService = new EmailNotificationService(lendDAO);</b>
+<b class="nc">&nbsp;        NotificationScheduler scheduler = new NotificationScheduler(notificationService);</b>
+<b class="nc">&nbsp;        scheduler.startScheduler();</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @Override
@@ -155,10 +162,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        while (true) {
 <b class="nc">&nbsp;            Message message = (Message) receive();</b>
 <b class="nc">&nbsp;            if (message == null) {</b>
-<b class="nc">&nbsp;                System.out.println(&quot;SERVER | ERROR: Message is null&quot;);</b>
+<b class="nc">&nbsp;                serverError(&quot;Message is null&quot;);</b>
 &nbsp;                break;
 &nbsp;            }
-<b class="nc">&nbsp;            System.out.println(&quot;SERVER | INFO: received message &quot; + message.getOperation() + &quot; &quot; + message.getMessage());</b>
+&nbsp;
+<b class="nc">&nbsp;            CLIUtils.serverInfo(&quot;Received message &quot; + message.getOperation() + &quot; &quot; + message.getMessage());</b>
 &nbsp;
 <b class="nc">&nbsp;            switch (message.getOperation()) {</b>
 &nbsp;                case ADD_BOOK:
@@ -208,6 +216,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;                case SEARCH_LEND_BY_CUSTOMER_RETURN_DATE_RETURNED:
 &nbsp;                case SEARCH_LEND_BY_LATE:
 &nbsp;                case GET_LENDS_RETURNED:
+&nbsp;                case GET_LENDS_NR_COUNT:
 <b class="nc">&nbsp;                    handleSearchLendOperation((LendMessage) message);</b>
 &nbsp;                    break;
 &nbsp;                case ADD_CUSTOMER:
@@ -232,10 +241,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;                case SEARCH_CUSTOMER_BY_PHONE_EMAIL_ADDRESS:
 &nbsp;                case SEARCH_CUSTOMER_BY_NAME_PHONE_ADDRESS:
 &nbsp;                case SEARCH_CUSTOMER_BY_NAME_PHONE_EMAIL:
-<b class="nc">&nbsp;                    handleSearchCustomersMessage((CustomerMessage) message);</b>
+<b class="nc">&nbsp;                    handleSearchCustomersOperation((CustomerMessage) message);</b>
+&nbsp;                    break;
+&nbsp;                case ALERT_ALL:
+<b class="nc">&nbsp;                    notificationService.checkAndSendNotifications();</b>
+<b class="nc">&nbsp;                    send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
 &nbsp;                    break;
 &nbsp;                default:
-<b class="nc">&nbsp;                    serverCriticalError(&quot;Invalid operation into client handler&quot;);</b>
+<b class="nc">&nbsp;                    serverError(&quot;Invalid operation into client handler&quot;);</b>
 &nbsp;                    break;
 &nbsp;            }
 &nbsp;        }
@@ -360,6 +373,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;            case GET_LENDS_RETURNED:
 <b class="nc">&nbsp;                results = lendDAO.getLendsReturned(received.isReturned());</b>
 &nbsp;                break;
+&nbsp;            case GET_LENDS_NR_COUNT:
+<b class="nc">&nbsp;                int res = lendDAO.getNotReturnedLendsCount();</b>
+<b class="nc">&nbsp;                send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, res));</b>
+&nbsp;                return;
 &nbsp;            default:
 <b class="nc">&nbsp;                ok = false;</b>
 <b class="nc">&nbsp;                serverCriticalError(&quot;Invalid operation into search lend operation&quot;);</b>
@@ -481,7 +498,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * Handles the search customer operations
 &nbsp;     * @param customerMessage the message containing the search operation
 &nbsp;     */
-&nbsp;    private void handleSearchCustomersMessage(CustomerMessage customerMessage){
+&nbsp;    private void handleSearchCustomersOperation(CustomerMessage customerMessage){
 <b class="nc">&nbsp;        Customer received = customerMessage.getCustomer();</b>
 <b class="nc">&nbsp;        List &lt;Customer&gt; results = null;</b>
 <b class="nc">&nbsp;        boolean ok = true;</b>
@@ -565,7 +582,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-11-26 07:56</div>
+    <div style="float:right;">generated on 2024-12-06 12:15</div>
 </div>
 </body>
 </html>

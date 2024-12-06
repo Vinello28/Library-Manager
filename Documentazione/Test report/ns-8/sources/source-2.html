@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > NotificationScheduler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">prj.library.notification</a>
+</div>
+
+<h1>Coverage Summary for Class: NotificationScheduler (prj.library.notification)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NotificationScheduler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NotificationScheduler$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">NotificationScheduler$1$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package prj.library.notification;
+&nbsp;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.concurrent.ScheduledService;
+&nbsp;import javafx.concurrent.Task;
+&nbsp;import javafx.util.Duration;
+&nbsp;
+&nbsp;/**
+&nbsp; * Class to schedule the email notification service
+&nbsp; */
+&nbsp;public class NotificationScheduler {
+&nbsp;    private final EmailNotificationService notificationService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor
+&nbsp;     * @param notificationService the notification service to schedule
+&nbsp;     */
+<b class="nc">&nbsp;    public NotificationScheduler(EmailNotificationService notificationService) {</b>
+<b class="nc">&nbsp;        this.notificationService = notificationService;</b>
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            Platform.startup(() -&gt; {});</b>
+&nbsp;        } catch (IllegalStateException e) {
+&nbsp;            // Il toolkit è già inizializzato, ignora l&#39;errore
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Start the scheduler
+&nbsp;     */
+&nbsp;    public void startScheduler() {
+<b class="nc">&nbsp;        ScheduledService&lt;Void&gt; service = new ScheduledService&lt;&gt;() {</b>
+&nbsp;            @Override
+&nbsp;            protected Task&lt;Void&gt; createTask() {
+<b class="nc">&nbsp;                return new Task&lt;&gt;() {</b>
+&nbsp;                    @Override
+&nbsp;                    protected Void call() {
+<b class="nc">&nbsp;                        notificationService.checkAndSendNotifications();</b>
+<b class="nc">&nbsp;                        return null;</b>
+&nbsp;                    }
+&nbsp;                };
+&nbsp;            }
+&nbsp;        };
+&nbsp;
+&nbsp;        //Run the service every 24 hours
+<b class="nc">&nbsp;        service.setPeriod(Duration.hours(24));</b>
+<b class="nc">&nbsp;        service.start();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-06 12:15</div>
+</div>
+</body>
+</html>

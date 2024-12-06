@@ -56,26 +56,26 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    56,5%
+    60%
   </span>
   <span class="absValue">
-    (13/23)
+    (15/25)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    83,3%
+    70%
   </span>
   <span class="absValue">
-    (5/6)
+    (7/10)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    50%
+    54,1%
   </span>
   <span class="absValue">
-    (110/220)
+    (131/242)
   </span>
 </td>
 </tr>
@@ -90,6 +90,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <code class="sourceCode" id="sourceCode">&nbsp;package prj.library.database.DAO;
 &nbsp;
 &nbsp;import prj.library.models.Lends;
+&nbsp;import prj.library.notification.VirtualLend;
 &nbsp;import prj.library.utils.CLIUtils;
 &nbsp;import java.sql.*;
 &nbsp;import java.time.LocalDate;
@@ -337,20 +338,20 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByCustomerIdReturnDateReturned(int customerId, LocalDate returnDate, boolean returned) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
-<b class="nc">&nbsp;        Connection connection = getConnection();</b>
-<b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE customer_id = ? AND return_date = ? AND returned = ?&quot;;</b>
+<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        Connection connection = getConnection();</b>
+<b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE customer_id = ? AND return_date = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
-<b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
-<b class="nc">&nbsp;            preparedStatement.setInt(1, customerId);</b>
-<b class="nc">&nbsp;            preparedStatement.setDate(2, Date.valueOf(returnDate));</b>
-<b class="nc">&nbsp;            preparedStatement.setBoolean(3, returned);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
+<b class="fc">&nbsp;            preparedStatement.setInt(1, customerId);</b>
+<b class="fc">&nbsp;            preparedStatement.setDate(2, Date.valueOf(returnDate));</b>
+<b class="fc">&nbsp;            preparedStatement.setBoolean(3, returned);</b>
+<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="fc">&nbsp;        closeConnection(connection);</b>
+<b class="fc">&nbsp;        return lends;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookIdCustomerId(int bookId, int customerId) {
@@ -449,6 +450,45 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        return lends;</b>
 &nbsp;    }
 &nbsp;
+&nbsp;    public synchronized int getNotReturnedLendsCount() {
+<b class="nc">&nbsp;        int count = 0;</b>
+<b class="nc">&nbsp;        Connection connection = getConnection();</b>
+<b class="nc">&nbsp;        String query = &quot;SELECT COUNT(*) FROM lends WHERE returned = false&quot;;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
+<b class="nc">&nbsp;            ResultSet resultSet = preparedStatement.executeQuery();</b>
+<b class="nc">&nbsp;            if (resultSet.next()) {</b>
+<b class="nc">&nbsp;                count = resultSet.getInt(1);</b>
+&nbsp;            }
+&nbsp;        } catch (SQLException e) {
+<b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        closeConnection(connection);</b>
+<b class="nc">&nbsp;        return count;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public synchronized List&lt;VirtualLend&gt; getLateLendsNotification() {
+<b class="fc">&nbsp;        List&lt;VirtualLend&gt; lends = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        Connection connection = getConnection();</b>
+<b class="fc">&nbsp;        String query = &quot;SELECT b.title, c.email, c.name, l.return_date FROM lends l &quot; +</b>
+&nbsp;                &quot;JOIN books b ON l.book_id = b.id &quot; +
+&nbsp;                &quot;JOIN customers c ON l.customer_id = c.id_c &quot; +
+&nbsp;                &quot;WHERE l.return_date &lt; ? AND l.returned = false&quot;;
+&nbsp;        try {
+<b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
+<b class="fc">&nbsp;            preparedStatement.setDate(1, Date.valueOf(LocalDate.now()));</b>
+<b class="fc">&nbsp;            ResultSet resultSet = preparedStatement.executeQuery();</b>
+<b class="fc">&nbsp;            while (resultSet.next()) {</b>
+<b class="fc">&nbsp;                VirtualLend lend = new VirtualLend(resultSet.getString(&quot;title&quot;), resultSet.getString(&quot;email&quot;), resultSet.getString(&quot;name&quot;), resultSet.getDate(&quot;return_date&quot;).toLocalDate());</b>
+<b class="fc">&nbsp;                lends.add(lend);</b>
+&nbsp;            }
+&nbsp;        } catch (SQLException e) {
+<b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        }
+<b class="fc">&nbsp;        closeConnection(connection);</b>
+<b class="fc">&nbsp;        return lends;</b>
+&nbsp;    }
+&nbsp;
 &nbsp;    /**
 &nbsp;     * Get lends by statement
 &nbsp;     * @param preparedStatement the prepared statement
@@ -490,7 +530,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-11-26 07:56</div>
+    <div style="float:right;">generated on 2024-12-06 12:15</div>
 </div>
 </body>
 </html>

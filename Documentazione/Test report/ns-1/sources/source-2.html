@@ -59,7 +59,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/55)
+    (0/57)
   </span>
 </td>
 <td class="coverageStat">
@@ -67,7 +67,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/372)
+    (0/374)
   </span>
 </td>
 <td class="coverageStat">
@@ -75,7 +75,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/448)
+    (0/456)
   </span>
 </td>
 </tr>
@@ -220,6 +220,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    private PieChart genrePieChart;
 &nbsp;    @FXML
 &nbsp;    private BarChart&lt;String, Number&gt; numusBarChart;
+&nbsp;    @FXML
+&nbsp;    private Label labelCount;
 &nbsp;
 &nbsp;
 &nbsp;
@@ -473,7 +475,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;            clientController.createLend(lend[0]);</b>
 <b class="nc">&nbsp;            clientController.updateBook(editedBook);</b>
 <b class="nc">&nbsp;            List&lt;Book&gt; books = new ArrayList&lt;&gt;();</b>
-<b class="nc">&nbsp;            books.add(clientController.readBook(editedBook.getId())); //TODO check to remove</b>
+<b class="nc">&nbsp;            books.add(clientController.readBook(editedBook.getId()));</b>
 <b class="nc">&nbsp;            showBooksOnTableView(books, searchBookTableView);</b>
 &nbsp;        });
 &nbsp;    }
@@ -492,22 +494,22 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        String title = titleLendTextField.getText();</b>
 <b class="nc">&nbsp;        LocalDate date = returnLendDatePicker.getValue();</b>
 <b class="nc">&nbsp;        String cell = phoneLendTextField.getText();</b>
-<b class="nc">&nbsp;        Boolean unclepear = returnedLendChoiceBox.getValue();</b>
+<b class="nc">&nbsp;        Boolean retVal = returnedLendChoiceBox.getValue();</b>
 &nbsp;
 <b class="nc">&nbsp;        int b_id=0; //book id</b>
 <b class="nc">&nbsp;        int c_id=0; //customer id</b>
 &nbsp;        boolean returned;
 <b class="nc">&nbsp;        boolean sentinel = false;</b>
 &nbsp;
-<b class="nc">&nbsp;        if(unclepear != null &amp;&amp; unclepear) returned = true;</b>
-<b class="nc">&nbsp;        else if (unclepear != null &amp;&amp; !unclepear) {</b>
+<b class="nc">&nbsp;        if(retVal != null &amp;&amp; retVal) returned = true;</b>
+<b class="nc">&nbsp;        else if (retVal != null &amp;&amp; !retVal) {</b>
 <b class="nc">&nbsp;            returned = false;</b>
 <b class="nc">&nbsp;            sentinel = true;</b>
 <b class="nc">&nbsp;        } else returned = false;</b>
 &nbsp;
 &nbsp;        //checks if book and customer exists
 <b class="nc">&nbsp;        if (!title.isEmpty()) {</b>
-<b class="nc">&nbsp;            List&lt;Book&gt; books = clientController.searchBooksBy(1, new Book(0, title, &quot;&quot;, 0, Genre.Genre, 0));</b>
+<b class="nc">&nbsp;            List&lt;Book&gt; books = clientController.searchBooksBy(1, new Book(0, title, &quot;&quot;, 0, Genre.NULL, 0));</b>
 <b class="nc">&nbsp;            if (books == null || books.isEmpty()) {</b>
 <b class="nc">&nbsp;                showErrorDialog(&quot;Error&quot;, &quot;Book not found&quot;, &quot;Book you are looking for is not found. Try something else.&quot;);</b>
 <b class="nc">&nbsp;                clearSearchLends();</b>
@@ -717,7 +719,22 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        showPane(statsPane);</b>
 <b class="nc">&nbsp;        updateGenreChart();</b>
 <b class="nc">&nbsp;        updateCustomerLendsBarChart();</b>
+<b class="nc">&nbsp;        updateLendCount();</b>
 &nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void onAlertClick(){
+<b class="nc">&nbsp;        Boolean tmp = clientController.sendAlerts();</b>
+&nbsp;
+<b class="nc">&nbsp;        CLIUtils.clientInfo(&quot;sending mail notifications to customers with late returns&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (tmp) {</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Alert&quot;, &quot;Alerts sent&quot;, &quot;Alerts have been sent to customers with late returns.&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No alerts sent&quot;, &quot;No alerts have been sent to customers with late returns.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
 &nbsp;
 &nbsp;    /**
 &nbsp;     * Shows an error dialog with the given title, header and content.
@@ -952,7 +969,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        statsPane.setVisible(false);</b>
 &nbsp;    }
 &nbsp;
-&nbsp;
 &nbsp;    /**
 &nbsp;     * Updates the genre pie chart.
 &nbsp;     */
@@ -1082,6 +1098,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        numusBarChart.getStyleClass().add(&quot;custom-bar-chart&quot;);</b>
 &nbsp;    }
 &nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the lend count label.
+&nbsp;     */
+&nbsp;    private void updateLendCount() {
+<b class="nc">&nbsp;        int lendCount = clientController.getNotReturnedLendsCount();</b>
+<b class="nc">&nbsp;        labelCount.setText(String.format(&quot;%d&quot;, lendCount));</b>
+&nbsp;    }
 &nbsp;}
 </code>
 </pre>
@@ -1106,7 +1129,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-11-26 07:56</div>
+    <div style="float:right;">generated on 2024-12-06 12:15</div>
 </div>
 </body>
 </html>
