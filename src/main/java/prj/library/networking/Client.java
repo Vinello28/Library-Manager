@@ -13,7 +13,11 @@ public class Client extends NetworkInterface {
     private static final String SERVER_IP = "localhost";
     private static final int SERVER_PORT = 60129;
 
-
+    /**
+     * Constructor for the Client class.
+     *
+     * @throws IOException if an I/O error occurs when creating the socket
+     */
     public Client () throws IOException {
         super(new Socket(SERVER_IP, SERVER_PORT));
     }
