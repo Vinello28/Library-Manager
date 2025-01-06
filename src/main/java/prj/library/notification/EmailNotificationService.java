@@ -95,7 +95,7 @@ public class EmailNotificationService {
      */
     public void checkAndSendNotifications() {
         List<VirtualLend> expiringLoans = lendDAO.getLateLendsNotification();
-        System.out.println(expiringLoans);
+
         for (VirtualLend loan : expiringLoans) {
             sendExpirationNotification(
                     loan.getCustomerEmail(),
