@@ -8,12 +8,16 @@ import java.io.*;
 import java.net.*;
 import java.util.List;
 import prj.library.networking.NI.NetworkInterface;
+import static prj.library.utils.ConfigLoader.getProperty;
 
 public class Client extends NetworkInterface {
-    private static final String SERVER_IP = "localhost";
-    private static final int SERVER_PORT = 60129;
+    private static final String SERVER_IP =  getProperty("server.address"); //get the server address from the properties file
+    private static final int SERVER_PORT = Integer.parseInt(getProperty("server.port")); //get the server port from the properties file
 
-
+    /**
+     * Constructor for the Client class.
+     * @throws IOException if an I/O error occurs when creating the socket
+     */
     public Client () throws IOException {
         super(new Socket(SERVER_IP, SERVER_PORT));
     }
@@ -48,7 +52,6 @@ public class Client extends NetworkInterface {
         return m.getBooks();
     }
 
-
     /**
      * Receives a message from the server.
      *
@@ -58,7 +61,6 @@ public class Client extends NetworkInterface {
         BookMessage m = (BookMessage) receiveMessage();
         return m.getBook();
     }
-
 
     /**
      * Receives a message from the server.
