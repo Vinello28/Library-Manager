@@ -21,17 +21,12 @@ public class ClientHandler extends NetworkInterface implements Runnable {
     private BookDAO bookDAO;
     private LendsDAO lendDAO;
     private CustomerDAO customerDAO;
-    private EmailNotificationService notificationService;
 
     public ClientHandler(Socket socket) {
         super(socket);
         bookDAO = new BookDAO();
         lendDAO = new LendsDAO();
         customerDAO = new CustomerDAO();
-
-        notificationService = new EmailNotificationService(lendDAO);
-        NotificationScheduler scheduler = new NotificationScheduler(notificationService);
-        scheduler.startScheduler();
     }
 
     @Override
@@ -121,7 +116,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
                     handleSearchCustomersOperation((CustomerMessage) message);
                     break;
                 case ALERT_ALL:
-                    notificationService.checkAndSendNotifications();
+                    Server.sendNotification();
                     send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));
                     break;
                 default:
@@ -315,8 +310,7 @@ public class ClientHandler extends NetworkInterface implements Runnable {
             case REMOVE_LEND:
                 int id = lendMessage.getLend().getBookId();
                 lendDAO.deleteLend(lendMessage.getLend());
-                System.out.println("SERVER | INFO: Lend removed");
-                System.out.println("SERVER | DEBUG_INFO: Setting book available, id: " + id);
+                CLIUtils.serverInfo("removing this lend -> " + id);
                 Book book = bookDAO.readBook(id);
                 book.setAvailable();
                 bookDAO.updateBook(book);

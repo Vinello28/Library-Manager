@@ -67,6 +67,6 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## Contact
 
-Your Name - [vianello.tech@gmail.com](mailto:vianello.tech@gmail.com)
+Gabriele Vianello - [vianello.tech@gmail.com](mailto:vianello.tech@gmail.com)
 
 Project Link: [https://github.com/Vinello28/Library](https://github.com/Vinello28/Library)
