@@ -29,11 +29,11 @@ This project is a Library Management System built using Java/JavaFX and Maven. I
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/library-management-system.git
+   git clone https://github.com/Vinello28/library.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd library-management-system
+   cd library
    ```
 3. Update database and system connections details in `config.properties`:
    ```properties
