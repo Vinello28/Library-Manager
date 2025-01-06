@@ -18,9 +18,10 @@ import static prj.library.utils.CLIUtils.*;
  * Class that handles the client requests.
  */
 public class ClientHandler extends NetworkInterface implements Runnable {
-    private BookDAO bookDAO;
-    private LendsDAO lendDAO;
-    private CustomerDAO customerDAO;
+    private final BookDAO bookDAO;
+    private final LendsDAO lendDAO;
+    private final CustomerDAO customerDAO;
+    private EmailNotificationService notificationService;
 
     public ClientHandler(Socket socket) {
         super(socket);
