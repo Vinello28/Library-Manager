@@ -3,14 +3,48 @@ package prj.library.database.DAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import prj.library.models.Customer;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+
+/**
+ * Unit tests for the CustomerDAO class.<p>
+ * <p>
+ * This class contains test methods to verify the functionality of the CustomerDAO class,<p>
+ * which is responsible for performing CRUD operations on Customer objects in the database.<p>
+ * <p>
+ * The following test methods are included:<p>
+ * <p>
+ * - setUp(): Sets up the test environment before each test method. Initializes a new CustomerDAO instance and creates a sample Customer with test data.<p>
+ * - createCustomer(): Tests the creation of a new customer and verifies that the customer is correctly added to the database.<p>
+ * - updateCustomer(): Tests the update functionality of a customer and verifies that the customer's details are correctly updated in the database.<p>
+ * - deleteCustomer(): Tests the deletion of a customer and verifies that the customer is correctly removed from the database.<p>
+ * - readCustomer(): Tests the retrieval of a customer by ID and verifies that the correct customer details are returned.<p>
+ * - searchCustomerByName(): Tests the search functionality by customer name and verifies that the correct customer is returned.<p>
+ * - searchCustomerByPhoneNumber(): Tests the search functionality by customer phone number and verifies that the correct customer is returned.<p>
+ * - searchCustomerByEmail(): Tests the search functionality by customer email and verifies that the correct customer is returned.<p>
+ * - searchCustomerByAddress(): Tests the search functionality by customer address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByNameAndPhoneNumber(): Tests the search functionality by customer name and phone number and verifies that the correct customer is returned.<p>
+ * - searchCustomerByNameAndEmail(): Tests the search functionality by customer name and email and verifies that the correct customer is returned.<p>
+ * - searchCustomerByNameAndAddress(): Tests the search functionality by customer name and address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByPhoneNumberAndEmail(): Tests the search functionality by customer phone number and email and verifies that the correct customer is returned.<p>
+ * - searchCustomerByPhoneNumberAndAddress(): Tests the search functionality by customer phone number and address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByEmailAndAddress(): Tests the search functionality by customer email and address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByNameAndPhoneNumberAndEmail(): Tests the search functionality by customer name, phone number, and email and verifies that the correct customer is returned.<p>
+ * - searchCustomerByNameAndPhoneNumberAndAddress(): Tests the search functionality by customer name, phone number, and address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByNameAndEmailAndAddress(): Tests the search functionality by customer name, email, and address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByPhoneNumberAndEmailAndAddress(): Tests the search functionality by customer phone number, email, and address and verifies that the correct customer is returned.<p>
+ * - searchCustomerByAll(): Tests the search functionality by all customer details (name, phone number, email, and address) and verifies that the correct customer is returned.<p>
+ */
 class CustomerDAOTest {
 
     CustomerDAO customerDAO;
     Customer customer;
 
+    /**
+     * Sets up the test environment before each test method.<p>
+     * Initializes a new CustomerDAO instance and creates a sample Customer<p>
+     * with test data (name: "John Doe", email: "a@a.it", phone: "1234567890", address: "via1").<p>
+     */
     @BeforeEach
     void setUp() {
         customerDAO = new CustomerDAO();

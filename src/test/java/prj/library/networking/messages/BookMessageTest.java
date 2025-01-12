@@ -4,12 +4,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import prj.library.models.Book;
 import prj.library.models.Genre;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the BookMessage class.
+ * 
+ * This class contains tests for the following methods:
+ * 
+ * - setUp(): Sets up the test environment before each test method is executed.
+ * - getOperation(): Tests the getOperation() method of the BookMessage class.
+ * - getMessage(): Tests the getMessage() method of the BookMessage class.
+ * - setOperation(): Tests the setOperation() method of the BookMessage class.
+ * - setMessage(): Tests the setMessage() method of the BookMessage class.
+ * - getBook(): Tests the getBook() method of the BookMessage class.
+ * 
+ * The setUp() method initializes a Book object and a BookMessage object with the operation to add a book.
+ * Each test method verifies the correctness of the corresponding method in the BookMessage class.
+ */
 class BookMessageTest {
 
     BookMessage bookMessage;
+
+    /**
+     * Sets up the test environment before each test method is executed.
+     * Initializes a Book object and a BookMessage object with the operation to add a book.
+     */
     @BeforeEach
     void setUp() {
         Book b = new Book(1, "Title", "Author", 2021, Genre.DRAMA, 1);

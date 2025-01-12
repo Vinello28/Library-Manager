@@ -8,11 +8,44 @@ import java.util.List;
 import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the BookDAO class.
+ * 
+ * This class contains test methods to verify the functionality of the BookDAO class,
+ * which is responsible for performing CRUD operations on Book objects in the database.
+ * 
+ * The following methods are tested:
+ * 
+ * - setUp(): Sets up the test environment before each test method is executed.
+ * - createBook(): Tests the creation of a new book in the database.
+ * - readBook(): Tests reading a book from the database by its ID.
+ * - updateBook(): Tests updating an existing book in the database.
+ * - deleteBook(): Tests deleting a book from the database.
+ * - getBooksByTitle(): Tests retrieving books from the database by their title.
+ * - getBooksByGenre(): Tests retrieving books from the database by their genre.
+ * - getBooksByAuthor(): Tests retrieving books from the database by their author.
+ * - getBooksByYear(): Tests retrieving books from the database by their publication year.
+ * - getBooksByTitleAuthor(): Tests retrieving books from the database by their title and author.
+ * - getBooksByTitleGenre(): Tests retrieving books from the database by their title and genre.
+ * - getBooksByTitleYear(): Tests retrieving books from the database by their title and publication year.
+ * - getBooksByAuthorGenre(): Tests retrieving books from the database by their author and genre.
+ * - getBooksByAuthorYear(): Tests retrieving books from the database by their author and publication year.
+ * - getBooksByGenreYear(): Tests retrieving books from the database by their genre and publication year.
+ * - getBooksByTitleAuthorGenre(): Tests retrieving books from the database by their title, author, and genre.
+ * - getBooksByTitleAuthorYear(): Tests retrieving books from the database by their title, author, and publication year.
+ * - getBooksByTitleGenreYear(): Tests retrieving books from the database by their title, genre, and publication year.
+ * - getBooksByAuthorGenreYear(): Tests retrieving books from the database by their author, genre, and publication year.
+ * - getBooksByAllParam(): Tests retrieving books from the database by their title, author, genre, and publication year.
+ */
 class BookDAOTest {
 
     BookDAO bookDAO;
     Book book;
 
+    /**
+     * Sets up the test environment before each test method is executed.
+     * Initializes a new instance of BookDAO and a Book object with predefined values.
+     */
     @BeforeEach
     void setUp() {
         bookDAO = new BookDAO();
@@ -22,7 +55,7 @@ class BookDAOTest {
     @Test
     void createBook() {
         bookDAO.createBook(book);
-        assertEquals(bookDAO.getBooksByTitle("Title12121212").get(0).getTitle(), "Title12121212");
+        assertEquals("Title12121212", bookDAO.getBooksByTitle("Title12121212").get(0).getTitle());
 
         bookDAO.deleteBook(bookDAO.getBooksByTitle("Title12121212").get(0).getId());
     }
@@ -30,7 +63,7 @@ class BookDAOTest {
     @Test
     void readBook() {
         bookDAO.createBook(book);
-        assertEquals(bookDAO.readBook(bookDAO.getBooksByTitle("Title12121212").get(0).getId()).getTitle(), "Title12121212");
+        assertEquals("Title12121212", bookDAO.readBook(bookDAO.getBooksByTitle("Title12121212").get(0).getId()).getTitle());
 
         bookDAO.deleteBook(bookDAO.getBooksByTitle("Title12121212").get(0).getId());
     }

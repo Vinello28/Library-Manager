@@ -5,9 +5,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the VirtualLend class.
+ * 
+ * Test class for the VirtualLend class, ensuring that its getter and setter
+ * methods behave as expected. The tests verify the correct handling of book title,
+ * customer email, customer name, and return date.
+ */
 class VirtualLendTest {
     private VirtualLend virtualLend;
 
+    /**
+     * Initializes the VirtualLend object before each test, providing a sample
+     * book title, user email, and user name for testing purposes.
+     */
     @BeforeEach
     void setUp() {
         virtualLend = new VirtualLend("Test Book", "Test Email", "Test Name", null);

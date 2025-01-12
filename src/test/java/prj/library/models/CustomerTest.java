@@ -2,13 +2,27 @@ package prj.library.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Customer class.
+ * 
+ * The CustomerTest class tests the Customer class.
+ * It tests the following methods:
+ * - Testing getter methods: getId, getName, getEmail, getPhone, getAddress.
+ * - Testing setter methods: setId, setName, setEmail, setPhone, setAddress.
+ * 
+ * The setUp method initializes a Customer object with predefined values before each test method is executed.
+ * The test methods use assertions to verify that the expected values match the actual values returned by the Customer object's methods.
+ */
 class CustomerTest {
 
     Customer customer = new Customer();
 
+    /**
+     * Sets up the test environment before each test method is executed.
+     * Initializes a Customer object with predefined values.
+     */
     @BeforeEach
     void setUp() {
         customer = new Customer(1, "Paolo", "paolo@gmail.com", "09123456789", "Manila");

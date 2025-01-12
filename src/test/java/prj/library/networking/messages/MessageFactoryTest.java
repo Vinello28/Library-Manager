@@ -4,22 +4,37 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import prj.library.models.Book;
 import prj.library.models.Customer;
-import prj.library.models.Genre;
 import prj.library.models.Lends;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static prj.library.models.Genre.*;
 
+/**
+ * Unit tests for the MessageFactory class.
+ * 
+ * This class contains various test methods to verify the correct creation of different types of messages
+ * using the MessageFactory. Each test method checks the operation, message content, and the class type
+ * of the created message.
+ * 
+ * Test Methods:
+ * - setUp(): Initializes any necessary resources before each test.
+ * - createMessageBook(): Tests the creation of a message for adding a book.
+ * - createMessageLend(): Tests the creation of a message for adding a lend.
+ * - createMessageBooksList(): Tests the creation of a message for a list of books.
+ * - createMessageLendsList(): Tests the creation of a message for a list of lends.
+ * - createMessageBookSearch(): Tests the creation of a message for searching a book by title and genre.
+ * - createMessageLendSearch(): Tests the creation of a message for searching a lend by book.
+ * - customerMessage(): Tests the creation of a message for adding a customer.
+ * - customerListMessage(): Tests the creation of a message for a list of customers.
+ * - customerSearchMessage(): Tests the creation of a message for searching a customer by name.
+ */
 class MessageFactoryTest {
 
     @BeforeEach
     void setUp() {
     }
 
-    // Test for createMessage method
     @Test
     void createMessageBook () {
         Book book = new Book(1, "Title", "Author", 2021, ACTION, 1);
