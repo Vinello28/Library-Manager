@@ -72,10 +72,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    72,4%
+    80,4%
   </span>
   <span class="absValue">
-    (144/199)
+    (160/199)
   </span>
 </td>
 </tr>
@@ -121,8 +121,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            pstmt.executeUpdate();</b>
 &nbsp;        }catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(conn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized Book readBook(int id) {
@@ -137,8 +138,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;            }
 &nbsp;        }catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -155,8 +157,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            pstmt.executeUpdate();</b>
 &nbsp;        }catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(conn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized void deleteBook(int id) {
@@ -167,8 +170,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            pstmt.executeUpdate();</b>
 &nbsp;        }catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(conn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Book&gt; getAllBooks() {
@@ -178,8 +182,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -191,8 +196,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -204,8 +210,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -217,8 +224,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -230,8 +238,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -244,8 +253,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -258,8 +268,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -272,8 +283,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -286,8 +298,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -314,8 +327,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -329,8 +343,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -344,8 +359,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -358,9 +374,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            pstmt.setInt(3, year);</b>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
-<b class="nc">&nbsp;        CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -374,8 +391,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -390,8 +408,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getBooks(pstmt);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -452,7 +471,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2025-01-16 09:56</div>
+    <div style="float:right;">generated on 2025-01-16 15:58</div>
 </div>
 </body>
 </html>

@@ -72,10 +72,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    54,1%
+    50%
   </span>
   <span class="absValue">
-    (131/242)
+    (114/228)
   </span>
 </td>
 </tr>
@@ -124,8 +124,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;            }
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized void updateLend(Lends lend) {
@@ -142,8 +143,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            preparedStatement.executeUpdate();</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized void deleteLend(Lends lend) {
@@ -155,121 +157,123 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            preparedStatement.executeUpdate();</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized Lends readLend(int id) {
-<b class="fc">&nbsp;        Lends lend = null;</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE lend_id = ?&quot;;</b>
 &nbsp;        try {
 <b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, id);</b>
 <b class="fc">&nbsp;            ResultSet resultSet = preparedStatement.executeQuery();</b>
-&nbsp;
+&nbsp;            
+<b class="fc">&nbsp;            Lends lend = null;</b>
 <b class="fc">&nbsp;            if (resultSet.next()) {</b>
 <b class="fc">&nbsp;                lend = new Lends(resultSet.getInt(&quot;book_id&quot;), resultSet.getInt(&quot;customer_id&quot;), resultSet.getDate(&quot;return_date&quot;).toLocalDate(), resultSet.getBoolean(&quot;returned&quot;));</b>
-<b class="fc">&nbsp;                lend.setId(resultSet.getInt(&quot;id&quot;));</b>
+<b class="fc">&nbsp;                lend.setId(resultSet.getInt(&quot;lend_id&quot;));</b>
 &nbsp;            }
+<b class="fc">&nbsp;            return lend;</b>
 &nbsp;        } catch (SQLException e) {
-<b class="fc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lend;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLends() {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsReturned(Boolean returned) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE returned = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setBoolean(1, returned);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByCustomerId(int customerId) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE customer_id = ?&quot;;</b>
 &nbsp;        try {
 <b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, customerId);</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookId(int bookId) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ?&quot;;</b>
 &nbsp;        try {
 <b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLateLends() {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE return_date &lt; ? AND returned = false&quot;;</b>
 &nbsp;        try {
 <b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="fc">&nbsp;            preparedStatement.setDate(1, Date.valueOf(LocalDate.now()));</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByReturnDate(LocalDate returnDate) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE return_date = ?&quot;;</b>
 &nbsp;        try {
 <b class="fc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="fc">&nbsp;            preparedStatement.setDate(1, Date.valueOf(returnDate));</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByAllReturned(int bookId, int customerId, LocalDate returnDate, boolean returned) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND return_date = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
@@ -278,16 +282,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;            preparedStatement.setInt(2, customerId);</b>
 <b class="nc">&nbsp;            preparedStatement.setDate(3, Date.valueOf(returnDate));</b>
 <b class="nc">&nbsp;            preparedStatement.setBoolean(4, returned);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByAll(int bookId, int customerId, LocalDate returnDate) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND return_date = ?&quot;;</b>
 &nbsp;        try {
@@ -295,16 +299,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
 <b class="fc">&nbsp;            preparedStatement.setInt(2, customerId);</b>
 <b class="fc">&nbsp;            preparedStatement.setDate(3, Date.valueOf(returnDate));</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookIdCustomerIdReturned(int bookId, int customerId, boolean returned) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND customer_id = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
@@ -312,16 +316,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
 <b class="fc">&nbsp;            preparedStatement.setInt(2, customerId);</b>
 <b class="fc">&nbsp;            preparedStatement.setBoolean(3, returned);</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookIdReturnDateReturned(int bookId, LocalDate returnDate, boolean returned) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND return_date = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
@@ -329,16 +333,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
 <b class="fc">&nbsp;            preparedStatement.setDate(2, Date.valueOf(returnDate));</b>
 <b class="fc">&nbsp;            preparedStatement.setBoolean(3, returned);</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByCustomerIdReturnDateReturned(int customerId, LocalDate returnDate, boolean returned) {
-<b class="fc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;        Connection connection = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE customer_id = ? AND return_date = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
@@ -346,108 +350,109 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            preparedStatement.setInt(1, customerId);</b>
 <b class="fc">&nbsp;            preparedStatement.setDate(2, Date.valueOf(returnDate));</b>
 <b class="fc">&nbsp;            preparedStatement.setBoolean(3, returned);</b>
-<b class="fc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="fc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookIdCustomerId(int bookId, int customerId) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND customer_id = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
 <b class="nc">&nbsp;            preparedStatement.setInt(2, customerId);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookIdReturnDate(int bookId, LocalDate returnDate) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND return_date = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
 <b class="nc">&nbsp;            preparedStatement.setDate(2, Date.valueOf(returnDate));</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByBookIdReturned(int bookId, boolean returned) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE book_id = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setInt(1, bookId);</b>
 <b class="nc">&nbsp;            preparedStatement.setBoolean(2, returned);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByCustomerIdReturnDate(int customerId, LocalDate returnDate) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE customer_id = ? AND return_date = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setInt(1, customerId);</b>
 <b class="nc">&nbsp;            preparedStatement.setDate(2, Date.valueOf(returnDate));</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByCustomerIdReturned(int customerId, boolean returned) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE customer_id = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setInt(1, customerId);</b>
 <b class="nc">&nbsp;            preparedStatement.setBoolean(2, returned);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Lends&gt; getLendsByReturnDateReturned(LocalDate returnDate, boolean returned) {
-<b class="nc">&nbsp;        List&lt;Lends&gt; lends = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;        Connection connection = getConnection();</b>
 <b class="nc">&nbsp;        String query = &quot;SELECT * FROM lends WHERE return_date = ? AND returned = ?&quot;;</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement preparedStatement = connection.prepareStatement(query);</b>
 <b class="nc">&nbsp;            preparedStatement.setDate(1, Date.valueOf(returnDate));</b>
 <b class="nc">&nbsp;            preparedStatement.setBoolean(2, returned);</b>
-<b class="nc">&nbsp;            lends = getLendsByStatement(preparedStatement);</b>
+<b class="nc">&nbsp;            return getLendsByStatement(preparedStatement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized int getNotReturnedLendsCount() {
@@ -460,11 +465,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;            if (resultSet.next()) {</b>
 <b class="nc">&nbsp;                count = resultSet.getInt(1);</b>
 &nbsp;            }
+<b class="nc">&nbsp;            return count;</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(connection);</b>
-<b class="nc">&nbsp;        return count;</b>
+<b class="nc">&nbsp;        return 0;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;VirtualLend&gt; getLateLendsNotification() {
@@ -482,11 +489,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;                VirtualLend lend = new VirtualLend(resultSet.getString(&quot;title&quot;), resultSet.getString(&quot;email&quot;), resultSet.getString(&quot;name&quot;), resultSet.getDate(&quot;return_date&quot;).toLocalDate());</b>
 <b class="fc">&nbsp;                lends.add(lend);</b>
 &nbsp;            }
+<b class="fc">&nbsp;            return lends;</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(connection);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(connection);</b>
-<b class="fc">&nbsp;        return lends;</b>
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    /**
@@ -530,7 +539,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2025-01-16 09:56</div>
+    <div style="float:right;">generated on 2025-01-16 15:58</div>
 </div>
 </body>
 </html>

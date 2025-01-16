@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * Class to represent a virtual lend
+ * Class that represent a virtual lend
  */
 public class VirtualLend implements Serializable{
 
-    private String bookTitle;
-    private String customerEmail;
-    private String customerName;
-    private LocalDate returnDate;
+    private String bookTitle; //book's title
+    private String customerEmail; //customer's email
+    private String customerName;  //customer's name
+    private LocalDate returnDate; //lend's return date
 
     /**
      * Constructor

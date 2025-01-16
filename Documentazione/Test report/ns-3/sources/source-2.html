@@ -72,10 +72,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    71,1%
+    77,9%
   </span>
   <span class="absValue">
-    (140/197)
+    (155/199)
   </span>
 </td>
 </tr>
@@ -95,7 +95,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import prj.library.utils.CLIUtils;
 &nbsp;import static prj.library.database.DatabaseController.*;
 &nbsp;import java.sql.*;
-&nbsp;import java.util.ArrayList;
 &nbsp;import java.util.List;
 &nbsp;
 &nbsp;/**
@@ -118,8 +117,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            statement.executeUpdate();</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(conn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized void updateCustomer(Customer customer) {
@@ -135,8 +135,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            statement.executeUpdate();</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(conn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized void deleteCustomer(Customer customer) {
@@ -148,8 +149,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            statement.executeUpdate();</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        closeConnection(conn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized Customer readCustomer(int id) {
@@ -159,12 +161,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            PreparedStatement statement = conn.prepareStatement(query);</b>
 <b class="fc">&nbsp;            statement.setInt(1, id);</b>
 <b class="fc">&nbsp;            ResultSet rst = statement.executeQuery();</b>
-<b class="pc">&nbsp;            if (rst.next()) return CustomerExtractor(rst);</b>
+<b class="pc">&nbsp;            if (rst.next()) return customerExtractor(rst);</b>
 &nbsp;
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -177,8 +180,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -191,8 +195,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -205,6 +210,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
@@ -215,12 +222,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        try {
 <b class="nc">&nbsp;            PreparedStatement statement = conn.prepareStatement(query);</b>
 <b class="nc">&nbsp;            List&lt;Customer&gt; res = getCustomers(statement);</b>
-<b class="nc">&nbsp;            closeConnection(conn);</b>
 <b class="nc">&nbsp;            return res;</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
-<b class="nc">&nbsp;            return new ArrayList&lt;&gt;();</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Customer&gt; searchCustomerByAddress(String address) {
@@ -230,13 +238,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            PreparedStatement statement = conn.prepareStatement(query);</b>
 <b class="fc">&nbsp;            statement.setString(1, address);</b>
 <b class="fc">&nbsp;            List&lt;Customer&gt; res = getCustomers(statement);</b>
-<b class="fc">&nbsp;            closeConnection(conn);</b>
 <b class="fc">&nbsp;            return res;</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
-<b class="nc">&nbsp;            return new ArrayList&lt;&gt;();</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-&nbsp;
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Customer&gt; searchCustomerByNameAndPhoneNumber(String name, String phoneNumber) {
@@ -249,8 +257,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -264,8 +273,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -279,8 +289,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -294,8 +305,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -309,8 +321,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -324,8 +337,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -340,24 +354,25 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Customer&gt; searchCustomerByNameAndPhoneNumberAndAddress(String name, String phoneNumber, String address) {
 <b class="fc">&nbsp;        Connection conn = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM customers WHERE name = ? AND phone = ? AND address = ?&quot;;</b>
-&nbsp;        try {
-<b class="fc">&nbsp;            PreparedStatement statement = conn.prepareStatement(query);</b>
+<b class="fc">&nbsp;        try (PreparedStatement statement = conn.prepareStatement(query)) {</b>
 <b class="fc">&nbsp;            statement.setString(1, name);</b>
 <b class="fc">&nbsp;            statement.setString(2, phoneNumber);</b>
 <b class="fc">&nbsp;            statement.setString(3, address);</b>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -372,24 +387,25 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public synchronized List&lt;Customer&gt; searchCustomerByPhoneNumberAndEmailAndAddress(String phoneNumber, String email, String address) {
 <b class="fc">&nbsp;        Connection conn = getConnection();</b>
 <b class="fc">&nbsp;        String query = &quot;SELECT * FROM customers WHERE phone = ? AND email = ? AND address = ?&quot;;</b>
-&nbsp;        try {
-<b class="fc">&nbsp;            PreparedStatement statement = conn.prepareStatement(query);</b>
+<b class="fc">&nbsp;        try (PreparedStatement statement = conn.prepareStatement(query)) {</b>
 <b class="fc">&nbsp;            statement.setString(1, phoneNumber);</b>
 <b class="fc">&nbsp;            statement.setString(2, email);</b>
 <b class="fc">&nbsp;            statement.setString(3, address);</b>
 <b class="fc">&nbsp;            return getCustomers(statement);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        closeConnection(conn);</b>
 <b class="nc">&nbsp;        return null;</b>
 &nbsp;    }
 &nbsp;
@@ -407,8 +423,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;            return res;</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
-<b class="nc">&nbsp;            return new ArrayList&lt;&gt;();</b>
+&nbsp;        } finally {
+<b class="fc">&nbsp;            closeConnection(conn);</b>
 &nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
 &nbsp;
 &nbsp;    }
 &nbsp;
@@ -424,7 +442,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;        ObservableList&lt;Customer&gt; customers = FXCollections.observableArrayList();</b>
 &nbsp;        try {
 <b class="fc">&nbsp;            while (resultSet.next()) {</b>
-<b class="fc">&nbsp;                customers.add(CustomerExtractor(resultSet));</b>
+<b class="fc">&nbsp;                customers.add(customerExtractor(resultSet));</b>
 &nbsp;            }
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(&quot;Database error: &quot; + e.getMessage());</b>
@@ -439,7 +457,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * @return Customer
 &nbsp;     * @throws SQLException if a database error occurs
 &nbsp;     */
-&nbsp;    private Customer CustomerExtractor(ResultSet rst) throws SQLException {
+&nbsp;    private Customer customerExtractor(ResultSet rst) throws SQLException {
 <b class="fc">&nbsp;        Customer customer = new Customer();</b>
 <b class="fc">&nbsp;        customer.setId(rst.getInt(&quot;id_c&quot;));</b>
 <b class="fc">&nbsp;        customer.setName(rst.getString(&quot;name&quot;));</b>
@@ -472,7 +490,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2025-01-16 09:56</div>
+    <div style="float:right;">generated on 2025-01-16 15:58</div>
 </div>
 </body>
 </html>

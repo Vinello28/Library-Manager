@@ -88,7 +88,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;public class Server {
 &nbsp;    private final int port; //port to listen on
-<b class="nc">&nbsp;    private ExecutorService pool = Executors.newFixedThreadPool(10); //thread pool</b>
+<b class="nc">&nbsp;    private final ExecutorService clientHandlerThreadPool = Executors.newFixedThreadPool(10); //thread pool</b>
 &nbsp;    private static EmailNotificationService notificationService;
 &nbsp;
 <b class="nc">&nbsp;    public Server() {</b>
@@ -111,7 +111,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;            while (true) {
 <b class="nc">&nbsp;                Socket clientSocket = serverSocket.accept(); //accept new connection</b>
-<b class="nc">&nbsp;                pool.execute(new ClientHandler(clientSocket)); //handle client in a new client handler</b>
+<b class="nc">&nbsp;                clientHandlerThreadPool.execute(new ClientHandler(clientSocket)); //handle client in a new client handler</b>
 &nbsp;            }
 &nbsp;        } catch (IOException e) {
 <b class="nc">&nbsp;            CLIUtils.serverCriticalError(e.getMessage());</b>
@@ -154,7 +154,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2025-01-16 09:56</div>
+    <div style="float:right;">generated on 2025-01-16 15:58</div>
 </div>
 </body>
 </html>
