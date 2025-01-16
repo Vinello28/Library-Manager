@@ -32,8 +32,9 @@ public class BookDAO implements BookDAOInterface {
             pstmt.executeUpdate();
         }catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
     }
 
     public synchronized Book readBook(int id) {
@@ -48,8 +49,9 @@ public class BookDAO implements BookDAOInterface {
             }
         }catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -66,8 +68,9 @@ public class BookDAO implements BookDAOInterface {
             pstmt.executeUpdate();
         }catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
     }
 
     public synchronized void deleteBook(int id) {
@@ -78,8 +81,9 @@ public class BookDAO implements BookDAOInterface {
             pstmt.executeUpdate();
         }catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
     }
 
     public synchronized List<Book> getAllBooks() {
@@ -89,8 +93,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -102,8 +107,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -115,8 +121,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -128,8 +135,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -141,8 +149,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -155,8 +164,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -169,8 +179,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -183,8 +194,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -197,8 +209,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -225,8 +238,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -240,8 +254,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -255,8 +270,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -269,9 +285,10 @@ public class BookDAO implements BookDAOInterface {
             pstmt.setInt(3, year);
             return getBooks(pstmt);
         } catch (SQLException e) {
-        CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+            CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -285,8 +302,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -301,8 +319,9 @@ public class BookDAO implements BookDAOInterface {
             return getBooks(pstmt);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
