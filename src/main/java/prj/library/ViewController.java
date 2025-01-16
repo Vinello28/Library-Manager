@@ -637,8 +637,6 @@ public class ViewController {
     public void onAlertClick(){
         Boolean tmp = clientController.sendAlerts();
 
-        //TODO waiting message
-
         CLIUtils.clientInfo("sending mail notifications to customers with late returns");
 
         if (tmp) {
