@@ -74,17 +74,17 @@ public class LendsDAO implements LendsDAOInterface {
     }
 
     public synchronized Lends readLend(int id) {
-        Lends lend = null;
         Connection connection = getConnection();
         String query = "SELECT * FROM lends WHERE lend_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-
+            
+            Lends lend = null;
             if (resultSet.next()) {
                 lend = new Lends(resultSet.getInt("book_id"), resultSet.getInt("customer_id"), resultSet.getDate("return_date").toLocalDate(), resultSet.getBoolean("returned"));
-                lend.setId(resultSet.getInt("id"));
+                lend.setId(resultSet.getInt("lend_id"));
             }
             return lend;
         } catch (SQLException e) {
