@@ -21,14 +21,15 @@ import java.util.Properties;
  * Service to send email notifications to customers
  */
 public class EmailNotificationService {
-    private final String username;
-    private final String password;
-    private final String smtpHost;
-    private final String smtpPort;
-    private final LendsDAO lendDAO;
+    private final String username; //email address
+    private final String password; //email password
+    private final String smtpHost; //smtp host
+    private final String smtpPort; //smtp port
+    private final LendsDAO lendDAO; //DAO to access the database
 
     /**
      * Constructor
+     * loads the email configuration from the properties file
      * @param lendDAO the DAO to access the database
      */
     public EmailNotificationService(LendsDAO lendDAO) {
@@ -45,17 +46,17 @@ public class EmailNotificationService {
      */
     private Session createSession() {
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", smtpHost);
-        props.put("mail.smtp.port", smtpPort);
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.auth", "true"); //enable smtp authentication
+        props.put("mail.smtp.starttls.enable", "true"); //enable tls
+        props.put("mail.smtp.host", smtpHost); //set smtp host
+        props.put("mail.smtp.port", smtpPort); //set smtp port
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com"); //trust the smtp host
 
 
         return Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(username, password); //authenticate the email
             }
         });
     }
@@ -69,16 +70,16 @@ public class EmailNotificationService {
      */
     public void sendExpirationNotification(String toEmail, String customerName, String bookTitle, LocalDate dueDate) {
         try {
-            Session session = createSession();
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("Book return reminder");
+            Session session = createSession(); //create a new session
+            Message message = new MimeMessage(session); //create a new message
+            message.setFrom(new InternetAddress(username)); //set the sender
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); //set the recipient
+            message.setSubject("Book return reminder"); //set the subject
 
             String content = String.format(
                     "Hi %s !,\n\n" +
-                            "We remind you that your book's lend \"%s\" ends on %s.\n" +
-                            "Please return the book within the expiration date.\n\n" +
+                            "We remind you that your book's lend \"%s\" ended on %s.\n" +
+                            "Please return the book as soon as possible.\n\n" +
                             "Have a nice day!,\nThe Library Team",
                     customerName, bookTitle, dueDate);
 
@@ -94,14 +95,14 @@ public class EmailNotificationService {
      * Check for expiring loans and send notifications
      */
     public void checkAndSendNotifications() {
-        List<VirtualLend> expiringLoans = lendDAO.getLateLendsNotification();
+        List<VirtualLend> expiringLends = lendDAO.getLateLendsNotification();
 
-        for (VirtualLend loan : expiringLoans) {
+        for (VirtualLend lend : expiringLends) {
             sendExpirationNotification(
-                    loan.getCustomerEmail(),
-                    loan.getCustomerName(),
-                    loan.getBookTitle(),
-                    loan.getReturnDate()
+                    lend.getCustomerEmail(),
+                    lend.getCustomerName(),
+                    lend.getBookTitle(),
+                    lend.getReturnDate()
             );
         }
     }

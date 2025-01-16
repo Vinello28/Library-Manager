@@ -135,7 +135,11 @@ public class ViewController {
     private Label labelCount;
 
 
-
+    /**
+     * Constructor
+     * <p>
+     * Initialize the client controller
+     */
     public ViewController() {
         try {
             clientController = new ClientController();
@@ -152,7 +156,7 @@ public class ViewController {
 
         hideAllPanes();
 
-        //Set up the home view
+        //Setting up the home view
         showPane(homePane);
 
         initHomeTableView();
@@ -165,7 +169,7 @@ public class ViewController {
 
         loadBooks();
 
-        //Add listener to the ListView
+        //Add listener to ListView
         customersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 //Update TextFields with selected customer data
@@ -188,7 +192,6 @@ public class ViewController {
         String year = yearABTextField.getText();
         String copies = copiesABTextField.getText();
 
-
         if(title.isEmpty() || author.isEmpty() || genre == null || year.isEmpty() || copies.isEmpty()) {
             showErrorDialog("Error", "Invalid input", "Please fill all fields.");
             return;
@@ -197,7 +200,6 @@ public class ViewController {
         try {
             int yearInt = Integer.parseInt(year);
             int copiesInt = Integer.parseInt(copies);
-
             Book book = new Book(title, author, yearInt, genre, copiesInt);
             clientController.createBook(book);
         } catch (NumberFormatException e) {
@@ -256,7 +258,7 @@ public class ViewController {
         Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();
 
         if (selectedBook == null) {
-            System.out.println("No book selected for editing.");
+            showErrorDialog("Warning", "Selection error", "No books selected for editing");
             return;
         }
 
@@ -330,7 +332,6 @@ public class ViewController {
         final Lends[] lend = new Lends[1];
 
         if (selectedBook == null) {
-            CLIUtils.clientInfo("No book selected for editing.");
             showErrorDialog("Error", "No book selected", "Please select a book to lend.");
             return;
         }
@@ -344,17 +345,17 @@ public class ViewController {
         Dialog<Book> dialog = new Dialog<>();
         dialog.setTitle("Lend Book");
 
-        // Set the button types.
+        //Set button types
         ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-        // Create the fields and populate with current book data.
+        //Create the fields and populate with current book data
         ChoiceBox<Customer> customerChoiceBox = new ChoiceBox<>();
         customerChoiceBox.getItems().addAll(clientController.getCustomers());
         DatePicker returnDatePicker = new DatePicker();
         Label booktitleLabel = new Label(selectedBook.getTitle());
 
-        // Create a grid pane and add the fields
+        //Create a grid pane and add the fields
         GridPane grid = new GridPane();
         grid.add(new Label("Chose customer:"), 0, 0);
         grid.add(customerChoiceBox, 1, 0);
@@ -366,7 +367,7 @@ public class ViewController {
         dialog.getDialogPane().setContent(grid);
         lend[0] = null;
 
-        // Convert the result to a Book object when the save button is clicked.
+        //Convert the result to a Book object when the save button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 if(clientController.readBook(selectedBook.getId()).getCopies() < 1) {
@@ -401,7 +402,6 @@ public class ViewController {
     @FXML
     protected void onSearchLendButtonClick(){
         searchLendTableView.getItems().clear();
-
         String title = titleLendTextField.getText();
         LocalDate date = returnLendDatePicker.getValue();
         String cell = phoneLendTextField.getText();
@@ -637,6 +637,8 @@ public class ViewController {
     public void onAlertClick(){
         Boolean tmp = clientController.sendAlerts();
 
+        //TODO waiting message
+
         CLIUtils.clientInfo("sending mail notifications to customers with late returns");
 
         if (tmp) {
@@ -667,7 +669,6 @@ public class ViewController {
      * @param tableView the table view to show the books on
      */
     private void showBooksOnTableView(List<Book> books, TableView tableView) {
-
         if(books == null) {
             showErrorDialog("Error", "Critical error", "Could not connect to the server. Please try again later.");
             return;
@@ -690,24 +691,32 @@ public class ViewController {
      * Initializes the home table view.
      */
     private void initHomeTableView() {
-        idHColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        titleHColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        authorHColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-        genreHColumn.setCellValueFactory(new PropertyValueFactory<>( "genre"));
-        yearHColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
-        copiesHColumn.setCellValueFactory(new PropertyValueFactory<>("copies"));
+        initTableView(idHColumn, titleHColumn, authorHColumn, genreHColumn, yearHColumn, copiesHColumn);
+    }
+
+    /**
+     * Initialize TableView columns
+     * @param idColumn the book's id column
+     * @param titleColumn the book's title column
+     * @param authorColumn the book's author column
+     * @param genreColumn the book's genre column
+     * @param yearColumn the book's year column
+     * @param copiesColumn the book's copies column
+     */
+    private void initTableView(TableColumn<Book, Integer> idColumn, TableColumn<Book, String> titleColumn, TableColumn<Book, String> authorColumn, TableColumn<Book, Genre> genreColumn, TableColumn<Book, Integer> yearColumn, TableColumn<Book, Integer> copiesColumn) {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        genreColumn.setCellValueFactory(new PropertyValueFactory<>( "genre"));
+        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+        copiesColumn.setCellValueFactory(new PropertyValueFactory<>("copies"));
     }
 
     /**
      * Initializes the search table view.
      */
     private void initSearchTableView() {
-        idSColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        titleSColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        authorSColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-        genreSColumn.setCellValueFactory(new PropertyValueFactory<>( "genre"));
-        yearSColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
-        copiesSColumn.setCellValueFactory(new PropertyValueFactory<>("copies"));
+        initTableView(idSColumn, titleSColumn, authorSColumn, genreSColumn, yearSColumn, copiesSColumn);
     }
 
     /**

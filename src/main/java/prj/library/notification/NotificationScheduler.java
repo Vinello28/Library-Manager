@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import prj.library.utils.CLIUtils;
 
 /**
  * Class to schedule the email notification service
@@ -21,7 +22,7 @@ public class NotificationScheduler {
         try {
             Platform.startup(() -> {});
         } catch (IllegalStateException e) {
-            // Il toolkit è già inizializzato, ignora l'errore
+            CLIUtils.serverError("NotificationScheduler already started");
         }
     }
 
@@ -35,7 +36,7 @@ public class NotificationScheduler {
                 return new Task<>() {
                     @Override
                     protected Void call() {
-                        notificationService.checkAndSendNotifications();
+                        notificationService.checkAndSendNotifications(); //send email notifications
                         return null;
                     }
                 };

@@ -10,32 +10,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the BookDAO class.
- * 
+ * <p>
  * This class contains test methods to verify the functionality of the BookDAO class,
  * which is responsible for performing CRUD operations on Book objects in the database.
- * 
+ * <p>
  * The following methods are tested:
- * 
- * - setUp(): Sets up the test environment before each test method is executed.
- * - createBook(): Tests the creation of a new book in the database.
- * - readBook(): Tests reading a book from the database by its ID.
- * - updateBook(): Tests updating an existing book in the database.
- * - deleteBook(): Tests deleting a book from the database.
- * - getBooksByTitle(): Tests retrieving books from the database by their title.
- * - getBooksByGenre(): Tests retrieving books from the database by their genre.
- * - getBooksByAuthor(): Tests retrieving books from the database by their author.
- * - getBooksByYear(): Tests retrieving books from the database by their publication year.
- * - getBooksByTitleAuthor(): Tests retrieving books from the database by their title and author.
- * - getBooksByTitleGenre(): Tests retrieving books from the database by their title and genre.
- * - getBooksByTitleYear(): Tests retrieving books from the database by their title and publication year.
- * - getBooksByAuthorGenre(): Tests retrieving books from the database by their author and genre.
- * - getBooksByAuthorYear(): Tests retrieving books from the database by their author and publication year.
- * - getBooksByGenreYear(): Tests retrieving books from the database by their genre and publication year.
- * - getBooksByTitleAuthorGenre(): Tests retrieving books from the database by their title, author, and genre.
- * - getBooksByTitleAuthorYear(): Tests retrieving books from the database by their title, author, and publication year.
- * - getBooksByTitleGenreYear(): Tests retrieving books from the database by their title, genre, and publication year.
- * - getBooksByAuthorGenreYear(): Tests retrieving books from the database by their author, genre, and publication year.
- * - getBooksByAllParam(): Tests retrieving books from the database by their title, author, genre, and publication year.
+ * <p>
+ * - setUp(): Sets up the test environment before each test method is executed.<p>
+ * - createBook(): Tests the creation of a new book in the database.<p>
+ * - readBook(): Tests reading a book from the database by its ID.<p>
+ * - updateBook(): Tests updating an existing book in the database.<p>
+ * - deleteBook(): Tests deleting a book from the database.<p>
+ * - getBooksByTitle(): Tests retrieving books from the database by their title.<p>
+ * - getBooksByGenre(): Tests retrieving books from the database by their genre.<p>
+ * - getBooksByAuthor(): Tests retrieving books from the database by their author.<p>
+ * - getBooksByYear(): Tests retrieving books from the database by their publication year.<p>
+ * - getBooksByTitleAuthor(): Tests retrieving books from the database by their title and author.<p>
+ * - getBooksByTitleGenre(): Tests retrieving books from the database by their title and genre.<p>
+ * - getBooksByTitleYear(): Tests retrieving books from the database by their title and publication year.<p>
+ * - getBooksByAuthorGenre(): Tests retrieving books from the database by their author and genre.<p>
+ * - getBooksByAuthorYear(): Tests retrieving books from the database by their author and publication year.<p>
+ * - getBooksByGenreYear(): Tests retrieving books from the database by their genre and publication year.<p>
+ * - getBooksByTitleAuthorGenre(): Tests retrieving books from the database by their title, author, and genre.<p>
+ * - getBooksByTitleAuthorYear(): Tests retrieving books from the database by their title, author, and publication year.<p>
+ * - getBooksByTitleGenreYear(): Tests retrieving books from the database by their title, genre, and publication year.<p>
+ * - getBooksByAuthorGenreYear(): Tests retrieving books from the database by their author, genre, and publication year.<p>
+ * - getBooksByAllParam(): Tests retrieving books from the database by their title, author, genre, and publication year.<p>
  */
 class BookDAOTest {
 

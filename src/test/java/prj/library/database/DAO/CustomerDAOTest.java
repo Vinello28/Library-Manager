@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import prj.library.models.Customer;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
  * Unit tests for the CustomerDAO class.<p>
  * <p>
@@ -78,7 +77,6 @@ class CustomerDAOTest {
         Customer customer1 = customerDAO.searchCustomerByName("John Doe").get(0);
 
         customerDAO.deleteCustomer(customer1);
-
 
         assertEquals(0, customerDAO.searchCustomerByName("John Doe").size());
     }

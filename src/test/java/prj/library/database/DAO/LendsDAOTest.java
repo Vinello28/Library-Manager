@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
  * Unit tests for the LendsDAO class.
  * <p>
@@ -39,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * and inserting a test book and customer into the database. The tearDown method cleans up resources by deleting<p>
  * the test book and customer entries from the database.<p>
  */
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class) //Ordering test to avoid database errors
 class LendsDAOTest {
     private static LendsDAO lendsDAO;
     private static Lends testLend;
@@ -135,7 +134,6 @@ class LendsDAOTest {
     @Test
     @Order(5)
     void testGetLendsByBookId() {
-        
         List<Lends> bookLends = lendsDAO.getLendsByBookId(TEST_BOOK_ID);
 
         assertFalse(bookLends.isEmpty(), "Book lends list should not be empty");
@@ -146,11 +144,9 @@ class LendsDAOTest {
     @Test
     @Order(6)
     void testGetLateLends() {
-        
         Lends lateLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID,
                 LocalDate.now().minusDays(1), false);
         lendsDAO.createLend(lateLend);
-
 
         List<Lends> lateLends = lendsDAO.getLateLends();
 
@@ -166,9 +162,7 @@ class LendsDAOTest {
     @Test
     @Order(7)
     void testGetLendsByReturnDate() {
-        
         List<Lends> dateLends = lendsDAO.getLendsByReturnDate(TEST_RETURN_DATE);
-
         
         assertFalse(dateLends.isEmpty(), "Date lends list should not be empty");
         assertTrue(dateLends.stream().anyMatch(l -> l.getReturnDate().equals(TEST_RETURN_DATE)),
@@ -178,7 +172,6 @@ class LendsDAOTest {
     @Test
     @Order(8)
     void testGetLendsByAll() {
-        
         List<Lends> allFilteredLends = lendsDAO.getLendsByAll(
                 TEST_BOOK_ID, TEST_CUSTOMER_ID, TEST_RETURN_DATE);
 
@@ -194,21 +187,17 @@ class LendsDAOTest {
     @Test
     @Order(9)
     void testDeleteLend() {
-        
         lendsDAO.deleteLend(testLend);
         Lends deletedLend = lendsDAO.readLend(testLend.getId());
-
         
         assertNull(deletedLend, "Lend should be deleted");
     }
 
     @Test
     void testGetLendsByBookIdCustomerIdReturned() {
-        
         Lends newLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID, TEST_RETURN_DATE, true);
         lendsDAO.createLend(newLend);
 
-        
         List<Lends> filteredLends = lendsDAO.getLendsByBookIdCustomerIdReturned(
                 TEST_BOOK_ID, TEST_CUSTOMER_ID, true);
 
@@ -226,15 +215,13 @@ class LendsDAOTest {
 
     @Test
     void testGetLendsByBookIdReturnDateReturned() {
-        
         Lends newLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID, TEST_RETURN_DATE, true);
         lendsDAO.createLend(newLend);
 
-        
         List<Lends> filteredLends = lendsDAO.getLendsByBookIdReturnDateReturned(
                 TEST_BOOK_ID, TEST_RETURN_DATE, true);
 
-        
+
         assertFalse(filteredLends.isEmpty(), "Filtered lends list should not be empty");
         assertTrue(filteredLends.stream().anyMatch(l ->
                         l.getBookId() == TEST_BOOK_ID &&
@@ -248,7 +235,6 @@ class LendsDAOTest {
 
     @Test
     void testGetLendsByCustomerIdReturnDateReturned() {
-
         Lends newLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID, TEST_RETURN_DATE, true);
         lendsDAO.createLend(newLend);
 
@@ -267,7 +253,6 @@ class LendsDAOTest {
 
     @Test
     void testGetLateLendsNotification(){
-
         Lends lateLend = new Lends(TEST_BOOK_ID, TEST_CUSTOMER_ID,
                 LocalDate.now().minusDays(10), false);
         lendsDAO.createLend(lateLend);
