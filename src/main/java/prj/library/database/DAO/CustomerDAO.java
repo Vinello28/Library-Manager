@@ -6,7 +6,6 @@ import prj.library.models.Customer;
 import prj.library.utils.CLIUtils;
 import static prj.library.database.DatabaseController.*;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +28,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             statement.executeUpdate();
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
     }
 
     public synchronized void updateCustomer(Customer customer) {
@@ -46,8 +46,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             statement.executeUpdate();
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
     }
 
     public synchronized void deleteCustomer(Customer customer) {
@@ -59,8 +60,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             statement.executeUpdate();
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
     }
 
     public synchronized Customer readCustomer(int id) {
@@ -70,12 +72,13 @@ public class CustomerDAO implements CustomerDAOInterface {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet rst = statement.executeQuery();
-            if (rst.next()) return CustomerExtractor(rst);
+            if (rst.next()) return customerExtractor(rst);
 
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -88,8 +91,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -102,8 +106,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -116,6 +121,8 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
         return null;
     }
@@ -126,12 +133,13 @@ public class CustomerDAO implements CustomerDAOInterface {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             List<Customer> res = getCustomers(statement);
-            closeConnection(conn);
             return res;
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
-            return new ArrayList<>();
+        } finally {
+            closeConnection(conn);
         }
+        return null;
     }
 
     public synchronized List<Customer> searchCustomerByAddress(String address) {
@@ -141,13 +149,13 @@ public class CustomerDAO implements CustomerDAOInterface {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, address);
             List<Customer> res = getCustomers(statement);
-            closeConnection(conn);
             return res;
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
-            return new ArrayList<>();
+        } finally {
+            closeConnection(conn);
         }
-
+        return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndPhoneNumber(String name, String phoneNumber) {
@@ -160,8 +168,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -175,8 +184,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -190,8 +200,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -205,8 +216,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -220,8 +232,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -235,8 +248,9 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -251,24 +265,25 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByNameAndPhoneNumberAndAddress(String name, String phoneNumber, String address) {
         Connection conn = getConnection();
         String query = "SELECT * FROM customers WHERE name = ? AND phone = ? AND address = ?";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, phoneNumber);
             statement.setString(3, address);
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -283,24 +298,25 @@ public class CustomerDAO implements CustomerDAOInterface {
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
     public synchronized List<Customer> searchCustomerByPhoneNumberAndEmailAndAddress(String phoneNumber, String email, String address) {
         Connection conn = getConnection();
         String query = "SELECT * FROM customers WHERE phone = ? AND email = ? AND address = ?";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, phoneNumber);
             statement.setString(2, email);
             statement.setString(3, address);
             return getCustomers(statement);
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
+        } finally {
+            closeConnection(conn);
         }
-        closeConnection(conn);
         return null;
     }
 
@@ -318,8 +334,10 @@ public class CustomerDAO implements CustomerDAOInterface {
             return res;
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
-            return new ArrayList<>();
+        } finally {
+            closeConnection(conn);
         }
+        return null;
 
     }
 
@@ -335,7 +353,7 @@ public class CustomerDAO implements CustomerDAOInterface {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try {
             while (resultSet.next()) {
-                customers.add(CustomerExtractor(resultSet));
+                customers.add(customerExtractor(resultSet));
             }
         } catch (SQLException e) {
             CLIUtils.serverCriticalError("Database error: " + e.getMessage());
@@ -350,7 +368,7 @@ public class CustomerDAO implements CustomerDAOInterface {
      * @return Customer
      * @throws SQLException if a database error occurs
      */
-    private Customer CustomerExtractor(ResultSet rst) throws SQLException {
+    private Customer customerExtractor(ResultSet rst) throws SQLException {
         Customer customer = new Customer();
         customer.setId(rst.getInt("id_c"));
         customer.setName(rst.getString("name"));

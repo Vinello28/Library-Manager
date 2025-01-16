@@ -64,7 +64,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/135)
+    (0/131)
   </span>
 </td>
 </tr>
@@ -110,7 +110,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/136)
+    (0/132)
   </span>
 </td>
 </tr>
@@ -141,9 +141,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp; * Class that handles the client requests.
 &nbsp; */
 &nbsp;public class ClientHandler extends NetworkInterface implements Runnable {
-&nbsp;    private BookDAO bookDAO;
-&nbsp;    private LendsDAO lendDAO;
-&nbsp;    private CustomerDAO customerDAO;
+&nbsp;    private final BookDAO bookDAO;
+&nbsp;    private final LendsDAO lendDAO;
+&nbsp;    private final CustomerDAO customerDAO;
 &nbsp;    private EmailNotificationService notificationService;
 &nbsp;
 &nbsp;    public ClientHandler(Socket socket) {
@@ -151,10 +151,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        bookDAO = new BookDAO();</b>
 <b class="nc">&nbsp;        lendDAO = new LendsDAO();</b>
 <b class="nc">&nbsp;        customerDAO = new CustomerDAO();</b>
-&nbsp;
-<b class="nc">&nbsp;        notificationService = new EmailNotificationService(lendDAO);</b>
-<b class="nc">&nbsp;        NotificationScheduler scheduler = new NotificationScheduler(notificationService);</b>
-<b class="nc">&nbsp;        scheduler.startScheduler();</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @Override
@@ -244,7 +240,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;                    handleSearchCustomersOperation((CustomerMessage) message);</b>
 &nbsp;                    break;
 &nbsp;                case ALERT_ALL:
-<b class="nc">&nbsp;                    notificationService.checkAndSendNotifications();</b>
+<b class="nc">&nbsp;                    Server.sendNotification();</b>
 <b class="nc">&nbsp;                    send(MessageFactory.createMessage(Operation.GENERIC_RESPONSE, true));</b>
 &nbsp;                    break;
 &nbsp;                default:
@@ -438,8 +434,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;            case REMOVE_LEND:
 <b class="nc">&nbsp;                int id = lendMessage.getLend().getBookId();</b>
 <b class="nc">&nbsp;                lendDAO.deleteLend(lendMessage.getLend());</b>
-<b class="nc">&nbsp;                System.out.println(&quot;SERVER | INFO: Lend removed&quot;);</b>
-<b class="nc">&nbsp;                System.out.println(&quot;SERVER | DEBUG_INFO: Setting book available, id: &quot; + id);</b>
+<b class="nc">&nbsp;                CLIUtils.serverInfo(&quot;removing this lend -&gt; &quot; + id);</b>
 <b class="nc">&nbsp;                Book book = bookDAO.readBook(id);</b>
 <b class="nc">&nbsp;                book.setAvailable();</b>
 <b class="nc">&nbsp;                bookDAO.updateBook(book);</b>
@@ -582,7 +577,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>

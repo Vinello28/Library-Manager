@@ -60,10 +60,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    62,5%
+    66,7%
   </span>
   <span class="absValue">
-    (5/8)
+    (6/9)
   </span>
 </td>
 </tr>
@@ -79,18 +79,27 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;import java.sql.Connection;
 &nbsp;import java.sql.DriverManager;
-&nbsp;import java.sql.PreparedStatement;
 &nbsp;import java.sql.SQLException;
 &nbsp;import static prj.library.utils.CLIUtils.*;
+&nbsp;import static prj.library.utils.ConfigLoader.getProperty;
 &nbsp;
 &nbsp;/**
 &nbsp; * This class is responsible for handling the connection to the database
 &nbsp; */
 <b class="nc">&nbsp;public class DatabaseController {</b>
-<b class="fc">&nbsp;    private static String DB_URL = &quot;jdbc:mysql://localhost:3306/biblioteca&quot;;</b>
-<b class="fc">&nbsp;    private static String DB_USER = &quot;root&quot;;</b>
-<b class="fc">&nbsp;    private static String DB_PASSWORD = &quot;Aridaje68&quot;;</b>
-&nbsp;    private static Connection connection;
+&nbsp;    private static String DB_URL; //database url to connect to
+&nbsp;    private static String DB_USER; //database user
+&nbsp;    private static String DB_PASSWORD; //database password
+&nbsp;    private static Connection connection; //connection instance (to DB)
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Configures the database connection using information from the properties file
+&nbsp;     */
+&nbsp;    private static void configureDB(){
+<b class="fc">&nbsp;        DB_URL = getProperty(&quot;database.url&quot;);</b>
+<b class="fc">&nbsp;        DB_USER = getProperty(&quot;database.user&quot;);</b>
+<b class="fc">&nbsp;        DB_PASSWORD = getProperty(&quot;database.password&quot;);</b>
+&nbsp;    }
 &nbsp;
 &nbsp;    /**
 &nbsp;     * Establishes a connection to the database
@@ -98,6 +107,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     */
 &nbsp;    public static Connection getConnection() {
 &nbsp;        try {
+<b class="fc">&nbsp;            configureDB();</b>
 <b class="fc">&nbsp;            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);</b>
 &nbsp;        } catch (SQLException e) {
 <b class="nc">&nbsp;            serverCriticalError(&quot;Database connection error --&gt; &quot; + e.getMessage());</b>
@@ -141,7 +151,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>

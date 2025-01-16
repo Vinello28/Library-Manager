@@ -64,7 +64,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/30)
+    (0/29)
   </span>
 </td>
 </tr>
@@ -110,7 +110,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/32)
+    (0/31)
   </span>
 </td>
 </tr>
@@ -144,14 +144,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp; * Service to send email notifications to customers
 &nbsp; */
 &nbsp;public class EmailNotificationService {
-&nbsp;    private final String username;
-&nbsp;    private final String password;
-&nbsp;    private final String smtpHost;
-&nbsp;    private final String smtpPort;
-&nbsp;    private final LendsDAO lendDAO;
+&nbsp;    private final String username; //email address
+&nbsp;    private final String password; //email password
+&nbsp;    private final String smtpHost; //smtp host
+&nbsp;    private final String smtpPort; //smtp port
+&nbsp;    private final LendsDAO lendDAO; //DAO to access the database
 &nbsp;
 &nbsp;    /**
 &nbsp;     * Constructor
+&nbsp;     * loads the email configuration from the properties file
 &nbsp;     * @param lendDAO the DAO to access the database
 &nbsp;     */
 <b class="nc">&nbsp;    public EmailNotificationService(LendsDAO lendDAO) {</b>
@@ -168,17 +169,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     */
 &nbsp;    private Session createSession() {
 <b class="nc">&nbsp;        Properties props = new Properties();</b>
-<b class="nc">&nbsp;        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);</b>
-<b class="nc">&nbsp;        props.put(&quot;mail.smtp.starttls.enable&quot;, &quot;true&quot;);</b>
-<b class="nc">&nbsp;        props.put(&quot;mail.smtp.host&quot;, smtpHost);</b>
-<b class="nc">&nbsp;        props.put(&quot;mail.smtp.port&quot;, smtpPort);</b>
-<b class="nc">&nbsp;        props.put(&quot;mail.smtp.ssl.trust&quot;, &quot;smtp.gmail.com&quot;);</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;); //enable smtp authentication</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.starttls.enable&quot;, &quot;true&quot;); //enable tls</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.host&quot;, smtpHost); //set smtp host</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.port&quot;, smtpPort); //set smtp port</b>
+<b class="nc">&nbsp;        props.put(&quot;mail.smtp.ssl.trust&quot;, &quot;smtp.gmail.com&quot;); //trust the smtp host</b>
 &nbsp;
 &nbsp;
 <b class="nc">&nbsp;        return Session.getInstance(props, new Authenticator() {</b>
 &nbsp;            @Override
 &nbsp;            protected PasswordAuthentication getPasswordAuthentication() {
-<b class="nc">&nbsp;                return new PasswordAuthentication(username, password);</b>
+<b class="nc">&nbsp;                return new PasswordAuthentication(username, password); //authenticate the email</b>
 &nbsp;            }
 &nbsp;        });
 &nbsp;    }
@@ -192,16 +193,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     */
 &nbsp;    public void sendExpirationNotification(String toEmail, String customerName, String bookTitle, LocalDate dueDate) {
 &nbsp;        try {
-<b class="nc">&nbsp;            Session session = createSession();</b>
-<b class="nc">&nbsp;            Message message = new MimeMessage(session);</b>
-<b class="nc">&nbsp;            message.setFrom(new InternetAddress(username));</b>
-<b class="nc">&nbsp;            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));</b>
-<b class="nc">&nbsp;            message.setSubject(&quot;Book return reminder&quot;);</b>
+<b class="nc">&nbsp;            Session session = createSession(); //create a new session</b>
+<b class="nc">&nbsp;            Message message = new MimeMessage(session); //create a new message</b>
+<b class="nc">&nbsp;            message.setFrom(new InternetAddress(username)); //set the sender</b>
+<b class="nc">&nbsp;            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); //set the recipient</b>
+<b class="nc">&nbsp;            message.setSubject(&quot;Book return reminder&quot;); //set the subject</b>
 &nbsp;
 <b class="nc">&nbsp;            String content = String.format(</b>
 &nbsp;                    &quot;Hi %s !,\n\n&quot; +
-&nbsp;                            &quot;We remind you that your book&#39;s lend \&quot;%s\&quot; ends on %s.\n&quot; +
-&nbsp;                            &quot;Please return the book within the expiration date.\n\n&quot; +
+&nbsp;                            &quot;We remind you that your book&#39;s lend \&quot;%s\&quot; ended on %s.\n&quot; +
+&nbsp;                            &quot;Please return the book as soon as possible.\n\n&quot; +
 &nbsp;                            &quot;Have a nice day!,\nThe Library Team&quot;,
 &nbsp;                    customerName, bookTitle, dueDate);
 &nbsp;
@@ -217,14 +218,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * Check for expiring loans and send notifications
 &nbsp;     */
 &nbsp;    public void checkAndSendNotifications() {
-<b class="nc">&nbsp;        List&lt;VirtualLend&gt; expiringLoans = lendDAO.getLateLendsNotification();</b>
-<b class="nc">&nbsp;        System.out.println(expiringLoans);</b>
-<b class="nc">&nbsp;        for (VirtualLend loan : expiringLoans) {</b>
+<b class="nc">&nbsp;        List&lt;VirtualLend&gt; expiringLends = lendDAO.getLateLendsNotification();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (VirtualLend lend : expiringLends) {</b>
 <b class="nc">&nbsp;            sendExpirationNotification(</b>
-<b class="nc">&nbsp;                    loan.getCustomerEmail(),</b>
-<b class="nc">&nbsp;                    loan.getCustomerName(),</b>
-<b class="nc">&nbsp;                    loan.getBookTitle(),</b>
-<b class="nc">&nbsp;                    loan.getReturnDate()</b>
+<b class="nc">&nbsp;                    lend.getCustomerEmail(),</b>
+<b class="nc">&nbsp;                    lend.getCustomerName(),</b>
+<b class="nc">&nbsp;                    lend.getBookTitle(),</b>
+<b class="nc">&nbsp;                    lend.getReturnDate()</b>
 &nbsp;            );
 &nbsp;        }
 &nbsp;    }
@@ -252,7 +253,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>

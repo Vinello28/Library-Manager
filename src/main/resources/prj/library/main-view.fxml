@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.ViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prj.library.ViewController">
    <top>
       <Pane prefHeight="128.0" prefWidth="1290.0" style="-fx-background-color: #0a004d;" BorderPane.alignment="CENTER">
          <children>
@@ -38,32 +26,32 @@
    <left>
       <Pane prefHeight="735.0" prefWidth="214.0" style="-fx-background-color: #102a85;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addNB" layoutX="3.0" layoutY="89.0" mnemonicParsing="false" onAction="#onAddClick" prefHeight="55.0" prefWidth="147.0" style="-fx-background-color: #102a85;" text="📖  add book" textFill="WHITE">
+            <Button fx:id="addNB" layoutX="3.0" layoutY="89.0" mnemonicParsing="false" onAction="#onAddClick" prefHeight="55.0" prefWidth="173.0" style="-fx-background-color: #102a85;" text="📖  add book" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="searchNB" layoutX="3.0" layoutY="163.0" mnemonicParsing="false" onAction="#onSearchClick" prefHeight="55.0" prefWidth="181.0" style="-fx-background-color: #102a85;" text="🔎 search books" textFill="WHITE">
+            <Button fx:id="searchNB" layoutX="3.0" layoutY="163.0" mnemonicParsing="false" onAction="#onSearchClick" prefHeight="55.0" prefWidth="211.0" style="-fx-background-color: #102a85;" text="🔎 search books" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="lendNB" layoutX="3.0" layoutY="234.0" mnemonicParsing="false" onAction="#onLendClick" prefHeight="55.0" prefWidth="141.0" style="-fx-background-color: #102a85;" text="📅  lend ops" textFill="WHITE">
+            <Button fx:id="lendNB" layoutX="3.0" layoutY="234.0" mnemonicParsing="false" onAction="#onLendClick" prefHeight="55.0" prefWidth="171.0" style="-fx-background-color: #102a85;" text="📅  lend ops" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="customerNB" layoutX="3.0" layoutY="307.0" mnemonicParsing="false" onAction="#onCustomerClick" prefHeight="55.0" prefWidth="162.0" style="-fx-background-color: #102a85;" text="👤  Customers" textFill="WHITE">
+            <Button fx:id="customerNB" layoutX="3.0" layoutY="307.0" mnemonicParsing="false" onAction="#onCustomerClick" prefHeight="55.0" prefWidth="193.0" style="-fx-background-color: #102a85;" text="👤  customers" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="homeNB" layoutX="3.0" layoutY="14.0" mnemonicParsing="false" onAction="#onHomeClick" prefHeight="55.0" prefWidth="111.0" style="-fx-background-color: #102a85;" text="🏠  home" textFill="WHITE">
+            <Button fx:id="homeNB" layoutX="3.0" layoutY="14.0" mnemonicParsing="false" onAction="#onHomeClick" prefHeight="55.0" prefWidth="136.0" style="-fx-background-color: #102a85;" text="🏠  home" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="statsNB" layoutX="3.0" layoutY="381.0" mnemonicParsing="false" onAction="#onStatsClick" prefHeight="55.0" prefWidth="111.0" style="-fx-background-color: #102a85;" text="📊  stats" textFill="WHITE">
+            <Button fx:id="statsNB" layoutX="3.0" layoutY="381.0" mnemonicParsing="false" onAction="#onStatsClick" prefHeight="55.0" prefWidth="143.0" style="-fx-background-color: #102a85;" text="📊  stats" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="20.0" />
                </font>

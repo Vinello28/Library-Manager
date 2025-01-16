@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > LendsDAOInterface</title>
+  <title>Coverage Report > BookDAOInterface</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,14 +22,14 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">prj.library.database.DAO</a>
 </div>
 
-<h1>Coverage Summary for Class: LendsDAOInterface (prj.library.database.DAO)</h1>
+<h1>Coverage Summary for Class: BookDAOInterface (prj.library.database.DAO)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">LendsDAOInterface</td>
+  <td class="name">BookDAOInterface</td>
 </tr>
 
 </table>
@@ -41,187 +41,168 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package prj.library.database.DAO;
 &nbsp;
-&nbsp;import prj.library.models.Lends;
-&nbsp;import prj.library.notification.VirtualLend;
-&nbsp;
-&nbsp;import java.time.LocalDate;
+&nbsp;import prj.library.models.Book;
+&nbsp;import prj.library.models.Genre;
 &nbsp;import java.util.List;
 &nbsp;
 &nbsp;/**
-&nbsp; * Interface for the LendsDAO class
+&nbsp; * Interface for the BookDAO class
 &nbsp; */
-&nbsp;public interface LendsDAOInterface {
+&nbsp;public interface BookDAOInterface {
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Create a new lend
-&nbsp;     * @param lend the lend to be created
+&nbsp;     * creates a new book in the database
+&nbsp;     * @param book the book to be created
 &nbsp;     */
-&nbsp;    void createLend(Lends lend);
+&nbsp;    void createBook(Book book);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Update a lend
-&nbsp;     * @param lend the lend to be updated
+&nbsp;     * deletes a book from the database
+&nbsp;     * @param id the id of the book to be deleted
 &nbsp;     */
-&nbsp;    void updateLend(Lends lend);
+&nbsp;    void deleteBook(int id);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Delete a lend
-&nbsp;     * @param lend the lend to be deleted
+&nbsp;     * updates a book in the database
+&nbsp;     * @param book the book to be updated
 &nbsp;     */
-&nbsp;    void deleteLend(Lends lend);
+&nbsp;    void updateBook(Book book);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get a lend by its id
-&nbsp;     * @param id the id of the lend
-&nbsp;     * @return the lend with the given id
+&nbsp;     * gets all books from the database
+&nbsp;     * @param id the id of the book
+&nbsp;     * @return a list of all books
 &nbsp;     */
-&nbsp;    Lends readLend(int id);
+&nbsp;    Book readBook(int id);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get all lends
-&nbsp;     * @return a list of all lends
+&nbsp;     * gets all books from the database
+&nbsp;     * @return a list of all books
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLends();
+&nbsp;    List&lt;Book&gt; getAllBooks();
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get all lends that have been returned or not
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends with specified return status
+&nbsp;     * gets books by title
+&nbsp;     * @param title the title of the book
+&nbsp;     * @return a list of books with the given title
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsReturned(Boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByTitle(String title);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get all lends by a customer id
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @return a list of all lends by the customer with the given id
+&nbsp;     * gets books by author
+&nbsp;     * @param author the author of the book
+&nbsp;     * @return a list of books with the given author
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByCustomerId(int customerId);
+&nbsp;    List&lt;Book&gt; getBooksByAuthor(String author);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get all lends by a book id
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @return a list of all lends by the book with the given id
+&nbsp;     * gets books by genre
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given genre
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByBookId(int bookId);
+&nbsp;    List&lt;Book&gt; getBooksByGenre(Genre genre);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get all late lends
-&nbsp;     * @return a list of all late lends
+&nbsp;     * gets books by year
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLateLends();
+&nbsp;    List&lt;Book&gt; getBooksByYear(int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get Lends by return date
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @return a list of all lends with the given return date
+&nbsp;     * gets books by title and author
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @return a list of books with the given title and author
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByReturnDate(LocalDate returnDate);
+&nbsp;    List&lt;Book&gt; getBooksByTitleAuthor(String title, String author);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by all parameters including returned
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by title and genre
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given title and genre
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByAllReturned(int bookId, int customerId, LocalDate returnDate, boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByTitleGenre(String title, Genre genre);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by all parameters excluding returned
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by title and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByAll(int bookId, int customerId, LocalDate returnDate);
+&nbsp;    List&lt;Book&gt; getBooksByTitleYear(String title, int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by all parameters excluding return date
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by author and genre
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given author and genre
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByBookIdCustomerIdReturned(int bookId, int customerId, boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByAuthorGenre(String author, Genre genre);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by all parameters excluding customer id
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by author and year
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given author and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByBookIdReturnDateReturned(int bookId, LocalDate returnDate, boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByAuthorYear(String author, int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by all parameters excluding book id
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by genre and year
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given genre and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByCustomerIdReturnDateReturned(int customerId, LocalDate returnDate, boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByGenreYear(Genre genre, int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by book id and customer id
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by title, author and genre
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @return a list of books with the given title, author and genre
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByBookIdCustomerId(int bookId, int customerId);
+&nbsp;    List&lt;Book&gt; getBooksByTitleAuthorGenre(String title, String author, Genre genre);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by book id and return date
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by title, author and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title, author and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByBookIdReturnDate(int bookId, LocalDate returnDate);
+&nbsp;    List&lt;Book&gt; getBooksByTitleAuthorYear(String title, String author, int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by book id and returned
-&nbsp;     * @param bookId the id of the book
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by title, genre and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title, genre and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByBookIdReturned(int bookId, boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByTitleGenreYear(String title, Genre genre, int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by customer id and return date
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by author, genre and year
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given author, genre and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByCustomerIdReturnDate(int customerId, LocalDate returnDate);
+&nbsp;    List&lt;Book&gt; getBooksByAuthorGenreYear(String author, Genre genre, int year);
 &nbsp;
 &nbsp;    /**
-&nbsp;     * Get lends by customer id and returned
-&nbsp;     * @param customerId the id of the customer
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
+&nbsp;     * gets books by title, author, genre and year
+&nbsp;     * @param title the title of the book
+&nbsp;     * @param author the author of the book
+&nbsp;     * @param genre the genre of the book
+&nbsp;     * @param year the year of the book
+&nbsp;     * @return a list of books with the given title, author, genre and year
 &nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByCustomerIdReturned(int customerId, boolean returned);
+&nbsp;    List&lt;Book&gt; getBooksByAllParam(String title, String author, Genre genre, int year);
 &nbsp;
-&nbsp;    /**
-&nbsp;     * Get lends by return date and returned
-&nbsp;     * @param returnDate the return date of the lend
-&nbsp;     * @param returned the return status of the lend
-&nbsp;     * @return a list of all lends that match the given parameters
-&nbsp;     */
-&nbsp;    List&lt;Lends&gt; getLendsByReturnDateReturned(LocalDate returnDate, boolean returned);
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Get the count of all lends that have not been returned
-&nbsp;     * @return the count of all lends that have not been returned
-&nbsp;     */
-&nbsp;    int getNotReturnedLendsCount();
-&nbsp;
-&nbsp;    /**
-&nbsp;     * Return all lends that are late and have not been returned in virtual lend format
-&nbsp;     * @return a list of all late lends in virtual lend format
-&nbsp;     */
-&nbsp;    List&lt;VirtualLend&gt; getLateLendsNotification();
 &nbsp;}
 </code>
 </pre>
@@ -246,7 +227,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>

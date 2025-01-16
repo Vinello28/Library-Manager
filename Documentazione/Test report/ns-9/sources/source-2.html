@@ -48,34 +48,34 @@ Current scope:     <a href="../../index.html">all classes</a>
   <td class="name">ConfigLoader</td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    100%
   </span>
   <span class="absValue">
-    (0/1)
+    (1/1)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    75%
   </span>
   <span class="absValue">
-    (0/4)
+    (3/4)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    50%
   </span>
   <span class="absValue">
-    (0/4)
+    (2/4)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    66,7%
   </span>
   <span class="absValue">
-    (0/12)
+    (8/12)
   </span>
 </td>
 </tr>
@@ -101,19 +101,19 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    private static Properties properties;
 &nbsp;
 &nbsp;    static {
-<b class="nc">&nbsp;        loadConfig();</b>
+<b class="fc">&nbsp;        loadConfig();</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    /**
 &nbsp;     * Method that loads configuration from the properties file
 &nbsp;     */
 &nbsp;    private static void loadConfig() {
-<b class="nc">&nbsp;        properties = new Properties();</b>
-<b class="nc">&nbsp;        try (InputStream input = ConfigLoader.class.getResourceAsStream(CONFIG_FILE)) {</b>
-<b class="nc">&nbsp;            if (input == null) {</b>
+<b class="fc">&nbsp;        properties = new Properties();</b>
+<b class="fc">&nbsp;        try (InputStream input = ConfigLoader.class.getResourceAsStream(CONFIG_FILE)) {</b>
+<b class="pc">&nbsp;            if (input == null) {</b>
 <b class="nc">&nbsp;                throw new RuntimeException(&quot;Cannot find &quot; + CONFIG_FILE);</b>
 &nbsp;            }
-<b class="nc">&nbsp;            properties.load(input);</b>
+<b class="fc">&nbsp;            properties.load(input);</b>
 &nbsp;        } catch (IOException ex) {
 <b class="nc">&nbsp;            throw new RuntimeException(&quot;Error loading configuration&quot;, ex);</b>
 &nbsp;        }
@@ -125,11 +125,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * @return the value of the property
 &nbsp;     */
 &nbsp;    public static String getProperty(String key) {
-<b class="nc">&nbsp;        String value = properties.getProperty(key);</b>
-<b class="nc">&nbsp;        if (value == null) {</b>
+<b class="fc">&nbsp;        String value = properties.getProperty(key);</b>
+<b class="pc">&nbsp;        if (value == null) {</b>
 <b class="nc">&nbsp;            throw new RuntimeException(&quot;Property &quot; + key + &quot; not found in config file&quot;);</b>
 &nbsp;        }
-<b class="nc">&nbsp;        return value;</b>
+<b class="fc">&nbsp;        return value;</b>
 &nbsp;    }
 &nbsp;}
 </code>
@@ -155,7 +155,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>

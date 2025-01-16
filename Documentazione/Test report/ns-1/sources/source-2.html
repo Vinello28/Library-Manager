@@ -59,7 +59,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/57)
+    (0/58)
   </span>
 </td>
 <td class="coverageStat">
@@ -75,7 +75,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/456)
+    (0/451)
   </span>
 </td>
 </tr>
@@ -224,7 +224,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    private Label labelCount;
 &nbsp;
 &nbsp;
-&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Initialize the client controller
+&nbsp;     */
 <b class="nc">&nbsp;    public ViewController() {</b>
 &nbsp;        try {
 <b class="nc">&nbsp;            clientController = new ClientController();</b>
@@ -241,7 +245,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 <b class="nc">&nbsp;        hideAllPanes();</b>
 &nbsp;
-&nbsp;        //Set up the home view
+&nbsp;        //Setting up the home view
 <b class="nc">&nbsp;        showPane(homePane);</b>
 &nbsp;
 <b class="nc">&nbsp;        initHomeTableView();</b>
@@ -254,7 +258,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 <b class="nc">&nbsp;        loadBooks();</b>
 &nbsp;
-&nbsp;        //Add listener to the ListView
+&nbsp;        //Add listener to ListView
 <b class="nc">&nbsp;        customersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
 <b class="nc">&nbsp;            if (newValue != null) {</b>
 &nbsp;                //Update TextFields with selected customer data
@@ -277,7 +281,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        String year = yearABTextField.getText();</b>
 <b class="nc">&nbsp;        String copies = copiesABTextField.getText();</b>
 &nbsp;
-&nbsp;
 <b class="nc">&nbsp;        if(title.isEmpty() || author.isEmpty() || genre == null || year.isEmpty() || copies.isEmpty()) {</b>
 <b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Invalid input&quot;, &quot;Please fill all fields.&quot;);</b>
 &nbsp;            return;
@@ -286,7 +289,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        try {
 <b class="nc">&nbsp;            int yearInt = Integer.parseInt(year);</b>
 <b class="nc">&nbsp;            int copiesInt = Integer.parseInt(copies);</b>
-&nbsp;
 <b class="nc">&nbsp;            Book book = new Book(title, author, yearInt, genre, copiesInt);</b>
 <b class="nc">&nbsp;            clientController.createBook(book);</b>
 &nbsp;        } catch (NumberFormatException e) {
@@ -345,7 +347,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        Book selectedBook = searchBookTableView.getSelectionModel().getSelectedItem();</b>
 &nbsp;
 <b class="nc">&nbsp;        if (selectedBook == null) {</b>
-<b class="nc">&nbsp;            System.out.println(&quot;No book selected for editing.&quot;);</b>
+<b class="nc">&nbsp;            showErrorDialog(&quot;Warning&quot;, &quot;Selection error&quot;, &quot;No books selected for editing&quot;);</b>
 &nbsp;            return;
 &nbsp;        }
 &nbsp;
@@ -419,7 +421,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        final Lends[] lend = new Lends[1];</b>
 &nbsp;
 <b class="nc">&nbsp;        if (selectedBook == null) {</b>
-<b class="nc">&nbsp;            CLIUtils.clientInfo(&quot;No book selected for editing.&quot;);</b>
 <b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;No book selected&quot;, &quot;Please select a book to lend.&quot;);</b>
 &nbsp;            return;
 &nbsp;        }
@@ -433,17 +434,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        Dialog&lt;Book&gt; dialog = new Dialog&lt;&gt;();</b>
 <b class="nc">&nbsp;        dialog.setTitle(&quot;Lend Book&quot;);</b>
 &nbsp;
-&nbsp;        // Set the button types.
+&nbsp;        //Set button types
 <b class="nc">&nbsp;        ButtonType saveButtonType = new ButtonType(&quot;Save&quot;, ButtonBar.ButtonData.OK_DONE);</b>
 <b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);</b>
 &nbsp;
-&nbsp;        // Create the fields and populate with current book data.
+&nbsp;        //Create the fields and populate with current book data
 <b class="nc">&nbsp;        ChoiceBox&lt;Customer&gt; customerChoiceBox = new ChoiceBox&lt;&gt;();</b>
 <b class="nc">&nbsp;        customerChoiceBox.getItems().addAll(clientController.getCustomers());</b>
 <b class="nc">&nbsp;        DatePicker returnDatePicker = new DatePicker();</b>
 <b class="nc">&nbsp;        Label booktitleLabel = new Label(selectedBook.getTitle());</b>
 &nbsp;
-&nbsp;        // Create a grid pane and add the fields
+&nbsp;        //Create a grid pane and add the fields
 <b class="nc">&nbsp;        GridPane grid = new GridPane();</b>
 <b class="nc">&nbsp;        grid.add(new Label(&quot;Chose customer:&quot;), 0, 0);</b>
 <b class="nc">&nbsp;        grid.add(customerChoiceBox, 1, 0);</b>
@@ -455,7 +456,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        dialog.getDialogPane().setContent(grid);</b>
 <b class="nc">&nbsp;        lend[0] = null;</b>
 &nbsp;
-&nbsp;        // Convert the result to a Book object when the save button is clicked.
+&nbsp;        //Convert the result to a Book object when the save button is clicked
 <b class="nc">&nbsp;        dialog.setResultConverter(dialogButton -&gt; {</b>
 <b class="nc">&nbsp;            if (dialogButton == saveButtonType) {</b>
 <b class="nc">&nbsp;                if(clientController.readBook(selectedBook.getId()).getCopies() &lt; 1) {</b>
@@ -490,7 +491,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @FXML
 &nbsp;    protected void onSearchLendButtonClick(){
 <b class="nc">&nbsp;        searchLendTableView.getItems().clear();</b>
-&nbsp;
 <b class="nc">&nbsp;        String title = titleLendTextField.getText();</b>
 <b class="nc">&nbsp;        LocalDate date = returnLendDatePicker.getValue();</b>
 <b class="nc">&nbsp;        String cell = phoneLendTextField.getText();</b>
@@ -726,6 +726,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    public void onAlertClick(){
 <b class="nc">&nbsp;        Boolean tmp = clientController.sendAlerts();</b>
 &nbsp;
+&nbsp;        //TODO waiting message
+&nbsp;
 <b class="nc">&nbsp;        CLIUtils.clientInfo(&quot;sending mail notifications to customers with late returns&quot;);</b>
 &nbsp;
 <b class="nc">&nbsp;        if (tmp) {</b>
@@ -756,7 +758,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * @param tableView the table view to show the books on
 &nbsp;     */
 &nbsp;    private void showBooksOnTableView(List&lt;Book&gt; books, TableView tableView) {
-&nbsp;
 <b class="nc">&nbsp;        if(books == null) {</b>
 <b class="nc">&nbsp;            showErrorDialog(&quot;Error&quot;, &quot;Critical error&quot;, &quot;Could not connect to the server. Please try again later.&quot;);</b>
 &nbsp;            return;
@@ -779,24 +780,32 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * Initializes the home table view.
 &nbsp;     */
 &nbsp;    private void initHomeTableView() {
-<b class="nc">&nbsp;        idHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
-<b class="nc">&nbsp;        titleHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;title&quot;));</b>
-<b class="nc">&nbsp;        authorHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;author&quot;));</b>
-<b class="nc">&nbsp;        genreHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;( &quot;genre&quot;));</b>
-<b class="nc">&nbsp;        yearHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;year&quot;));</b>
-<b class="nc">&nbsp;        copiesHColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;copies&quot;));</b>
+<b class="nc">&nbsp;        initTableView(idHColumn, titleHColumn, authorHColumn, genreHColumn, yearHColumn, copiesHColumn);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialize TableView columns
+&nbsp;     * @param idColumn the book&#39;s id column
+&nbsp;     * @param titleColumn the book&#39;s title column
+&nbsp;     * @param authorColumn the book&#39;s author column
+&nbsp;     * @param genreColumn the book&#39;s genre column
+&nbsp;     * @param yearColumn the book&#39;s year column
+&nbsp;     * @param copiesColumn the book&#39;s copies column
+&nbsp;     */
+&nbsp;    private void initTableView(TableColumn&lt;Book, Integer&gt; idColumn, TableColumn&lt;Book, String&gt; titleColumn, TableColumn&lt;Book, String&gt; authorColumn, TableColumn&lt;Book, Genre&gt; genreColumn, TableColumn&lt;Book, Integer&gt; yearColumn, TableColumn&lt;Book, Integer&gt; copiesColumn) {
+<b class="nc">&nbsp;        idColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
+<b class="nc">&nbsp;        titleColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;title&quot;));</b>
+<b class="nc">&nbsp;        authorColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;author&quot;));</b>
+<b class="nc">&nbsp;        genreColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;( &quot;genre&quot;));</b>
+<b class="nc">&nbsp;        yearColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;year&quot;));</b>
+<b class="nc">&nbsp;        copiesColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;copies&quot;));</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    /**
 &nbsp;     * Initializes the search table view.
 &nbsp;     */
 &nbsp;    private void initSearchTableView() {
-<b class="nc">&nbsp;        idSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</b>
-<b class="nc">&nbsp;        titleSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;title&quot;));</b>
-<b class="nc">&nbsp;        authorSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;author&quot;));</b>
-<b class="nc">&nbsp;        genreSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;( &quot;genre&quot;));</b>
-<b class="nc">&nbsp;        yearSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;year&quot;));</b>
-<b class="nc">&nbsp;        copiesSColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;copies&quot;));</b>
+<b class="nc">&nbsp;        initTableView(idSColumn, titleSColumn, authorSColumn, genreSColumn, yearSColumn, copiesSColumn);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    /**
@@ -1129,7 +1138,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>

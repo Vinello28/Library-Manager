@@ -11,7 +11,7 @@ import static prj.library.utils.ConfigLoader.getProperty;
 
 public class Server {
     private final int port; //port to listen on
-    private ExecutorService pool = Executors.newFixedThreadPool(10); //thread pool
+    private final ExecutorService clientHandlerThreadPool = Executors.newFixedThreadPool(10); //thread pool
     private static EmailNotificationService notificationService;
 
     public Server() {
@@ -34,7 +34,7 @@ public class Server {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept(); //accept new connection
-                pool.execute(new ClientHandler(clientSocket)); //handle client in a new client handler
+                clientHandlerThreadPool.execute(new ClientHandler(clientSocket)); //handle client in a new client handler
             }
         } catch (IOException e) {
             CLIUtils.serverCriticalError(e.getMessage());

@@ -52,7 +52,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/6)
+    (0/7)
   </span>
 </td>
 </tr>
@@ -109,7 +109,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/11)
+    (0/12)
   </span>
 </td>
 </tr>
@@ -126,6 +126,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import javafx.concurrent.ScheduledService;
 &nbsp;import javafx.concurrent.Task;
 &nbsp;import javafx.util.Duration;
+&nbsp;import prj.library.utils.CLIUtils;
 &nbsp;
 &nbsp;/**
 &nbsp; * Class to schedule the email notification service
@@ -143,7 +144,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        try {
 <b class="nc">&nbsp;            Platform.startup(() -&gt; {});</b>
 &nbsp;        } catch (IllegalStateException e) {
-&nbsp;            // Il toolkit è già inizializzato, ignora l&#39;errore
+<b class="nc">&nbsp;            CLIUtils.serverError(&quot;NotificationScheduler already started&quot;);</b>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
@@ -157,7 +158,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;                return new Task&lt;&gt;() {</b>
 &nbsp;                    @Override
 &nbsp;                    protected Void call() {
-<b class="nc">&nbsp;                        notificationService.checkAndSendNotifications();</b>
+<b class="nc">&nbsp;                        notificationService.checkAndSendNotifications(); //send email notifications</b>
 <b class="nc">&nbsp;                        return null;</b>
 &nbsp;                    }
 &nbsp;                };
@@ -192,7 +193,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-12-06 12:15</div>
+    <div style="float:right;">generated on 2025-01-16 09:56</div>
 </div>
 </body>
 </html>
