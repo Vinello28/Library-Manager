@@ -5,6 +5,7 @@ import prj.library.models.Customer;
 import prj.library.models.Genre;
 import prj.library.models.Lends;
 import prj.library.networking.messages.Operation;
+import prj.library.utils.CLIUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -17,14 +18,14 @@ import java.util.stream.Collectors;
  * The ClientController class is responsible for handling the communication between the client and the server.
  */
 public class ClientController implements ClientControllerInterface {
-    private Client client;
+    private final Client client;
 
     public ClientController() throws IOException {
         client = new Client();
     }
 
     public Boolean createBook(Book book) {
-        System.out.println("CLIENT | DEBUG INFO: Sending create request" + book);
+        CLIUtils.clientInfo("sending create request" + book);
         client.sendMessage(Operation.ADD_BOOK,  book);
         return client.receiveMessageBoolean();
     }

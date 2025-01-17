@@ -83,8 +83,10 @@ class LendsDAOTest {
     static void tearDown() {
         BookDAO bookDAO = new BookDAO();
         CustomerDAO customerDAO = new CustomerDAO();
-        bookDAO.deleteBook(book.getId());
-        customerDAO.deleteCustomer(customer);
+        bookDAO.deleteBook(TEST_BOOK_ID);
+        Customer c = new Customer();
+        c.setId(TEST_CUSTOMER_ID);
+        customerDAO.deleteCustomer(c);
     }
 
     @Test
@@ -189,7 +191,7 @@ class LendsDAOTest {
     void testDeleteLend() {
         lendsDAO.deleteLend(testLend);
         Lends deletedLend = lendsDAO.readLend(testLend.getId());
-        
+
         assertNull(deletedLend, "Lend should be deleted");
     }
 
