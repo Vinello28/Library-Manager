@@ -2,6 +2,7 @@
 
 # Library Management System
 This project is a Library Management System built using Java/JavaFX and Maven. It provides functionalities to manage books, customers and lends in a library database.
+Grade: 30 (5cfu)
 
 ## Features
 - Manage books by title, author, genre, and year.
